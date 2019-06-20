@@ -150,7 +150,7 @@ class Refine(nn.Module):
         out = self.post0(F.upsample(self.h2(out) + self.v2(p2), size=(31, 31)))
         out = self.post1(F.upsample(self.h1(out) + self.v1(p1), size=(61, 61)))
         out = self.post2(F.upsample(self.h0(out) + self.v0(p0), size=(127, 127)))
-        out = out.view(-1, 127*127)
+        out = out.view(-1, 127*127*18)
         return out
 
     def param_groups(self, start_lr, feature_mult=1):

@@ -18,7 +18,7 @@ from utils.log_helper import init_log, print_speed, add_file_handler, Dummy
 from utils.load_helper import load_pretrain, restore_from
 from utils.average_meter_helper import AverageMeter
 
-from datasets.siam_pose_dataset import DataSets
+from datasets.siam_mask_dataset import DataSets
 
 from utils.lr_helper import build_lr_scheduler
 from tensorboardX import SummaryWriter
@@ -28,7 +28,8 @@ from torch.utils.collect_env import get_pretty_env_info
 
 torch.backends.cudnn.benchmark = True
 
-parser = argparse.ArgumentParser(description='PyTorch Tracking SiamMask Training')
+
+parser = argparse.ArgumentParser(description='PyTorch Tracking Training')
 
 parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
                     help='number of data loading workers (default: 16)')
@@ -53,8 +54,8 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
 parser.add_argument('--pretrained', dest='pretrained', default='',
                     help='use pre-trained model')
 parser.add_argument('--config', dest='config', required=True,
-                    help='hyperparameter of SiamMask in json format')
-parser.add_argument('--arch', dest='arch', default='', choices=['Custom',],
+                    help='hyperparameter of SiamRPN in json format')
+parser.add_argument('--arch', dest='arch', default='', choices=['Custom',''],
                     help='architecture of pretrained model')
 parser.add_argument('-l', '--log', default="log.txt", type=str,
                     help='log file')
@@ -95,13 +96,8 @@ def build_data_loader(cfg):
 
 
 def build_opt_lr(model, cfg, args, epoch):
-    backbone_feature = model.features.param_groups(cfg['lr']['start_lr'], cfg['lr']['feature_lr_mult'])
-    if len(backbone_feature) == 0:
-        trainable_params = model.rpn_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['rpn_lr_mult'], 'mask')
-    else:
-        trainable_params = backbone_feature + \
-                           model.rpn_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['rpn_lr_mult']) + \
-                           model.mask_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
+    trainable_params = model.mask_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult']) + \
+                       model.refine_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
 
     optimizer = torch.optim.SGD(trainable_params, args.lr,
                                 momentum=args.momentum,
@@ -140,9 +136,10 @@ def main():
 
     if args.arch == 'Custom':
         from custom import Custom
-        model = Custom(pretrain=True, anchors=cfg['anchors'])
+        model = Custom(anchors=cfg['anchors'])
     else:
-        exit()
+        model = models.__dict__[args.arch](anchors=cfg['anchors'])
+
     logger.info(model)
 
     if args.pretrained:
@@ -168,12 +165,25 @@ def main():
     train(train_loader, dist_model, optimizer, lr_scheduler, args.start_epoch, cfg)
 
 
+def BNtoFixed(m):
+    class_name = m.__class__.__name__
+    if class_name.find('BatchNorm') != -1:
+        m.eval()
+
+
 def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
     global tb_index, best_acc, cur_lr, logger
     cur_lr = lr_scheduler.get_cur_lr()
     logger = logging.getLogger('global')
     avg = AverageMeter()
     model.train()
+    model.module.features.train() # .eval()
+    model.module.rpn_model.train()  # .eval()
+    # model.module.features.apply(BNtoFixed)
+    # model.module.rpn_model.apply(BNtoFixed)
+
+    model.module.mask_model.train()
+    model.module.refine_model.train()
     model = model.cuda()
     end = time.time()
 
@@ -205,9 +215,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             if epoch == args.epochs:
                 return
 
-            if model.module.features.unfix(epoch/args.epochs):
-                logger.info('unfix part model.')
-                optimizer, lr_scheduler = build_opt_lr(model.module, cfg, args, epoch)
+            optimizer, lr_scheduler = build_opt_lr(model.module, cfg, args, epoch)
 
             lr_scheduler.step(epoch)
             cur_lr = lr_scheduler.get_cur_lr()
@@ -230,16 +238,13 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             'label_loc': torch.autograd.Variable(input[3]).cuda(),
             'label_loc_weight': torch.autograd.Variable(input[4]).cuda(),
             'label_mask': torch.autograd.Variable(input[6]).cuda(),
-            'label_kp_weight': torch.autograd.Variable(input[7]).cuda(),
-            'label_mask_weight': torch.autograd.Variable(input[8]).cuda(),
+            'label_mask_weight': torch.autograd.Variable(input[7]).cuda(),
         }
 
         outputs = model(x)
 
-        rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\
-                                                    torch.mean(outputs['losses'][1]),\
-                                                    torch.mean(outputs['losses'][2])
-        # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
+        rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]), torch.mean(outputs['losses'][1]), torch.mean(outputs['losses'][2])
+        mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
 
         cls_weight, reg_weight, mask_weight = cfg['loss']['weight']
 
@@ -252,6 +257,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             torch.nn.utils.clip_grad_norm_(model.module.features.parameters(), cfg['clip']['feature'])
             torch.nn.utils.clip_grad_norm_(model.module.rpn_model.parameters(), cfg['clip']['rpn'])
             torch.nn.utils.clip_grad_norm_(model.module.mask_model.parameters(), cfg['clip']['mask'])
+            torch.nn.utils.clip_grad_norm_(model.module.refine_model.parameters(), cfg['clip']['mask'])
         else:
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)  # gradient clip
 
@@ -263,25 +269,25 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         batch_time = time.time() - end
 
         avg.update(batch_time=batch_time, rpn_cls_loss=rpn_cls_loss, rpn_loc_loss=rpn_loc_loss,
-                   rpn_mask_loss=rpn_mask_loss, siammask_loss=siammask_loss)
-                   # mask_iou_mean=mask_iou_mean, mask_iou_at_5=mask_iou_at_5, mask_iou_at_7=mask_iou_at_7)
+                   rpn_mask_loss=rpn_mask_loss, siammask_loss=siammask_loss,
+                   mask_iou_mean=mask_iou_mean, mask_iou_at_5=mask_iou_at_5, mask_iou_at_7=mask_iou_at_7)
 
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
         tb_writer.add_scalar('loss/mask', rpn_mask_loss, tb_index)
-        # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
-        # tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
-        # tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)
+        tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
+        tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
+        tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)
         end = time.time()
 
         if (iter + 1) % args.print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}] lr: {lr:.6f}\t{batch_time:s}\t{data_time:s}'
-                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{rpn_mask_loss:s}\t{siammask_loss:s}'.format(
+                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{rpn_mask_loss:s}\t{siammask_loss:s}'
+                        '\t{mask_iou_mean:s}\t{mask_iou_at_5:s}\t{mask_iou_at_7:s}'.format(
                         epoch+1, (iter + 1) % num_per_epoch, num_per_epoch, lr=cur_lr, batch_time=avg.batch_time,
                         data_time=avg.data_time, rpn_cls_loss=avg.rpn_cls_loss, rpn_loc_loss=avg.rpn_loc_loss,
-                        rpn_mask_loss=avg.rpn_mask_loss, siammask_loss=avg.siammask_loss,))
-                        # mask_iou_mean=avg.mask_iou_mean,
-                        # mask_iou_at_5=avg.mask_iou_at_5,mask_iou_at_7=avg.mask_iou_at_7))
+                        rpn_mask_loss=avg.rpn_mask_loss, siammask_loss=avg.siammask_loss, mask_iou_mean=avg.mask_iou_mean,
+                        mask_iou_at_5=avg.mask_iou_at_5,mask_iou_at_7=avg.mask_iou_at_7))
             print_speed(iter + 1, avg.batch_time.avg, args.epochs * num_per_epoch)
 
 

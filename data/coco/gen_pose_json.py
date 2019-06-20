@@ -102,8 +102,8 @@ def kp_conversion(KeyPoints, matrix):
     return kps_conversion
 
 
-# for data_subset in ['val2017', 'train2017']:
-for data_subset in ['val2017']:
+for data_subset in ['val2017', 'train2017']:
+# for data_subset in ['val2017']:
     dataset = dict()
     # annFile = '{}/annotations/instances_{}.json'.format(dataDir, data_subset)
     annFile = '{}/annotations/person_keypoints_{}.json'.format(dataDir, data_subset)

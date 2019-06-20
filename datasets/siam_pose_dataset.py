@@ -397,8 +397,8 @@ class DataSets(Dataset):
         self.template_size = 127
         self.origin_size = 127
         self.search_size = 255
-        self.heatmap_size = (511, 511)
-        self.image_size = 511
+        self.heatmap_size = (255, 255)
+        self.image_size = 255
         self.size = 17
         self.sigma = 2
         self.base_size = 0
@@ -521,7 +521,6 @@ class DataSets(Dataset):
                 g = np.exp(- ((x - x0) ** 2 + (y - y0) ** 2) / (2 * self.sigma ** 2))
 
                 # Usable gaussian range
-                print(ul, br)
                 g_x = max(0, -ul[0]), min(br[0], self.heatmap_size[0]) - ul[0]
                 g_y = max(0, -ul[1]), min(br[1], self.heatmap_size[1]) - ul[1]
                 # Image range
@@ -601,41 +600,6 @@ class DataSets(Dataset):
 
         template_image, scale_z = self.imread(template[0])
 
-        # added: joints
-
-        # template_obj = template[1]
-        # if max(template_obj['keypoints']) == 0:
-        #     template_joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
-        #     template_joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
-        #
-        #     for ipt in range(self.num_joints):
-        #         template_joints_3d[ipt, 0] = template_obj['keypoints'][ipt * 3 + 0]
-        #         template_joints_3d[ipt, 1] = template_obj['keypoints'][ipt * 3 + 1]
-        #         template_joints_3d[ipt, 2] = 0
-        #         t_vis = template_obj['keypoints'][ipt * 3 + 2]
-        #         if t_vis > 1:
-        #             t_vis = 1
-        #         template_joints_3d_vis[ipt, 0] = t_vis
-        #         template_joints_3d_vis[ipt, 1] = t_vis
-        #         template_joints_3d_vis[ipt, 2] = 0
-        #
-        # search_obj = search[1]
-        # if max(search_obj['keypoints']) == 0:
-        #     search_joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
-        #     search_joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
-        #
-        #     for ipt in range(self.num_joints):
-        #         search_joints_3d[ipt, 0] = search_obj['keypoints'][ipt * 3 + 0]
-        #         search_joints_3d[ipt, 1] = search_obj['keypoints'][ipt * 3 + 1]
-        #         search_joints_3d[ipt, 2] = 0
-        #         s_vis = search_obj['keypoints'][ipt * 3 + 2]
-        #         if s_vis > 1:
-        #             s_vis = 1
-        #         search_joints_3d_vis[ipt, 0] = s_vis
-        #         search_joints_3d_vis[ipt, 1] = s_vis
-        #         search_joints_3d_vis[ipt, 2] = 0
-
-
         if self.template_small:
             template_image = center_crop(template_image, self.template_size)
 
@@ -646,18 +610,18 @@ class DataSets(Dataset):
         else:
             search_kp = np.zeros(51, dtype=np.float32)
 
-        joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
-        joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
-        for ipt in range(self.num_joints):
-            joints_3d[ipt, 0] = search_kp[ipt * 3 + 0]
-            joints_3d[ipt, 1] = search_kp[ipt * 3 + 1]
-            joints_3d[ipt, 2] = 0
-            t_vis = search_kp[ipt * 3 + 2]
-            if t_vis > 1:
-                t_vis = 1
-            joints_3d_vis[ipt, 0] = t_vis
-            joints_3d_vis[ipt, 1] = t_vis
-            joints_3d_vis[ipt, 2] = 0
+        # joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
+        # joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
+        # for ipt in range(self.num_joints):
+        #     joints_3d[ipt, 0] = search_kp[ipt * 3 + 0]
+        #     joints_3d[ipt, 1] = search_kp[ipt * 3 + 1]
+        #     joints_3d[ipt, 2] = 0
+        #     t_vis = search_kp[ipt * 3 + 2]
+        #     if t_vis > 1:
+        #         t_vis = 1
+        #     joints_3d_vis[ipt, 0] = t_vis
+        #     joints_3d_vis[ipt, 1] = t_vis
+        #     joints_3d_vis[ipt, 2] = 0
 
         if self.crop_size > 0:
             search_image = center_crop(search_image, self.crop_size)
@@ -682,15 +646,84 @@ class DataSets(Dataset):
 
         template_box = toBBox(template_image, template[1])
         search_box = toBBox(search_image, search[1])
-        bbox = search_box
-        # template, _ = self.template_aug(template_image, template_box, self.template_size, gray=gray)
-        # search, bbox = self.search_aug(search_image, search_box, self.search_size, gray=gray)
+        # bbox = search_box
+        template, _ = self.template_aug(template_image, template_box, self.template_size, gray=gray)
+        search, bbox = self.search_aug(search_image, search_box, self.search_size, gray=gray)
 
         def draw(image, box, name):
             image = image.copy()
             x1, y1, x2, y2 = map(lambda x: int(round(x)), box)
             cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0))
             cv2.imwrite(name, image)
+
+        def crop_hwc(bbox, out_sz=255):
+            a = (out_sz - 1) / (bbox[2] - bbox[0])
+            b = (out_sz - 1) / (bbox[3] - bbox[1])
+            c = -a * bbox[0]
+            d = -b * bbox[1]
+            mapping = np.array([[a, 0, c],
+                                [0, b, d]]).astype(np.float)
+            # crop = cv2.warpAffine(image, mapping, (out_sz, out_sz),
+            # borderMode=cv2.BORDER_CONSTANT, borderValue=padding)
+            return mapping
+
+        def crop_hwc1(image, bbox, out_sz, padding=(0, 0, 0)):
+            a = (out_sz - 1) / (bbox[2] - bbox[0])
+            b = (out_sz - 1) / (bbox[3] - bbox[1])
+            c = -a * bbox[0]
+            d = -b * bbox[1]
+            mapping = np.array([[a, 0, c],
+                                [0, b, d]]).astype(np.float)
+            crop = cv2.warpAffine(image, mapping, (out_sz, out_sz))
+            return crop
+
+        def pos_s_2_bbox(pos, s):
+            bbox = [pos[0] - s / 2, pos[1] - s / 2, pos[0] + s / 2, pos[1] + s / 2]
+            return bbox
+
+        def crop_like_SiamFCx(bbox, exemplar_size=127, context_amount=0.5, search_size=255):
+            target_pos = [(bbox[2] + bbox[0]) / 2., (bbox[3] + bbox[1]) / 2.]
+            target_size = [bbox[2] - bbox[0] + 1, bbox[3] - bbox[1] + 1]
+            wc_z = target_size[1] + context_amount * sum(target_size)
+            hc_z = target_size[0] + context_amount * sum(target_size)
+            s_z = np.sqrt(wc_z * hc_z)
+            scale_z = exemplar_size / s_z
+            d_search = (search_size - exemplar_size) / 2
+            pad = d_search / scale_z
+            s_x = s_z + 2 * pad
+
+            # x = crop_hwc1(image, pos_s_2_bbox(target_pos, s_x), search_size, padding)
+            return target_pos, s_x
+
+        def kp_conversion(KeyPoints, matrix):
+
+            key_points = []
+            kps_conversion = []
+            skeleton = [0, 0]
+            Skeleton = []
+
+            for i in range(0, int(len(KeyPoints) / 3)):
+                skeleton[0] = KeyPoints[i * 3 + 0]
+                skeleton[1] = KeyPoints[i * 3 + 1]
+                Skeleton.append(skeleton[:])
+                lis = Skeleton[i]
+                lis.append(1)
+                key_points.append(lis)
+
+            key_points = np.array(key_points)
+
+            for i in range(0, int(len(KeyPoints) / 3)):
+                if KeyPoints[i * 3 + 2] != 0:
+                    ky_conversion = np.matmul(matrix, key_points[i, :]).tolist()
+                    kps_conversion.append(ky_conversion[0])
+                    kps_conversion.append(ky_conversion[1])
+                    kps_conversion.append(KeyPoints[i * 3 + 2])
+                else:
+                    kps_conversion.append(0)
+                    kps_conversion.append(0)
+                    kps_conversion.append(0)
+
+            return kps_conversion
 
         if debug:
             draw(template_image, template_box, "debug/{:06d}_ot.jpg".format(index))
@@ -699,11 +732,42 @@ class DataSets(Dataset):
             draw(search, bbox, "debug/{:06d}_s.jpg".format(index))
 
         cls, delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
-        template = template_image  # .astype(np.int16)  # np.array(template_image, dtype=np.int16)
-        search = search_image  # .astype(np.int16)  # np.array(search_image, dtype=np.int16)
+        # template = template_image  # .astype(np.int16)  # np.array(template_image, dtype=np.int16)
+        # search = search_image  # .astype(np.int16)  # np.array(search_image, dtype=np.int16)
+
+        pos, s = crop_like_SiamFCx(search_box, exemplar_size=127, context_amount=0.5, search_size=255)
+
+        # search = crop_like_SiamFCx1(search, bbox, exemplar_size=127, context_amount=0.5, search_size=255,
+        #                              padding=avg_chans)
+
+
+        mapping_bbox = pos_s_2_bbox(pos, s)
+
+        mapping = crop_hwc(mapping_bbox, out_sz=255)
+
+        keypoints = kp_conversion(search_kp.tolist(), mapping)
+
+        joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
+        joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
+        for ipt in range(self.num_joints):
+            joints_3d[ipt, 0] = keypoints[ipt * 3 + 0]
+            joints_3d[ipt, 1] = keypoints[ipt * 3 + 1]
+            joints_3d[ipt, 2] = 0
+            t_vis = search_kp[ipt * 3 + 2]
+            if t_vis > 1:
+                t_vis = 1
+            joints_3d_vis[ipt, 0] = t_vis
+            joints_3d_vis[ipt, 1] = t_vis
+            joints_3d_vis[ipt, 2] = 0
+
+        if not neg:
+            kp_weight = cls.max(axis=0, keepdims=True)
+        else:
+            kp_weight = np.zeros([1, cls.shape[1], cls.shape[2]], dtype=np.float32)
+
         template, search = map(lambda x: np.transpose(x, (2, 0, 1)).astype(np.float32), [template, search])
 
         gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
 
-        return template, search, cls, delta, delta_weight, np.array(bbox, np.float32), gs_tgt, tgt_wt
+        return template, search, cls, delta, delta_weight, np.array(bbox, np.float32), gs_tgt, tgt_wt, np.array(kp_weight, np.float32)
 

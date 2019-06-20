@@ -1,0 +1,639 @@
+[2019-06-03 13:06:05,153-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,195-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,300-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,331-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,390-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,401-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,397-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,405-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,390-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,443-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,443-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,449-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,522-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,594-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,652-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,669-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,734-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,790-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,786-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,830-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 13:06:05,963-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:05,974-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,096-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,107-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,108-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,102-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,106-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,112-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,134-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,150-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,173-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,182-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,179-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,191-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,196-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,197-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,203-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,204-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,206-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,207-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,225-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,238-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,235-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,250-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,257-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,286-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,293-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,302-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,404-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,419-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,447-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,462-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,485-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,487-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,478-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,491-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,632-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,634-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 13:06:06,652-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 13:06:06,652-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:22,804-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:22,910-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:22,970-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:22,985-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,017-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,132-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,323-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,324-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:23,330-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,497-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,523-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,552-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,553-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,554-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:23,560-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,561-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:23,568-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,585-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,597-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,599-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,599-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,621-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,605-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,640-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,653-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:23,713-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,722-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,733-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:09:23,852-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,874-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:23,992-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:23,993-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,025-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,038-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,127-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,128-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,176-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,190-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,257-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,258-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,331-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,342-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,408-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,409-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,429-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,430-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,433-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,434-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,450-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,451-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,458-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,459-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,460-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,461-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,479-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,480-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,490-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,492-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:09:24,657-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:09:24,659-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:53,342-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,370-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,374-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,411-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,511-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,598-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,599-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,780-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:53,781-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:53,810-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:53,812-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:53,849-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:53,850-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:53,887-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,881-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,906-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:53,908-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:53,937-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,945-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:53,971-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,002-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,013-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,045-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,090-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,128-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,130-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,156-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,149-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,186-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,257-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-03 14:26:54,350-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,374-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,392-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,393-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,402-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,403-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,476-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,487-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,574-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,575-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,695-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,696-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,706-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,707-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,708-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,709-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,735-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,736-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,795-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,819-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,879-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,880-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,886-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,887-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,919-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,920-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,924-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,925-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-03 14:26:54,936-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-03 14:26:54,937-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:09,781-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,784-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,785-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,787-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,788-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,789-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,790-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,784-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,789-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,806-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,808-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,810-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,811-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,822-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,820-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,837-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,842-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,844-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,845-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:09,871-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:29:10,528-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,529-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,521-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,534-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,551-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,553-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,557-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,560-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,566-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,568-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,569-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,569-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,582-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,585-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,586-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,590-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,583-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,594-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,594-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,591-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,598-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,610-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,612-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,613-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,623-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,624-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,608-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,630-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,635-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,636-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,646-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,647-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,655-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e9.pth
+[2019-06-04 16:29:10,666-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,667-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,691-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e7.pth
+[2019-06-04 16:29:10,696-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e3.pth
+[2019-06-04 16:29:10,700-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e11.pth
+[2019-06-04 16:29:10,703-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,704-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,710-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,711-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,709-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e6.pth
+[2019-06-04 16:29:10,726-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e8.pth
+[2019-06-04 16:29:10,721-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:29:10,739-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:29:10,742-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e2.pth
+[2019-06-04 16:29:10,737-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e12.pth
+[2019-06-04 16:29:10,745-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e4.pth
+[2019-06-04 16:29:10,740-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e13.pth
+[2019-06-04 16:29:10,756-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e5.pth
+[2019-06-04 16:29:10,772-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e1.pth
+[2019-06-04 16:29:10,809-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e10.pth
+[2019-06-04 16:31:52,766-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,768-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,781-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,810-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,855-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,888-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:52,918-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,014-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,029-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,104-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,108-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,089-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,302-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,307-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,321-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,333-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,347-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,357-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,358-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,344-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,399-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,401-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:31:53,464-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e5.pth
+[2019-06-04 16:31:53,476-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,477-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,478-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,480-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,542-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e3.pth
+[2019-06-04 16:31:53,565-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,590-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,600-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e10.pth
+[2019-06-04 16:31:53,621-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,622-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,624-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,634-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,749-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e13.pth
+[2019-06-04 16:31:53,778-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,779-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,788-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e11.pth
+[2019-06-04 16:31:53,781-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,780-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,931-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,932-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,967-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:53,970-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:53,963-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e1.pth
+[2019-06-04 16:31:54,014-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e7.pth
+[2019-06-04 16:31:54,030-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e6.pth
+[2019-06-04 16:31:54,101-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,114-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,130-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,131-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,137-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,139-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,198-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,208-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,209-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,220-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,219-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,221-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,224-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e8.pth
+[2019-06-04 16:31:54,311-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,319-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,320-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,316-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,324-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e12.pth
+[2019-06-04 16:31:54,331-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,332-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,345-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:31:54,346-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:31:54,379-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e2.pth
+[2019-06-04 16:31:54,417-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e4.pth
+[2019-06-04 16:31:54,418-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e9.pth
+[2019-06-04 16:33:14,034-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e8.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,049-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e1.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,060-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e3.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,073-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e10.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,132-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e7.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,163-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e9.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,176-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e19.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,343-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e13.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,337-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e17.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,421-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e4.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,556-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e5.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,552-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,562-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,623-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e15.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,649-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e16.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,661-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,662-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,677-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e7.pth
+[2019-06-04 16:33:14,691-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e11.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,707-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e2.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,728-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e12.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,722-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,734-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,736-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e14.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,766-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e3.pth
+[2019-06-04 16:33:14,783-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,784-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,786-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e6.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,843-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e10.pth
+[2019-06-04 16:33:14,870-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,871-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,873-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e18.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:14,885-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e9.pth
+[2019-06-04 16:33:14,928-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,930-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:14,966-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:14,975-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,010-rk0-test.py#555] Namespace(arch='Custom', config='config.json', cpu=False, dataset='VOT2018', debug=False, gt=False, log='log_test.txt', mask=True, refine=False, resume='snapshot/checkpoint_e20.pth', save_mask=False, video='', visualization=False)
+[2019-06-04 16:33:15,023-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,042-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,059-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,060-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,057-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e8.pth
+[2019-06-04 16:33:15,099-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e1.pth
+[2019-06-04 16:33:15,096-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,110-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,118-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e13.pth
+[2019-06-04 16:33:15,147-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e4.pth
+[2019-06-04 16:33:15,586-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,587-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,607-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,609-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,662-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,658-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,671-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,663-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,677-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e6.pth
+[2019-06-04 16:33:15,698-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,699-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,700-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,704-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,728-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,729-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,748-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,754-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,772-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e5.pth
+[2019-06-04 16:33:15,775-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,776-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,792-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e2.pth
+[2019-06-04 16:33:15,799-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e12.pth
+[2019-06-04 16:33:15,807-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-04 16:33:15,808-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-04 16:33:15,854-rk0-load_helper.py# 31] load pretrained model from snapshot/checkpoint_e11.pth

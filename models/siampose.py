@@ -10,34 +10,41 @@ from torch.autograd import Variable
 from utils.anchors import Anchors
 
 class JointsMSELoss(nn.Module):
+    # def __init__(self, use_target_weight):
+    #     super(JointsMSELoss, self).__init__()
+    #     self.criterion = nn.MSELoss()
+    #     self.use_target_weight = use_target_weight
+    #
+    # def forward(self, output, target, target_weight):
+    #     loss = self.criterion(output, target)
+    #     return loss
+
     def __init__(self, use_target_weight):
         super(JointsMSELoss, self).__init__()
-        self.criterion = nn.MSELoss()
+        self.criterion = nn.MSELoss(size_average=True)
         self.use_target_weight = use_target_weight
 
     def forward(self, output, target, target_weight):
-        loss = self.criterion(output, target)
-        return loss
-        # print('output shape: ', output.shape)
-        # batch_size = output.size(0)
-        # num_joints = output.size(1)
-        # heatmaps_pred = output.reshape((batch_size, num_joints, -1)).split(1, 1)
-        # heatmaps_gt = target.reshape((batch_size, num_joints, -1)).split(1, 1)
-        # loss = 0
-        #
-        # for idx in range(num_joints):
-        #     heatmap_pred = heatmaps_pred[idx].squeeze()
-        #     heatmap_gt = heatmaps_gt[idx].squeeze()
-        #     if self.use_target_weight:
-        #         loss += 0.5 * self.criterion(
-        #             heatmap_pred.mul(target_weight[:, idx]),
-        #             heatmap_gt.mul(target_weight[:, idx])
-        #         )
-        #     else:
-        #         loss += 0.5 * self.criterion(heatmap_pred, heatmap_gt)
-        # print('loss: ', loss)
-        #
-        # return loss / num_joints
+        target_weight = torch.unsqueeze(target_weight, -1)
+        batch_size = output.size(0)
+        num_joints = output.size(1)
+        heatmaps_pred = output.reshape((batch_size, num_joints, -1)).split(1, 1)
+        heatmaps_gt = target.reshape((batch_size, num_joints, -1)).split(1, 1)
+        loss = 0
+
+        for idx in range(num_joints):
+            heatmap_pred = heatmaps_pred[idx].squeeze()
+            heatmap_gt = heatmaps_gt[idx].squeeze()
+
+            if self.use_target_weight:
+                loss += 0.5 * self.criterion(
+                    heatmap_pred.mul(target_weight[:, idx]),
+                    heatmap_gt.mul(target_weight[:, idx])
+                )
+            else:
+                loss += 0.5 * self.criterion(heatmap_pred, heatmap_gt)
+
+        return loss / num_joints
 
 class SiamMask(nn.Module):
     def __init__(self, anchors=None, o_sz=63, g_sz=127):
@@ -51,7 +58,7 @@ class SiamMask(nn.Module):
         self.o_sz = o_sz
         self.g_sz = g_sz
         self.upSample = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])
-        self.kp_criterion = JointsMSELoss(False)
+        self.kp_criterion = JointsMSELoss(True)
 
         self.all_anchors = None
 
@@ -198,6 +205,14 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('pred mask shape: ', p_m.shape)
     # print('mask weight shape: ', weight.shape)
     # print('kp weight shape: ', kp_weight.shape)
+    kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
+    kp_weight_pos = kp_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    kp_weight_pos = kp_weight_pos.view(-1, 17)
     weight = weight.view(-1)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
     # print('pose shape: ', pos.shape)
@@ -208,7 +223,9 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     p_m = torch.index_select(p_m, 0, pos)
     # print('atf selected pred mask shape: ', p_m.shape)
     p_m = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])(p_m)
-    p_m = p_m.view(-1, g_sz * g_sz * 17)
+    # p_m = p_m.view(-1, g_sz * g_sz * 17)
+
+    kp_weight = torch.index_select(kp_weight_pos, 0, pos)
 
     mask_uf = F.unfold(mask, (g_sz, g_sz), padding=32, stride=8)
     # print('mask uf shape: ', mask_uf.shape)
@@ -216,6 +233,7 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('transpose mask uf shape: ', mask_uf.shape)
 
     mask_uf = torch.index_select(mask_uf, 0, pos)
+    mask_uf = mask_uf.view(-1, 17, g_sz, g_sz)
     # loss = F.soft_margin_loss(p_m, mask_uf)
     loss = criterion(p_m, mask_uf, kp_weight)
 

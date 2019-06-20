@@ -32,6 +32,7 @@ ytb_vos/
 # logs
 *.log
 log.txt
+log_test.txt
 board/
 
 # Byte-compiled / optimized / DLL files

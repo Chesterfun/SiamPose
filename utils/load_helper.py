@@ -66,5 +66,6 @@ def restore_from(model, optimizer, ckpt_path):
     model.load_state_dict(ckpt_model_dict, strict=False)
 
     check_keys(optimizer, ckpt['optimizer'])
+    ckpt['optimizer']['param_groups'] = ckpt['optimizer']['param_groups'][0,2,3]
     optimizer.load_state_dict(ckpt['optimizer'])
     return model, optimizer, epoch, best_acc, arch

@@ -12,6 +12,9 @@ import time
 import json
 import math
 import torch
+import matplotlib.pyplot as plt
+import numpy as np
+
 from torch.utils.data import DataLoader
 
 from utils.log_helper import init_log, print_speed, add_file_handler, Dummy
@@ -236,9 +239,11 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
 
         outputs = model(x)
 
+
         rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\
                                                     torch.mean(outputs['losses'][1]),\
                                                     torch.mean(outputs['losses'][2])
+
         # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
 
         cls_weight, reg_weight, mask_weight = cfg['loss']['weight']

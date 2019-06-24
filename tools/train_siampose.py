@@ -372,7 +372,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
 
         true_search = select_gt_img(x['search'], x['label_mask_weight'])
         toTensor = ToTensor()
-        if true_search.shape:
+        if true_search.shape && tb_index % 200 ==0:
             pred_img = save_batch_heatmaps(true_search, pred_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
             gt_img = save_batch_heatmaps(true_search, gt_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
 

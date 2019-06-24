@@ -412,8 +412,9 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
         tb_writer.add_scalar('loss/mask', rpn_mask_loss * mask_weight, tb_index)
-        tb_writer.add_image('gt_img', gt_img, tb_index)
-        tb_writer.add_image('pred_img', pred_img, tb_index)
+        if tb_index % 200 == 0:
+            tb_writer.add_image('gt_img', gt_img, tb_index)
+            tb_writer.add_image('pred_img', pred_img, tb_index)
         # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
         # tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
         # tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)

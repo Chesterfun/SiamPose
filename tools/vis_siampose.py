@@ -370,12 +370,12 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
 
         outputs = model(x)
         # print(x['search'].shape)
-        # pred_mask = outputs['predict'][2]
-        # pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  #is rpn_pred_mask (bs, 17, 127, 127)
-        #
-        # true_search = select_gt_img(x['search'], x['label_mask_weight'])
-        # if true_search.shape:
-        #     save_batch_heatmaps(true_search, pred_mask, vis_outpath + '{}.jpg'.format(iter), normalize=True)
+        pred_mask = outputs['predict'][2]
+        pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  #is rpn_pred_mask (bs, 17, 127, 127)
+
+        true_search = select_gt_img(x['search'], x['label_mask_weight'])
+        if true_search.shape:
+            save_batch_heatmaps(true_search, pred_mask, vis_outpath + '{}.jpg'.format(iter), normalize=True)
 
         # pred_mask = pred_mask.cpu(.sh).detach().numpy()
         # true_search = true_search.cpu().detach().numpy()

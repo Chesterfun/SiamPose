@@ -400,7 +400,7 @@ class DataSets(Dataset):
         self.heatmap_size = (255, 255)
         self.image_size = 255
         self.size = 17
-        self.sigma = 2
+        self.sigma = 6
         self.base_size = 0
         self.crop_size = 0
         self.target_type = 'gaussian'

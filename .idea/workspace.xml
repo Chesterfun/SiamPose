@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c42576a8-437d-421f-97ed-bfcb6698cb57" name="Default Changelist" comment="pose detection branch">
-      <change afterPath="$PROJECT_DIR$/tools/vis_siampose.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/siam_pose_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/siam_pose_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/siampose_base/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/siampose_base/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments/siampose_base/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/siampose_base/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/train_siampose.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/train_siampose.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/vis_siampose.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vis_siampose.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,23 +32,30 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tools/eval.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/demo.py">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-132" />
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/datasets/siam_pose_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
+            <state relative-caret-position="153">
+              <caret line="389" column="21" selection-start-line="389" selection-start-column="21" selection-end-line="389" selection-end-column="21" />
               <folding>
-                <marker date="1561026412117" expanded="true" signature="20726:21281" ph="..." />
+                <element signature="e#214#245#0" expanded="true" />
+                <marker date="1561378525391" expanded="true" signature="20726:21281" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/experiments/siampose_base/config.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -54,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tools/train_siampose.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1441">
-              <caret line="144" column="19" selection-start-line="144" selection-start-column="13" selection-end-line="144" selection-end-column="19" />
+            <state relative-caret-position="214">
+              <caret line="367" column="29" selection-start-line="367" selection-start-column="29" selection-end-line="367" selection-end-column="29" />
               <folding>
                 <element signature="e#214#229#0" expanded="true" />
               </folding>
@@ -64,10 +73,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tools/vis_siampose.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-379">
-              <caret line="381" selection-start-line="381" selection-end-line="381" />
+            <state relative-caret-position="338">
+              <caret line="183" column="25" selection-start-line="155" selection-end-line="183" selection-end-column="25" />
               <folding>
                 <element signature="e#214#229#0" expanded="true" />
               </folding>
@@ -90,8 +108,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/siampose.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4972">
-              <caret line="230" column="11" selection-start-line="230" selection-start-column="6" selection-end-line="230" selection-end-column="11" />
+            <state relative-caret-position="77">
+              <caret line="200" column="39" selection-start-line="200" selection-start-column="35" selection-end-line="200" selection-end-column="39" />
               <folding>
                 <element signature="e#214#226#0" expanded="true" />
               </folding>
@@ -102,7 +120,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/siammask.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3388">
+            <state relative-caret-position="496">
               <caret line="158" column="28" selection-start-line="158" selection-start-column="28" selection-end-line="158" selection-end-column="28" />
             </state>
           </provider>
@@ -111,8 +129,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/experiments/siampose_base/run.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+            <state relative-caret-position="220">
+              <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -128,9 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>log_once</find>
-      <find>ResDown</find>
-      <find>crop_like_SiamFCx1</find>
       <find>dataset</find>
       <find>output</find>
       <find>criterion</find>
@@ -154,10 +169,13 @@
       <find>_add_rpn_loss</find>
       <find>cls</find>
       <find>idx</find>
-      <find>save_batch_heatmaps</find>
-      <find>select_pred_heatmap</find>
-      <find>select_gt_img</find>
       <find>print</find>
+      <find>select_gt_img</find>
+      <find>select_pred_heatmap</find>
+      <find>save_batch_heatmaps</find>
+      <find>get_max_preds</find>
+      <find>train</find>
+      <find>sigma</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -193,27 +211,27 @@
         <option value="$PROJECT_DIR$/data/coco/gen_pose_json.py" />
         <option value="$PROJECT_DIR$/experiments/siampose/custom.py" />
         <option value="$PROJECT_DIR$/tools/siampose_base.py" />
-        <option value="$PROJECT_DIR$/datasets/siam_pose_dataset.py" />
         <option value="$PROJECT_DIR$/experiments/siampose/config.json" />
         <option value="$PROJECT_DIR$/experiments/siampose_base/resnet.py" />
         <option value="$PROJECT_DIR$/models/siammask.py" />
         <option value="$PROJECT_DIR$/experiments/siampose_base/custom.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/experiments/siampose_base/config.json" />
         <option value="$PROJECT_DIR$/experiments/siammask_base/run.sh" />
         <option value="$PROJECT_DIR$/models/siampose.py" />
-        <option value="$PROJECT_DIR$/tools/train_siampose.py" />
-        <option value="$PROJECT_DIR$/tools/vis_siampose.py" />
         <option value="$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/tools/vis_siampose.py" />
+        <option value="$PROJECT_DIR$/tools/train_siampose.py" />
+        <option value="$PROJECT_DIR$/datasets/siam_pose_dataset.py" />
+        <option value="$PROJECT_DIR$/experiments/siampose_base/config.json" />
         <option value="$PROJECT_DIR$/experiments/siampose_base/run.sh" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="65" />
-    <option name="y" value="38" />
+    <option name="y" value="-4" />
     <option name="width" value="1855" />
-    <option name="height" value="1176" />
+    <option name="height" value="1204" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -253,11 +271,6 @@
               <item name="SiamPose" type="b2602c69:ProjectViewProjectNode" />
               <item name="SiamPose" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SiamPose" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SiamPose" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -388,7 +401,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/vis_siampose.py" />
-      <option name="PARAMETERS" value="--config=config.json -b 2 -j 20 --resume snapshot/checkpoint_e6.pth --epochs 20" />
+      <option name="PARAMETERS" value="--config=config.json -b 2 -j 20 --resume snapshot/checkpoint_e19.pth --epochs 20" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -448,7 +461,7 @@
       <workItem from="1561108000609" duration="216000" />
       <workItem from="1561108234731" duration="16443000" />
       <workItem from="1561130585221" duration="251000" />
-      <workItem from="1561130873814" duration="1731000" />
+      <workItem from="1561130873814" duration="19649000" />
     </task>
     <task id="LOCAL-00001" summary="pose detection branch">
       <created>1561034893334</created>
@@ -468,7 +481,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="313752000" />
+    <option name="totallyTimeSpent" value="331670000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1204" extended-state="6" />
@@ -479,7 +492,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4991699" weight="0.3739535" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4991699" weight="0.2855814" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.24186046" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -488,7 +501,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5013835" side_tool="true" weight="0.23162791" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4986165" weight="0.48" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.4986165" visible="true" weight="0.14232558" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.3293023" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -535,7 +548,7 @@
     <SUITE FILE_PATH="coverage/SiamPose$gen_pose_json.coverage" NAME="gen_pose_json Coverage Results" MODIFIED="1561019917032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data/coco" />
     <SUITE FILE_PATH="coverage/SiamMask$kp_conversion.coverage" NAME="kp_conversion Coverage Results" MODIFIED="1560775202623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data/coco" />
     <SUITE FILE_PATH="coverage/SiamMask$pose_crop.coverage" NAME="pose_crop Coverage Results" MODIFIED="1560743357683" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data/coco" />
-    <SUITE FILE_PATH="coverage/SiamPose$vis_siampose.coverage" NAME="vis_siampose Coverage Results" MODIFIED="1561129660065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/experiments/siampose_base" />
+    <SUITE FILE_PATH="coverage/SiamPose$vis_siampose.coverage" NAME="vis_siampose Coverage Results" MODIFIED="1561343181375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/experiments/siampose_base" />
     <SUITE FILE_PATH="coverage/SiamMask$gen_pose_json.coverage" NAME="gen_pose_json Coverage Results" MODIFIED="1561012767621" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data/coco" />
   </component>
   <component name="debuggerHistoryManager">
@@ -548,16 +561,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/coco/gen_pose_siamfc_json.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57">
-          <caret line="96" column="76" selection-start-line="95" selection-start-column="8" selection-end-line="96" selection-end-column="76" />
-          <folding>
-            <element signature="e#214#247#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../anaconda3/envs/siammask/lib/python3.6/site-packages/matplotlib/image.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="211">
@@ -759,13 +762,6 @@
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../anaconda3/envs/siammask/lib/python3.6/site-packages/torch/nn/modules/loss.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
@@ -780,13 +776,6 @@
           <folding>
             <element signature="e#214#229#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/average_meter_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="616">
-          <caret line="28" column="20" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -815,13 +804,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
           <caret line="598" selection-start-line="598" selection-end-line="598" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/siampose_base/config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="21" column="32" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -855,19 +837,6 @@
     <entry file="file://$PROJECT_DIR$/tools/eval.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tools/demo.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datasets/siam_pose_dataset.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
-          <folding>
-            <marker date="1561026412117" expanded="true" signature="20726:21281" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/coco/pose_crop.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -878,23 +847,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/siampose.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4972">
-          <caret line="230" column="11" selection-start-line="230" selection-start-column="6" selection-end-line="230" selection-end-column="11" />
-          <folding>
-            <element signature="e#214#226#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/siammask.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3388">
-          <caret line="158" column="28" selection-start-line="158" selection-start-column="28" selection-end-line="158" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/pycharm64.vmoptions">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -902,27 +854,88 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/siampose_base/run.sh">
+    <entry file="file://$PROJECT_DIR$/../anaconda3/envs/siammask/lib/python3.6/site-packages/torch/utils/data/_utils/signal_handling.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+        <state relative-caret-position="282">
+          <caret line="62" selection-start-line="62" selection-end-line="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/siampose.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="200" column="39" selection-start-line="200" selection-start-column="35" selection-end-line="200" selection-end-column="39" />
+          <folding>
+            <element signature="e#214#226#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/average_meter_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tools/vis_siampose.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-379">
-          <caret line="381" selection-start-line="381" selection-end-line="381" />
+        <state relative-caret-position="338">
+          <caret line="183" column="25" selection-start-line="155" selection-end-line="183" selection-end-column="25" />
           <folding>
             <element signature="e#214#229#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/models/siammask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="158" column="28" selection-start-line="158" selection-start-column="28" selection-end-line="158" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools/demo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-132" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datasets/siam_pose_dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="389" column="21" selection-start-line="389" selection-start-column="21" selection-end-line="389" selection-end-column="21" />
+          <folding>
+            <element signature="e#214#245#0" expanded="true" />
+            <marker date="1561378525391" expanded="true" signature="20726:21281" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/siampose_base/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/siampose_base/run.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tools/train_siampose.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1441">
-          <caret line="144" column="19" selection-start-line="144" selection-start-column="13" selection-end-line="144" selection-end-column="19" />
+        <state relative-caret-position="214">
+          <caret line="367" column="29" selection-start-line="367" selection-start-column="29" selection-end-line="367" selection-end-column="29" />
           <folding>
             <element signature="e#214#229#0" expanded="true" />
           </folding>

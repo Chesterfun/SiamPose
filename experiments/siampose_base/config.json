@@ -19,7 +19,7 @@
         }
     },
     "loss": {
-        "weight": [1.0, 1.2, 1000]
+        "weight": [1.0, 1.2, 500]
     },
     "train_datasets": {
         "datasets": {

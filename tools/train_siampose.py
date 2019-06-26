@@ -365,17 +365,18 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         }
 
         outputs = model(x)
-        gt_mask = x['label_mask']
-        gt_mask = select_gt_img(gt_mask, x['label_mask_weight'], channel=17)
-        pred_mask = outputs['predict'][2]
-        pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  # is rpn_pred_mask (bs, 17, 127, 127)
+        if tb_index % 2 == 0:
 
-        true_search = select_gt_img(x['search'], x['label_mask_weight'])
-        toTensor = ToTensor()
-        if true_search.shape and tb_index % 200 == 0:
-            pred_img = save_batch_heatmaps(true_search, pred_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
-            gt_img = save_batch_heatmaps(true_search, gt_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
+            gt_mask = x['label_mask']
+            gt_mask = select_gt_img(gt_mask, x['label_mask_weight'], channel=17)
+            pred_mask = outputs['predict'][2]
+            pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  # is rpn_pred_mask (bs, 17, 127, 127)
 
+            true_search = select_gt_img(x['search'], x['label_mask_weight'])
+            toTensor = ToTensor()
+            if true_search.shape:
+                pred_img = save_batch_heatmaps(true_search, pred_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
+                gt_img = save_batch_heatmaps(true_search, gt_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
 
 
         rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\
@@ -412,7 +413,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
         tb_writer.add_scalar('loss/mask', rpn_mask_loss * mask_weight, tb_index)
-        if tb_index % 200 == 0:
+        if tb_index % 2 == 0:
             tb_writer.add_image('gt_img', gt_img, tb_index)
             tb_writer.add_image('pred_img', pred_img, tb_index)
         # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)

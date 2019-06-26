@@ -17,9 +17,9 @@ class JointsMSELoss(nn.Module):
         self.use_target_weight = use_target_weight
 
     def forward(self, output, target, target_weight):
-        print(target_weight.shape)
-        print(target.shape)
-        target_weight = target_weight.double()
+        target = target.float()
+        # output = output.float()
+        # target_weight = target_weight.float()
         target_weight = torch.unsqueeze(target_weight, -1)
         batch_size = output.size(0)
         num_joints = 17

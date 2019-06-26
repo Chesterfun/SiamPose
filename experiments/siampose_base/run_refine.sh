@@ -5,7 +5,7 @@ mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_refine.py \
     --config=config_refine.json -b 4 \
-    -j 8 --pretrained ./siampose_base_snap/checkpoint_e20.pth \
+    -j 12 \
     --epochs 20 \
     --log logs/log.txt \
     2>&1 | tee logs/train.log

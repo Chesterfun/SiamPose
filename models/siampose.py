@@ -100,9 +100,10 @@ class SiamMask(nn.Module):
         run network
         """
         template_feature = self.feature_extractor(template)
-        search_feature = self.feature_extractor(search)
+        feature, search_feature = self.features.forward_all(search)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
-        rpn_pred_mask = self.mask(template_feature, search_feature)  # (b, 63*63, w, h)
+        corr_feature = self.mask_model.mask.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
+        rpn_pred_mask = self.refine_model(feature, corr_feature)
 
         if softmax:
             rpn_pred_cls = self.softmax(rpn_pred_cls)
@@ -218,12 +219,16 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('pose shape: ', pos.shape)
     if pos.nelement() == 0: return p_m.sum() * 0
 
-    p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, o_sz, o_sz)
-    # print('atf pred mask shape: ', p_m.shape)
-    p_m = torch.index_select(p_m, 0, pos)
-    # print('atf selected pred mask shape: ', p_m.shape)
-    p_m = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])(p_m)
-    # p_m = p_m.view(-1, g_sz * g_sz * 17)
+    if len(p_m.shape) == 4:
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, o_sz, o_sz)
+        # print('atf pred mask shape: ', p_m.shape)
+        p_m = torch.index_select(p_m, 0, pos)
+        # print('atf selected pred mask shape: ', p_m.shape)
+        p_m = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])(p_m)
+        # p_m = p_m.view(-1, g_sz * g_sz * 17)
+    else:
+        p_m = torch.index_select(p_m, 0, pos)
+        p_m = p_m.view(-1, 17, g_sz, g_sz)
 
     kp_weight = torch.index_select(kp_weight_pos, 0, pos)
 
@@ -236,8 +241,6 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     mask_uf = mask_uf.view(-1, 17, g_sz, g_sz)
     # loss = F.soft_margin_loss(p_m, mask_uf)
     loss = criterion(p_m, mask_uf, kp_weight)
-
-
 
     # iou_m, iou_5, iou_7 = iou_measure(p_m, mask_uf)
     return loss  # , iou_m, iou_5, iou_7

@@ -1,4 +1,4 @@
-from models.siampose_sharp import SiamMask
+from models.siampose import SiamMask
 from models.features import MultiStageFeature
 from models.rpn import RPN, DepthCorr
 from models.mask import Mask

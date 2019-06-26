@@ -404,6 +404,7 @@ class DataSets(Dataset):
         self.base_size = 0
         self.crop_size = 0
         self.target_type = 'gaussian'
+        self.single_heatmap = False
 
         self.num_joints = 17                                                # added
 
@@ -418,6 +419,8 @@ class DataSets(Dataset):
             self.base_size = cfg['base_size']
         if 'size' in cfg:
             self.size = cfg['size']
+        if 'single_heatmap' in cfg:
+            self.single_heatmap = cfg['single_heatmap']
 
         if (self.search_size - self.template_size) / self.anchors.stride + 1 + self.base_size != self.size:
             raise Exception("size not match!")  # TODO: calculate size online
@@ -534,6 +537,64 @@ class DataSets(Dataset):
 
         return target, target_weight
 
+    def generate_target_in_single_map(self, joints, joints_vis):
+        '''
+        :param joints:  [num_joints, 3]
+        :return: target, target_weight(1: visible, 0: invisible)
+        '''
+        target_weight = np.ones((self.num_joints, 1), dtype=np.float32)
+        target_weight[:, 0] = joints_vis[:, 0]
+
+        assert self.target_type == 'gaussian', \
+            'Only support gaussian map now!'
+
+        if self.target_type == 'gaussian':
+            target = np.zeros((self.heatmap_size[1],
+                              self.heatmap_size[0]),
+                              dtype=np.float32)
+
+            masked_gaussian = np.zeros((self.heatmap_size[1],
+                                       self.heatmap_size[0]),
+                                       dtype=np.float32)
+
+            tmp_size = self.sigma * 3
+
+            for joint_id in range(self.num_joints):
+                feat_stride = [self.image_size / self.heatmap_size[0], self.image_size / self.heatmap_size[1]]
+                mu_x = int(joints[joint_id][0] / feat_stride[0] + 0.5)
+                mu_y = int(joints[joint_id][1] / feat_stride[1] + 0.5)
+                # Check that any part of the gaussian is in-bounds
+                ul = [int(mu_x - tmp_size), int(mu_y - tmp_size)]
+                br = [int(mu_x + tmp_size + 1), int(mu_y + tmp_size + 1)]
+                if ul[0] >= self.heatmap_size[0] or ul[1] >= self.heatmap_size[1] \
+                        or br[0] < 0 or br[1] < 0:
+                    # If not, just return the image as is
+                    target_weight[joint_id] = 0
+                    continue
+
+                # # Generate gaussian
+                size = 2 * tmp_size + 1
+                x = np.arange(0, size, 1, np.float32)
+                y = x[:, np.newaxis]
+                x0 = y0 = size // 2
+                # The gaussian is not normalized, we want the center value to equal 1
+                g = np.exp(- ((x - x0) ** 2 + (y - y0) ** 2) / (2 * self.sigma ** 2))
+
+                # Usable gaussian range
+                g_x = max(0, -ul[0]), min(br[0], self.heatmap_size[0]) - ul[0]
+                g_y = max(0, -ul[1]), min(br[1], self.heatmap_size[1]) - ul[1]
+                # Image range
+                img_x = max(0, ul[0]), min(br[0], self.heatmap_size[0])
+                img_y = max(0, ul[1]), min(br[1], self.heatmap_size[1])
+
+                v = target_weight[joint_id]
+                if v > 0.5:
+                    masked_gaussian[img_y[0]:img_y[1], img_x[0]:img_x[1]] = \
+                        g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
+                    np.maximum(target, masked_gaussian, out=target)
+
+        return target, target_weight
+
     def imread(self, path):
         img = cv2.imread(path)
 
@@ -609,19 +670,6 @@ class DataSets(Dataset):
             search_kp = np.array(search[2], dtype=np.float32)
         else:
             search_kp = np.zeros(51, dtype=np.float32)
-
-        # joints_3d = np.zeros((self.num_joints, 3), dtype=np.float)
-        # joints_3d_vis = np.zeros((self.num_joints, 3), dtype=np.float)
-        # for ipt in range(self.num_joints):
-        #     joints_3d[ipt, 0] = search_kp[ipt * 3 + 0]
-        #     joints_3d[ipt, 1] = search_kp[ipt * 3 + 1]
-        #     joints_3d[ipt, 2] = 0
-        #     t_vis = search_kp[ipt * 3 + 2]
-        #     if t_vis > 1:
-        #         t_vis = 1
-        #     joints_3d_vis[ipt, 0] = t_vis
-        #     joints_3d_vis[ipt, 1] = t_vis
-        #     joints_3d_vis[ipt, 2] = 0
 
         if self.crop_size > 0:
             search_image = center_crop(search_image, self.crop_size)
@@ -766,7 +814,11 @@ class DataSets(Dataset):
             kp_weight = np.zeros([1, cls.shape[1], cls.shape[2]], dtype=np.float32)
 
         template, search = map(lambda x: np.transpose(x, (2, 0, 1)).astype(np.float32), [template, search])
+        if self.single_heatmap:
+            gs_tgt, tgt_wt = self.generate_target_in_single_map(joints_3d, joints_3d_vis)
+        else:
+            gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
 
-        gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
-
-        return template, search, cls, delta, delta_weight, np.array(bbox, np.float32), gs_tgt, tgt_wt, np.array(kp_weight, np.float32)
+        return template, search, cls, delta, \
+          delta_weight, np.array(bbox, np.float32), \
+          gs_tgt, tgt_wt, np.array(kp_weight, np.float32), joints_3d

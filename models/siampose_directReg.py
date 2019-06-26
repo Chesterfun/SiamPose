@@ -17,6 +17,8 @@ class JointsMSELoss(nn.Module):
         self.use_target_weight = use_target_weight
 
     def forward(self, output, target, target_weight):
+        print(target_weight)
+        print(target)
         target_weight = torch.unsqueeze(target_weight, -1)
         batch_size = output.size(0)
         num_joints = output.size(1)
@@ -29,7 +31,7 @@ class JointsMSELoss(nn.Module):
             heatmap_gt = heatmaps_gt[idx].squeeze()
 
             if self.use_target_weight:
-                loss += * self.criterion(
+                loss += self.criterion(
                     heatmap_pred.mul(target_weight[:, idx]),
                     heatmap_gt.mul(target_weight[:, idx])
                 )
@@ -92,10 +94,9 @@ class SiamMask(nn.Module):
         run network
         """
         template_feature = self.feature_extractor(template)
-        feature, search_feature = self.features.forward_all(search)
+        search_feature = self.feature_extractor(search)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
-        corr_feature = self.mask_model.mask.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
-        rpn_pred_mask = self.refine_model(feature, corr_feature)
+        rpn_pred_mask = self.mask(template_feature, search_feature)
 
         if softmax:
             rpn_pred_cls = self.softmax(rpn_pred_cls)
@@ -200,13 +201,17 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('mask weight shape: ', weight.shape)
     # print('kp weight shape: ', kp_weight.shape)
     weight = weight.view(-1)
-    kp_weight = kp_weight.view(-1, 17)
-    mask = mask.view(-1, 17)
+    # kp_weight = kp_weight.view(-1, 17)
+    # mask = mask.view(-1, 17)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
+    print(pos)
+    print(mask.shape)
+    print(kp_weight.shape)
     # print('pose shape: ', pos.shape)
     if pos.nelement() == 0: return p_m.sum() * 0
 
     if len(p_m.shape) == 4:
+        print(p_m.shape)
         p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17)
         # print('atf pred mask shape: ', p_m.shape)
         p_m = torch.index_select(p_m, 0, pos)

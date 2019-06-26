@@ -364,7 +364,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             'label_mask_weight': torch.autograd.Variable(input[8]).cuda(),
             'label_kp': torch.autograd.Variable(input[9]).cuda()
         }
-        print('label_kp shape: ', label_kp)
+        print('label_kp shape: ', x['label_kp'].shape)
 
         outputs = model(x)
 

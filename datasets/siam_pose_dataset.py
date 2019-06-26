@@ -818,6 +818,7 @@ class DataSets(Dataset):
             gs_tgt, tgt_wt = self.generate_target_in_single_map(joints_3d, joints_3d_vis)
         else:
             gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
+        joints_3d = joints_3d / 255
 
         return template, search, cls, delta, \
           delta_weight, np.array(bbox, np.float32), \

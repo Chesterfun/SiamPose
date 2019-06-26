@@ -822,4 +822,4 @@ class DataSets(Dataset):
 
         return template, search, cls, delta, \
           delta_weight, np.array(bbox, np.float32), \
-          gs_tgt, tgt_wt, np.array(kp_weight, np.float32), joints_3d
+          gs_tgt, tgt_wt, np.array(kp_weight, np.float32), joints_3d[:, :2]

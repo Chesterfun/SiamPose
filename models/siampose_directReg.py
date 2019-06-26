@@ -17,11 +17,12 @@ class JointsMSELoss(nn.Module):
         self.use_target_weight = use_target_weight
 
     def forward(self, output, target, target_weight):
-        print(target_weight)
-        print(target)
+        print(target_weight.shape)
+        print(target.shape)
+        target_weight = target_weight.double()
         target_weight = torch.unsqueeze(target_weight, -1)
         batch_size = output.size(0)
-        num_joints = output.size(1)
+        num_joints = 17
         heatmaps_pred = output.reshape((batch_size, num_joints, -1)).split(1, 1)
         heatmaps_gt = target.reshape((batch_size, num_joints, -1)).split(1, 1)
         loss = 0
@@ -210,14 +211,14 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # (bs, 1, 25, 25, 17)
     kp_weight_pos = kp_weight_pos.view(-1, 17)
 
-    mask_weight_pos = mask.view(mask.size(0), 1, 1, 1, -1, 3)
+    mask_weight_pos = mask.view(mask.size(0), 1, 1, 1, -1, 2)
     mask_weight_pos = mask_weight_pos.expand(-1,
                                          weight.size(1),
                                          weight.size(2),
                                          weight.size(3),
                                          -1, -1).contiguous()
     # (bs, 1, 25, 25, 17)
-    mask_weight_pos = mask_weight_pos.view(-1, 17, 3)
+    mask_weight_pos = mask_weight_pos.view(-1, 17, 2)
 
     weight = weight.view(-1)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
@@ -227,8 +228,7 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     if pos.nelement() == 0: return p_m.sum() * 0
 
     if len(p_m.shape) == 4:
-        print(p_m.shape)
-        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17)
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, 2)
         # print('atf pred mask shape: ', p_m.shape)
         p_m = torch.index_select(p_m, 0, pos)
         # print('atf selected pred mask shape: ', p_m.shape)

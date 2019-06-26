@@ -84,7 +84,7 @@ class MaskCorr(Mask):
     def __init__(self, oSz=63):
         super(MaskCorr, self).__init__()
         self.oSz = oSz
-        self.mask = DepthCorr(256, 256, 17)
+        self.mask = DepthCorr(256, 256, 17*2)
 
     def forward(self, z, x):
         return self.mask(z, x)

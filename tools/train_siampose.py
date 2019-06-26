@@ -365,7 +365,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         }
 
         outputs = model(x)
-        if tb_index % 2 == 0:
+        if tb_index % 200 == 0:
 
             gt_mask = x['label_mask']
             gt_mask = select_gt_img(gt_mask, x['label_mask_weight'], channel=17)
@@ -413,7 +413,7 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
         tb_writer.add_scalar('loss/mask', rpn_mask_loss * mask_weight, tb_index)
-        if tb_index % 2 == 0:
+        if tb_index % 200 == 0:
             tb_writer.add_image('gt_img', gt_img, tb_index)
             tb_writer.add_image('pred_img', pred_img, tb_index)
         # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)

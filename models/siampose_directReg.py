@@ -200,9 +200,28 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('mask weight shape: ', weight.shape)
     # print('kp weight shape: ', kp_weight.shape)
     weight = weight.view(-1)
-    kp_weight = kp_weight.view(-1, 17)
     mask = mask.view(-1, 17)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
+
+    kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
+    kp_weight_pos = kp_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    kp_weight_pos = kp_weight_pos.view(-1, 17)
+    kp_weight = torch.index_select(kp_weight_pos, 0, pos)
+
+    mask_weight_pos = mask.view(mask.size(0), 1, 1, 1, -1, 3)
+    mask_weight_pos = mask_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1, -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    mask_weight_pos = mask_weight_pos.view(-1, 17, 3)
+    mask = torch.index_select(mask_weight_pos, 0, pos)
     # print('pose shape: ', pos.shape)
     if pos.nelement() == 0: return p_m.sum() * 0
 

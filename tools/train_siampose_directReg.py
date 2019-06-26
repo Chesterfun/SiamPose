@@ -269,7 +269,7 @@ def main():
     train_loader, val_loader = build_data_loader(cfg)
 
     if args.arch == 'Custom':
-        from custom import Custom
+        from custom_direct_reg import Custom
         model = Custom(pretrain=True, anchors=cfg['anchors'])
     else:
         exit()

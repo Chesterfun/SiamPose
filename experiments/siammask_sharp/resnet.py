@@ -349,4 +349,3 @@ if __name__ == '__main__':
     var = Variable(var)
 
     net(var)
-

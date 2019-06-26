@@ -14,7 +14,7 @@ mkdir -p logs
 base=$1
 
 python -u $ROOT/tools/train_siammask_refine.py \
-    --config=config.json -b 64 \
+    --config=config.json -b 16 \
     -j 20 --pretrained $base \
     --epochs 20 \
     2>&1 | tee logs/train.log

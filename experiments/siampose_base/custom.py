@@ -89,7 +89,6 @@ class MaskCorr(Mask):
     def forward(self, z, x):
         return self.mask(z, x)
 
-
 class Custom(SiamMask):
     def __init__(self, pretrain=False, **kwargs):
         super(Custom, self).__init__(**kwargs)
@@ -110,4 +109,3 @@ class Custom(SiamMask):
         rpn_pred_cls, rpn_pred_loc = self.rpn(self.zf, search)
         pred_mask = self.mask(self.zf, search)
         return rpn_pred_cls, rpn_pred_loc, pred_mask
-

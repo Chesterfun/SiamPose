@@ -111,9 +111,9 @@ class SubDataSet(object):
                     else:
                         if len(bbox) == 4:
                             x1, y1, x2, y2 = bbox
-                            w, h = x2 - x1, y2 -y1
+                            w, h = x2 - x1, y2 - y1
                         else:
-                            w, h= bbox
+                            w, h = bbox
                         if w == 0 or h == 0:
                             logger.info('Error, {name} {video} {trk} {bbox}'.format(**locals()))
                             zero += 1
@@ -770,4 +770,3 @@ class DataSets(Dataset):
         gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
 
         return template, search, cls, delta, delta_weight, np.array(bbox, np.float32), gs_tgt, tgt_wt, np.array(kp_weight, np.float32)
-

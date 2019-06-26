@@ -12,24 +12,31 @@ import time
 import json
 import math
 import torch
+import matplotlib.pyplot as plt
+import numpy as np
+import torch.nn as nn
+import torch.nn.functional as F
+import copy
+
 from torch.utils.data import DataLoader
+from torch.autograd import Variable
 
 from utils.log_helper import init_log, print_speed, add_file_handler, Dummy
 from utils.load_helper import load_pretrain, restore_from
 from utils.average_meter_helper import AverageMeter
 
-from datasets.siam_mask_dataset import DataSets
+from datasets.siam_pose_dataset import DataSets
 
 from utils.lr_helper import build_lr_scheduler
 from tensorboardX import SummaryWriter
 
 from utils.config_helper import load_config
 from torch.utils.collect_env import get_pretty_env_info
+from torchvision.transforms import ToTensor
 
 torch.backends.cudnn.benchmark = True
 
-
-parser = argparse.ArgumentParser(description='PyTorch Tracking Training')
+parser = argparse.ArgumentParser(description='PyTorch Tracking SiamMask Training')
 
 parser.add_argument('-j', '--workers', default=16, type=int, metavar='N',
                     help='number of data loading workers (default: 16)')
@@ -54,8 +61,8 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
 parser.add_argument('--pretrained', dest='pretrained', default='',
                     help='use pre-trained model')
 parser.add_argument('--config', dest='config', required=True,
-                    help='hyperparameter of SiamRPN in json format')
-parser.add_argument('--arch', dest='arch', default='', choices=['Custom',''],
+                    help='hyperparameter of SiamMask in json format')
+parser.add_argument('--arch', dest='arch', default='', choices=['Custom',],
                     help='architecture of pretrained model')
 parser.add_argument('-l', '--log', default="log.txt", type=str,
                     help='log file')
@@ -66,6 +73,132 @@ parser.add_argument('--log-dir', default='board', help='TensorBoard log dir')
 
 best_acc = 0.
 
+def get_max_preds(batch_heatmaps):
+    '''
+    get predictions from score maps
+    heatmaps: numpy.ndarray([batch_size, num_joints, height, width])
+    '''
+    assert isinstance(batch_heatmaps, np.ndarray), \
+        'batch_heatmaps should be numpy.ndarray'
+    assert batch_heatmaps.ndim == 4, 'batch_images should be 4-ndim'
+
+    batch_size = batch_heatmaps.shape[0]
+    num_joints = batch_heatmaps.shape[1]
+    width = batch_heatmaps.shape[3]
+    heatmaps_reshaped = batch_heatmaps.reshape((batch_size, num_joints, -1))
+    idx = np.argmax(heatmaps_reshaped, 2)
+    maxvals = np.amax(heatmaps_reshaped, 2)
+
+    maxvals = maxvals.reshape((batch_size, num_joints, 1))
+    idx = idx.reshape((batch_size, num_joints, 1))
+
+    preds = np.tile(idx, (1, 1, 2)).astype(np.float32)
+
+    preds[:, :, 0] = (preds[:, :, 0]) % width
+    preds[:, :, 1] = np.floor((preds[:, :, 1]) / width)
+
+    pred_mask = np.tile(np.greater(maxvals, 0.0), (1, 1, 2))
+    pred_mask = pred_mask.astype(np.float32)
+
+    preds *= pred_mask
+    return preds, maxvals
+
+def save_batch_heatmaps(batch_image, batch_heatmaps, file_name,
+                        normalize=True, toTensor=ToTensor()):
+    '''
+    batch_image: [batch_size, channel, height, width]
+    batch_heatmaps: ['batch_size, num_joints, height, width]
+    file_name: saved file name
+    '''
+    if normalize:
+        batch_image = batch_image.clone()
+        min = float(batch_image.min())
+        max = float(batch_image.max())
+
+        batch_image.add_(-min).div_(max - min + 1e-5)
+
+    batch_size = batch_heatmaps.size(0)
+    num_joints = batch_heatmaps.size(1)
+    heatmap_height = batch_heatmaps.size(2)
+    heatmap_width = batch_heatmaps.size(3)
+
+    grid_image = np.zeros((batch_size*heatmap_height,
+                           (num_joints+1)*heatmap_width,
+                           3),
+                          dtype=np.uint8)
+
+    preds, maxvals = get_max_preds(batch_heatmaps.detach().cpu().numpy())
+
+    for i in range(batch_size):
+        image = batch_image[i].mul(255)\
+                              .clamp(0, 255)\
+                              .byte()\
+                              .permute(1, 2, 0)\
+                              .cpu().numpy()
+        heatmaps = batch_heatmaps[i].mul(255)\
+                                    .clamp(0, 255)\
+                                    .byte()\
+                                    .cpu().numpy()
+
+        resized_image = cv2.resize(image,
+                                   (int(heatmap_width), int(heatmap_height)))
+
+        height_begin = heatmap_height * i
+        height_end = heatmap_height * (i + 1)
+        for j in range(num_joints):
+            cv2.circle(resized_image,
+                       (int(preds[i][j][0]), int(preds[i][j][1])),
+                       1, [0, 0, 255], 1)
+            heatmap = heatmaps[j, :, :]
+            colored_heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+            masked_image = colored_heatmap*0.7 + resized_image*0.3
+            cv2.circle(masked_image,
+                       (int(preds[i][j][0]), int(preds[i][j][1])),
+                       1, [0, 0, 255], 1)
+
+            width_begin = heatmap_width * (j+1)
+            width_end = heatmap_width * (j+2)
+            grid_image[height_begin:height_end, width_begin:width_end, :] = \
+                masked_image
+            # grid_image[height_begin:height_end, width_begin:width_end, :] = \
+            #     colored_heatmap*0.7 + resized_image*0.3
+
+        grid_image[height_begin:height_end, 0:heatmap_width, :] = resized_image
+        # print('brefore:', grid_image.shape)
+        grid_image = copy.deepcopy(grid_image[:, :, ::-1])
+        # print('after:', grid_image)
+        out_image = toTensor(grid_image)
+
+
+    return out_image
+
+def select_pred_heatmap(p_m, weight, o_sz=63, g_sz=127):
+
+    weight = weight.view(-1)
+    pos = Variable(weight.data.eq(1).nonzero().squeeze())
+    if pos.nelement() == 0: return p_m.sum() * 0
+
+    if len(p_m.shape) == 4:
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, o_sz, o_sz)
+        p_m = torch.index_select(p_m, 0, pos)
+        p_m = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])(p_m)
+    else:
+        p_m = torch.index_select(p_m, 0, pos)
+        p_m = p_m.view(-1, 17, g_sz, g_sz)
+    return p_m
+
+def select_gt_img(mask, weight, channel=3, g_sz=127):
+
+    weight = weight.view(-1)
+    pos = Variable(weight.data.eq(1).nonzero().squeeze())
+    if pos.nelement() == 0: return mask.sum() * 0
+
+    mask_uf = F.unfold(mask, (g_sz, g_sz), padding=32, stride=8)
+    mask_uf = torch.transpose(mask_uf, 1, 2).contiguous().view(-1, g_sz * g_sz * channel)
+    mask_uf = torch.index_select(mask_uf, 0, pos)
+    mask_uf = mask_uf.view(-1, channel, g_sz, g_sz)
+
+    return mask_uf
 
 def collect_env_info():
     env_str = get_pretty_env_info()
@@ -96,8 +229,13 @@ def build_data_loader(cfg):
 
 
 def build_opt_lr(model, cfg, args, epoch):
-    trainable_params = model.mask_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult']) + \
-                       model.refine_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
+    backbone_feature = model.features.param_groups(cfg['lr']['start_lr'], cfg['lr']['feature_lr_mult'])
+    if len(backbone_feature) == 0:
+        trainable_params = model.rpn_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['rpn_lr_mult'], 'mask')
+    else:
+        trainable_params = backbone_feature + \
+                           model.rpn_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['rpn_lr_mult']) + \
+                           model.mask_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
 
     optimizer = torch.optim.SGD(trainable_params, args.lr,
                                 momentum=args.momentum,
@@ -135,11 +273,10 @@ def main():
     train_loader, val_loader = build_data_loader(cfg)
 
     if args.arch == 'Custom':
-        from custom import Custom
-        model = Custom(anchors=cfg['anchors'])
+        from custom_refine import Custom
+        model = Custom(pretrain=True, anchors=cfg['anchors'])
     else:
-        model = models.__dict__[args.arch](anchors=cfg['anchors'])
-
+        exit()
     logger.info(model)
 
     if args.pretrained:
@@ -177,13 +314,13 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
     logger = logging.getLogger('global')
     avg = AverageMeter()
     model.train()
-    model.module.features.train() # .eval()
-    model.module.rpn_model.train()  # .eval()
+    # model.module.features.eval()
+    # model.module.rpn_model.eval()
     # model.module.features.apply(BNtoFixed)
     # model.module.rpn_model.apply(BNtoFixed)
-
-    model.module.mask_model.train()
-    model.module.refine_model.train()
+    #
+    # model.module.mask_model.train()
+    # model.module.refine_model.train()
     model = model.cuda()
     end = time.time()
 
@@ -215,7 +352,9 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             if epoch == args.epochs:
                 return
 
-            optimizer, lr_scheduler = build_opt_lr(model.module, cfg, args, epoch)
+            if model.module.features.unfix(epoch/args.epochs):
+                logger.info('unfix part model.')
+                optimizer, lr_scheduler = build_opt_lr(model.module, cfg, args, epoch)
 
             lr_scheduler.step(epoch)
             cur_lr = lr_scheduler.get_cur_lr()
@@ -238,13 +377,31 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             'label_loc': torch.autograd.Variable(input[3]).cuda(),
             'label_loc_weight': torch.autograd.Variable(input[4]).cuda(),
             'label_mask': torch.autograd.Variable(input[6]).cuda(),
-            'label_mask_weight': torch.autograd.Variable(input[7]).cuda(),
+            'label_kp_weight': torch.autograd.Variable(input[7]).cuda(),
+            'label_mask_weight': torch.autograd.Variable(input[8]).cuda(),
         }
 
         outputs = model(x)
+        if tb_index % 200 == 0:
 
-        rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]), torch.mean(outputs['losses'][1]), torch.mean(outputs['losses'][2])
-        mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
+            gt_mask = x['label_mask']
+            gt_mask = select_gt_img(gt_mask, x['label_mask_weight'], channel=17)
+            pred_mask = outputs['predict'][2]
+            pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  # is rpn_pred_mask (bs, 17, 127, 127)
+
+            true_search = select_gt_img(x['search'], x['label_mask_weight'])
+            toTensor = ToTensor()
+            if true_search.shape:
+                pred_img = save_batch_heatmaps(true_search, pred_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
+                gt_img = save_batch_heatmaps(true_search, gt_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
+
+
+
+        rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\
+                                                    torch.mean(outputs['losses'][1]),\
+                                                    torch.mean(outputs['losses'][2])
+
+        # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
 
         cls_weight, reg_weight, mask_weight = cfg['loss']['weight']
 
@@ -257,7 +414,6 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             torch.nn.utils.clip_grad_norm_(model.module.features.parameters(), cfg['clip']['feature'])
             torch.nn.utils.clip_grad_norm_(model.module.rpn_model.parameters(), cfg['clip']['rpn'])
             torch.nn.utils.clip_grad_norm_(model.module.mask_model.parameters(), cfg['clip']['mask'])
-            torch.nn.utils.clip_grad_norm_(model.module.refine_model.parameters(), cfg['clip']['mask'])
         else:
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.clip)  # gradient clip
 
@@ -269,25 +425,28 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         batch_time = time.time() - end
 
         avg.update(batch_time=batch_time, rpn_cls_loss=rpn_cls_loss, rpn_loc_loss=rpn_loc_loss,
-                   rpn_mask_loss=rpn_mask_loss, siammask_loss=siammask_loss,
-                   mask_iou_mean=mask_iou_mean, mask_iou_at_5=mask_iou_at_5, mask_iou_at_7=mask_iou_at_7)
+                   rpn_mask_loss=rpn_mask_loss * mask_weight, siammask_loss=siammask_loss)
+                   # mask_iou_mean=mask_iou_mean, mask_iou_at_5=mask_iou_at_5, mask_iou_at_7=mask_iou_at_7)
 
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
-        tb_writer.add_scalar('loss/mask', rpn_mask_loss, tb_index)
-        tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
-        tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
-        tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)
+        tb_writer.add_scalar('loss/mask', rpn_mask_loss * mask_weight, tb_index)
+        if tb_index % 200 == 0:
+            tb_writer.add_image('gt_img', gt_img, tb_index)
+            tb_writer.add_image('pred_img', pred_img, tb_index)
+        # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
+        # tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
+        # tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)
         end = time.time()
 
         if (iter + 1) % args.print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}] lr: {lr:.6f}\t{batch_time:s}\t{data_time:s}'
-                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{rpn_mask_loss:s}\t{siammask_loss:s}'
-                        '\t{mask_iou_mean:s}\t{mask_iou_at_5:s}\t{mask_iou_at_7:s}'.format(
+                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{rpn_mask_loss:s}\t{siammask_loss:s}'.format(
                         epoch+1, (iter + 1) % num_per_epoch, num_per_epoch, lr=cur_lr, batch_time=avg.batch_time,
                         data_time=avg.data_time, rpn_cls_loss=avg.rpn_cls_loss, rpn_loc_loss=avg.rpn_loc_loss,
-                        rpn_mask_loss=avg.rpn_mask_loss, siammask_loss=avg.siammask_loss, mask_iou_mean=avg.mask_iou_mean,
-                        mask_iou_at_5=avg.mask_iou_at_5,mask_iou_at_7=avg.mask_iou_at_7))
+                        rpn_mask_loss=avg.rpn_mask_loss, siammask_loss=avg.siammask_loss,))
+                        # mask_iou_mean=avg.mask_iou_mean,
+                        # mask_iou_at_5=avg.mask_iou_at_5,mask_iou_at_7=avg.mask_iou_at_7))
             print_speed(iter + 1, avg.batch_time.avg, args.epochs * num_per_epoch)
 
 

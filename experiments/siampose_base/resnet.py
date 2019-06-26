@@ -222,12 +222,10 @@ class ResNet(nn.Module):
         # print x.size()
         x = self.maxpool(x)
         # print x.size()
-
         p1 = self.layer1(x)
         p2 = self.layer2(p1)
         p3 = self.layer3(p2)
         # p3 = torch.cat([p2, p3], 1)
-
         log_once("p3 {}".format(p3.size()))
         p4 = self.layer4(p3)
 
@@ -357,4 +355,3 @@ if __name__ == '__main__':
     var = Variable(var)
 
     net(var)
-

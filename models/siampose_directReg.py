@@ -126,6 +126,7 @@ class SiamMask(nn.Module):
             label_mask = input['label_mask']
             label_mask_weight = input['label_mask_weight']
             label_kp_weight = input['label_kp_weight']
+            label_kp = input['label_kp']
 
         rpn_pred_cls, rpn_pred_loc, rpn_pred_mask, template_feature, search_feature = \
             self.run(template, search, softmax=self.training)
@@ -136,7 +137,7 @@ class SiamMask(nn.Module):
 
         if self.training:
             rpn_loss_cls, rpn_loss_loc, rpn_loss_mask = \
-                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_mask, label_mask_weight,
+                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask_weight,
                                    rpn_pred_cls, rpn_pred_loc, rpn_pred_mask,
                                    label_kp_weight, self.kp_criterion)
             outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, rpn_loss_mask]
@@ -198,30 +199,22 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     # print('pred mask shape: ', p_m.shape)
     # print('mask weight shape: ', weight.shape)
     # print('kp weight shape: ', kp_weight.shape)
-    kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
-    kp_weight_pos = kp_weight_pos.expand(-1,
-                                         weight.size(1),
-                                         weight.size(2),
-                                         weight.size(3),
-                                         -1).contiguous()
-    # (bs, 1, 25, 25, 17)
-    kp_weight_pos = kp_weight_pos.view(-1, 17)
     weight = weight.view(-1)
+    kp_weight = kp_weight.view(-1, 17)
+    mask = mask.view(-1, 17)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
     # print('pose shape: ', pos.shape)
     if pos.nelement() == 0: return p_m.sum() * 0
 
     if len(p_m.shape) == 4:
-        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, o_sz, o_sz)
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17)
         # print('atf pred mask shape: ', p_m.shape)
         p_m = torch.index_select(p_m, 0, pos)
         # print('atf selected pred mask shape: ', p_m.shape)
-        p_m = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])(p_m)
-        # p_m = p_m.view(-1, g_sz * g_sz * 17)
     else:
         p_m = torch.index_select(p_m, 0, pos)
 
-    kp_weight = torch.index_select(kp_weight_pos, 0, pos)
+    kp_weight = torch.index_select(kp_weight, 0, pos)
     mask = torch.index_select(mask, 0, pos)
 
     loss = criterion(p_m, mask, kp_weight)

@@ -100,10 +100,9 @@ class SiamMask(nn.Module):
         run network
         """
         template_feature = self.feature_extractor(template)
-        feature, search_feature = self.features.forward_all(search)
+        search_feature = self.feature_extractor(search)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
-        corr_feature = self.mask_model.mask.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
-        rpn_pred_mask = self.refine_model(feature, corr_feature)
+        rpn_pred_mask = self.mask(template_feature, search_feature)
 
         if softmax:
             rpn_pred_cls = self.softmax(rpn_pred_cls)

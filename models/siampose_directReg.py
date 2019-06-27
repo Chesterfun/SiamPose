@@ -82,13 +82,13 @@ class SiamMask(nn.Module):
 
         rpn_loss_loc = weight_l1_loss(rpn_pred_loc, label_loc, lable_loc_weight)
 
-        rpn_loss_mask = select_mask_logistic_loss(rpn_pred_mask,
+        rpn_loss_mask, pred_kp, gt_kp = select_mask_logistic_loss(rpn_pred_mask,
                                                  label_mask,
                                                  label_mask_weight,
                                                  kp_weight,
                                                  kp_criterion)
 
-        return rpn_loss_cls, rpn_loss_loc, rpn_loss_mask
+        return rpn_loss_cls, rpn_loss_loc, rpn_loss_mask, pred_kp, gt_kp
 
     def run(self, template, search, softmax=False):
         """
@@ -138,11 +138,13 @@ class SiamMask(nn.Module):
         outputs['predict'] = [rpn_pred_loc, rpn_pred_cls, rpn_pred_mask, template_feature, search_feature]
 
         if self.training:
-            rpn_loss_cls, rpn_loss_loc, rpn_loss_mask = \
+            rpn_loss_cls, rpn_loss_loc, rpn_loss_mask, pred_kp, gt_kp = \
                 self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask_weight,
                                    rpn_pred_cls, rpn_pred_loc, rpn_pred_mask,
                                    label_kp_weight, self.kp_criterion)
             outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, rpn_loss_mask]
+        outputs['predict'].append(gt_kp)
+        outputs['predict'].append(pred_kp)
             # outputs['accuracy'] = [iou_acc_mean, iou_acc_5, iou_acc_7]
 
         return outputs
@@ -238,7 +240,7 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
     loss = criterion(p_m, mask, kp_weight)
 
     # iou_m, iou_5, iou_7 = iou_measure(p_m, mask_uf)
-    return loss  # , iou_m, iou_5, iou_7
+    return loss, p_m, mask  # , iou_m, iou_5, iou_7
 
 
 def iou_measure(pred, label):

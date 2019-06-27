@@ -5,7 +5,7 @@ mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_refine.py \
     --config=config_refine.json -b 4 \
-    -j 12 \
+    -j 8 --resume checkpoint_e6.pth \
     --epochs 20 \
     --log logs/log.txt \
     2>&1 | tee logs/train.log

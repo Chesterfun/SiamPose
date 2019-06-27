@@ -21,6 +21,7 @@ ytb_vos/
 vis_output/
 
 !config.json
+!config_refine.json
 
 # zips
 *.zip

@@ -1,0 +1,847 @@
+[2019-06-30 17:12:10,605-rk0-train_siampose_bibranch.py#257] 
+PyTorch version: 1.0.0.dev20190328
+Is debug build: No
+CUDA used to build PyTorch: 10.0.130
+
+OS: Ubuntu 16.04.4 LTS
+GCC version: (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+CMake version: version 3.5.1
+
+Python version: 3.6
+Is CUDA available: Yes
+CUDA runtime version: 10.0.130
+GPU models and configuration: 
+GPU 0: Graphics Device
+GPU 1: Graphics Device
+
+Nvidia driver version: 410.78
+cuDNN version: Probably one of the following:
+/usr/lib/x86_64-linux-gnu/libcudnn.so.6.0.21
+/usr/local/cuda-10.0/targets/x86_64-linux/lib/libcudnn.so.7.4.2
+/usr/local/cuda-8.0/targets/x86_64-linux/lib/libcudnn.so.6.0.21
+/usr/local/cuda-9.0/targets/x86_64-linux/lib/libcudnn.so.7.0.3
+
+Versions of relevant libraries:
+[pip3] numpy==1.14.2
+[pip3] numpydoc==0.7.0
+[pip3] torch==1.0.0
+[pip3] torchvision==0.2.1
+[conda] blas                      1.0                         mkl  
+[conda] mkl                       2019.3                      199  
+[conda] mkl_fft                   1.0.12           py36ha843d7b_0  
+[conda] mkl_random                1.0.2            py36hd81dba3_0  
+[conda] pytorch-nightly           1.0.0.dev20190328 py3.6_cuda10.0.130_cudnn7.4.2_0    pytorch
+[conda] torchvision               0.2.1                     <pip>
+        OpenCV (4.1.0)
+[2019-06-30 17:12:10,607-rk0-train_siampose_bibranch.py#258] Namespace(arch='', batch=16, clip=10.0, config='config_bibranch.json', epochs=20, log='logs/log.txt', log_dir='board', lr=0.001, momentum=0.9, pretrained='', print_freq=10, resume='', save_dir='snapshot', start_epoch=0, weight_decay=0.0001, workers=8)
+[2019-06-30 17:12:10,610-rk0-train_siampose_bibranch.py#261] config 
+{
+    "network": {
+        "arch": "Custom"
+    },
+    "hp": {
+        "instance_size": 255,
+        "base_size": 8
+    },
+    "lr": {
+        "feature_lr_mult": 1.0,
+        "rpn_lr_mult": 1.0,
+        "mask_lr_mult": 1.0,
+        "type": "log",
+        "start_lr": 0.005,
+        "end_lr": 0.0025,
+        "warmup": {
+            "start_lr": 0.001,
+            "end_lr": 0.005,
+            "type": "step",
+            "step": 1,
+            "epoch": 5
+        }
+    },
+    "loss": {
+        "weight": [
+            1.0,
+            1.2,
+            10,
+            10
+        ],
+        "reg": {
+            "loss": "L1Loss"
+        },
+        "cls": {
+            "split": true
+        }
+    },
+    "train_datasets": {
+        "datasets": {
+            "coco": {
+                "root": "../../data/coco/crop_pose",
+                "anno": "../../data/coco/train2017_pose_siamfc.json",
+                "frame_range": 1
+            }
+        },
+        "template_size": 127,
+        "search_size": 255,
+        "base_size": 8,
+        "size": 25,
+        "single_heatmap": 1,
+        "augmentation": {
+            "template": {
+                "shift": 0,
+                "scale": 0
+            },
+            "search": {
+                "shift": 0,
+                "scale": 0,
+                "blur": 0.18
+            },
+            "neg": 0.2,
+            "gray": 0.25
+        }
+    },
+    "val_datasets": {
+        "datasets": {
+            "vid": {
+                "root": "../../data/coco/crop_pose",
+                "anno": "../../data/coco/val2017_pose_siamfc.json",
+                "num_use": 1000
+            }
+        },
+        "template_size": 127,
+        "search_size": 255,
+        "size": 17,
+        "num": 1000,
+        "augmentation": {
+            "template": {
+                "shift": 0,
+                "scale": 0.0
+            },
+            "search": {
+                "shift": 0,
+                "scale": 0.0
+            },
+            "neg": 0,
+            "gray": 0
+        }
+    },
+    "anchors": {
+        "stride": 8,
+        "ratios": [
+            0.33,
+            0.5,
+            1,
+            2,
+            3
+        ],
+        "scales": [
+            8
+        ],
+        "round_dight": 0
+    },
+    "clip": {
+        "feature": 10.0,
+        "rpn": 10.0,
+        "split": false
+    }
+}
+[2019-06-30 17:12:10,621-rk0-train_siampose_bibranch.py#208] build train dataset
+[2019-06-30 17:12:10,621-rk0-siam_pose_dataset.py# 36] loading ../../data/coco/train2017_pose_siamfc.json
+[2019-06-30 17:12:14,935-rk0-siam_pose_dataset.py# 74] ../../data/coco/train2017_pose_siamfc.json loaded.
+[2019-06-30 17:12:14,959-rk0-siam_pose_dataset.py#134] SubDataSet coco start-index 0 select [56599/56599] path {}.{}.{}.jpg
+[2019-06-30 17:12:15,881-rk0-siam_pose_dataset.py#629] shuffle done!
+[2019-06-30 17:12:15,882-rk0-siam_pose_dataset.py#630] dataset length 1131980
+[2019-06-30 17:12:15,882-rk0-siam_pose_dataset.py#483] dataset informations: 
+{
+    "template": 127,
+    "search": 255,
+    "template_small": false,
+    "gray": 0.25,
+    "neg": 0.2,
+    "inner_neg": 0,
+    "crop_size": 0,
+    "anchor_target": {
+        "thr_high": 0.6,
+        "thr_low": 0.3,
+        "negative": 16,
+        "rpn_batch": 64,
+        "positive": 16
+    },
+    "num": 56599
+}
+[2019-06-30 17:12:16,798-rk0-siam_pose_dataset.py#629] shuffle done!
+[2019-06-30 17:12:16,799-rk0-siam_pose_dataset.py#630] dataset length 1131980
+[2019-06-30 17:12:16,799-rk0-train_siampose_bibranch.py#212] build val dataset
+[2019-06-30 17:12:16,800-rk0-siam_pose_dataset.py# 36] loading ../../data/coco/val2017_pose_siamfc.json
+[2019-06-30 17:12:16,901-rk0-siam_pose_dataset.py# 74] ../../data/coco/val2017_pose_siamfc.json loaded.
+[2019-06-30 17:12:16,902-rk0-siam_pose_dataset.py#134] SubDataSet vid start-index 0 select [1000/2346] path {}.{}.{}.jpg
+[2019-06-30 17:12:16,903-rk0-siam_pose_dataset.py#629] shuffle done!
+[2019-06-30 17:12:16,903-rk0-siam_pose_dataset.py#630] dataset length 1000
+[2019-06-30 17:12:16,904-rk0-siam_pose_dataset.py#483] dataset informations: 
+{
+    "template": 127,
+    "search": 255,
+    "template_small": false,
+    "gray": 0,
+    "neg": 0,
+    "inner_neg": 0,
+    "crop_size": 0,
+    "anchor_target": {
+        "thr_high": 0.6,
+        "thr_low": 0.3,
+        "negative": 16,
+        "rpn_batch": 64,
+        "positive": 16
+    },
+    "num": 1000
+}
+[2019-06-30 17:12:16,905-rk0-siam_pose_dataset.py#629] shuffle done!
+[2019-06-30 17:12:16,905-rk0-siam_pose_dataset.py#630] dataset length 1000
+[2019-06-30 17:12:16,905-rk0-train_siampose_bibranch.py#223] build dataset done
+[2019-06-30 17:12:17,243-rk0-load_helper.py# 31] load pretrained model from resnet.model
+[2019-06-30 17:12:19,135-rk0-load_helper.py# 25] remove prefix 'module.'
+[2019-06-30 17:12:19,136-rk0-load_helper.py# 13] [Warning] missing keys: {'layer2.0.bn2.num_batches_tracked', 'layer2.3.bn2.num_batches_tracked', 'layer3.4.bn1.num_batches_tracked', 'layer1.0.bn3.num_batches_tracked', 'layer1.1.bn2.num_batches_tracked', 'layer1.0.bn2.num_batches_tracked', 'layer3.5.bn3.num_batches_tracked', 'layer1.0.bn1.num_batches_tracked', 'layer3.4.bn3.num_batches_tracked', 'layer3.3.bn3.num_batches_tracked', 'layer3.2.bn2.num_batches_tracked', 'layer3.4.bn2.num_batches_tracked', 'layer3.1.bn1.num_batches_tracked', 'layer3.0.bn2.num_batches_tracked', 'layer2.0.downsample.1.num_batches_tracked', 'layer2.1.bn2.num_batches_tracked', 'layer3.3.bn2.num_batches_tracked', 'layer3.1.bn3.num_batches_tracked', 'layer1.1.bn1.num_batches_tracked', 'layer2.2.bn1.num_batches_tracked', 'layer3.1.bn2.num_batches_tracked', 'layer3.2.bn3.num_batches_tracked', 'layer2.2.bn2.num_batches_tracked', 'layer3.0.downsample.1.num_batches_tracked', 'layer2.2.bn3.num_batches_tracked', 'bn1.num_batches_tracked', 'layer1.2.bn2.num_batches_tracked', 'layer2.3.bn3.num_batches_tracked', 'layer3.3.bn1.num_batches_tracked', 'layer2.3.bn1.num_batches_tracked', 'layer1.0.downsample.1.num_batches_tracked', 'layer2.1.bn1.num_batches_tracked', 'layer3.2.bn1.num_batches_tracked', 'layer3.5.bn1.num_batches_tracked', 'layer1.2.bn3.num_batches_tracked', 'layer1.1.bn3.num_batches_tracked', 'layer3.5.bn2.num_batches_tracked', 'layer3.0.bn3.num_batches_tracked', 'layer3.0.bn1.num_batches_tracked', 'layer2.0.bn3.num_batches_tracked', 'layer2.0.bn1.num_batches_tracked', 'layer2.1.bn3.num_batches_tracked', 'layer1.2.bn1.num_batches_tracked'}
+[2019-06-30 17:12:19,136-rk0-load_helper.py# 14] missing keys:43
+[2019-06-30 17:12:19,136-rk0-load_helper.py# 16] [Warning] unused_pretrained_keys: {'layer4.2.bn3.weight', 'layer4.1.bn1.running_var', 'layer4.0.bn1.running_var', 'layer4.1.conv3.weight', 'layer4.2.bn3.running_var', 'layer4.0.downsample.1.weight', 'layer4.0.bn3.running_mean', 'layer4.2.bn2.weight', 'layer4.2.bn2.bias', 'layer4.0.bn2.weight', 'layer4.1.bn3.running_var', 'layer4.1.bn3.weight', 'layer4.2.bn3.bias', 'layer4.0.downsample.0.weight', 'layer4.1.bn1.bias', 'layer4.2.bn1.weight', 'layer4.2.bn1.bias', 'layer4.2.conv2.weight', 'layer4.1.bn2.bias', 'layer4.1.bn2.weight', 'layer4.1.conv2.weight', 'layer4.1.bn1.running_mean', 'layer4.0.bn3.running_var', 'layer4.0.downsample.1.running_var', 'layer4.0.bn3.weight', 'layer4.2.bn2.running_mean', 'layer4.1.bn1.weight', 'layer4.0.bn2.running_mean', 'layer4.0.bn3.bias', 'layer4.2.conv1.weight', 'layer4.0.bn2.bias', 'layer4.1.conv1.weight', 'layer4.2.bn1.running_var', 'layer4.2.bn2.running_var', 'layer4.0.downsample.1.bias', 'layer4.0.bn2.running_var', 'layer4.1.bn2.running_mean', 'layer4.2.bn3.running_mean', 'layer4.0.bn1.running_mean', 'layer4.0.conv1.weight', 'layer4.1.bn3.running_mean', 'layer4.0.conv2.weight', 'layer4.1.bn3.bias', 'layer4.0.downsample.1.running_mean', 'layer4.0.bn1.weight', 'layer4.1.bn2.running_var', 'layer4.2.conv3.weight', 'layer4.0.bn1.bias', 'layer4.2.bn1.running_mean', 'layer4.0.conv3.weight'}
+[2019-06-30 17:12:19,136-rk0-load_helper.py# 17] unused checkpoint keys:50
+[2019-06-30 17:12:19,136-rk0-load_helper.py# 18] used keys:215
+[2019-06-30 17:12:19,152-rk0-features.py# 66] Current training 0 layers:
+	
+[2019-06-30 17:12:19,152-rk0-features.py# 66] Current training 1 layers:
+	
+[2019-06-30 17:12:19,183-rk0-train_siampose_bibranch.py#276] Custom(
+  (upSample): UpsamplingBilinear2d(size=[127, 127], mode=bilinear)
+  (kp_criterion): JointsSL1Loss(
+    (criterion): SmoothL1Loss()
+  )
+  (heatmap_criterion): JointsMSELoss(
+    (criterion): MSELoss()
+  )
+  (features): ResDown(
+    (features): ResNet(
+      (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace)
+      (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+      (layer1): Sequential(
+        (0): Bottleneck(
+          (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+          (downsample): Sequential(
+            (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): Bottleneck(
+          (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (2): Bottleneck(
+          (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+      )
+      (layer2): Sequential(
+        (0): Bottleneck(
+          (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+          (downsample): Sequential(
+            (0): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), bias=False)
+            (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): Bottleneck(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (2): Bottleneck(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (3): Bottleneck(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+      )
+      (layer3): Sequential(
+        (0): Bottleneck(
+          (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+          (downsample): Sequential(
+            (0): Conv2d(512, 1024, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+            (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): Bottleneck(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (2): Bottleneck(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (3): Bottleneck(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (4): Bottleneck(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+        (5): Bottleneck(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace)
+        )
+      )
+    )
+    (downsample): ResDownS(
+      (downsample): Sequential(
+        (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+  )
+  (rpn_model): UP(
+    (cls): DepthCorr(
+      (conv_kernel): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (conv_search): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (head): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+        (3): Conv2d(256, 10, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (loc): DepthCorr(
+      (conv_kernel): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (conv_search): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (head): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+        (3): Conv2d(256, 20, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+  )
+  (mask_model): MaskCorr(
+    (kp_direct_reg): DepthCorr(
+      (conv_kernel): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (conv_search): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (head): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+        (3): Conv2d(256, 34, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+    (kp_heatmap): DepthCorr(
+      (conv_kernel): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (conv_search): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+      )
+      (head): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace)
+        (3): Conv2d(256, 3969, kernel_size=(1, 1), stride=(1, 1))
+      )
+    )
+  )
+)
+[2019-06-30 17:12:19,215-rk0-train_siampose_bibranch.py#294] (WarmUPScheduler) lr spaces: 
+[0.001      0.00137973 0.00190365 0.00262653 0.0036239  0.005
+ 0.00475848 0.00452862 0.00430986 0.00410168 0.00390355 0.00371499
+ 0.00353553 0.00336475 0.00320222 0.00304753 0.00290032 0.00276022
+ 0.00262689 0.0025    ]
+[2019-06-30 17:12:19,216-rk0-train_siampose_bibranch.py#296] model prepare done
+[2019-06-30 17:12:26,174-rk0-resnet.py<forward>#229] p3 torch.Size([8, 1024, 15, 15])
+[2019-06-30 17:12:26,776-rk0-resnet.py<forward>#229] p3 torch.Size([8, 1024, 31, 31])
+/home/yaosy/anaconda3/envs/osis/lib/python3.6/site-packages/torch/nn/parallel/_functions.py:61: UserWarning: Was asked to gather along dimension 0, but all input tensors were scalars; will instead unsqueeze and return a vector.
+  warnings.warn('Was asked to gather along dimension 0, but all '
+[2019-06-30 17:12:28,759-rk0-train_siampose_bibranch.py#417] Epoch: [1][10/3537] lr: 0.001000	batch_time: 0.089057 (0.953389)	data_time: 0.000067 (0.450074)	rpn_cls_loss: 0.671395 (0.682319)	rpn_loc_loss: 0.500371 (0.733582)	rpn_kp_loss: 0.716639 (0.912756)	rpn_heatmap_loss: 0.424143 (0.671401)	siammask_loss: 2.412623 (3.146774)
+[2019-06-30 17:12:28,787-rk0-log_helper.py# 97] Progress: 10 / 70740 [0%], Speed: 0.953 s/iter, ETA 0:18:43 (D:H:M)
+
+[2019-06-30 17:12:31,275-rk0-train_siampose_bibranch.py#417] Epoch: [1][20/3537] lr: 0.001000	batch_time: 0.092638 (0.602161)	data_time: 0.001614 (0.304869)	rpn_cls_loss: 0.524333 (0.630055)	rpn_loc_loss: 0.468359 (0.653593)	rpn_kp_loss: 0.349762 (0.694258)	rpn_heatmap_loss: 0.127720 (0.566121)	siammask_loss: 1.563846 (2.674745)
+[2019-06-30 17:12:31,314-rk0-log_helper.py# 97] Progress: 20 / 70740 [0%], Speed: 0.602 s/iter, ETA 0:11:49 (D:H:M)
+
+[2019-06-30 17:12:35,968-rk0-train_siampose_bibranch.py#417] Epoch: [1][30/3537] lr: 0.001000	batch_time: 0.105526 (0.557598)	data_time: 0.000021 (0.326680)	rpn_cls_loss: 0.473802 (0.596611)	rpn_loc_loss: 0.442678 (0.583111)	rpn_kp_loss: 0.200503 (0.565913)	rpn_heatmap_loss: 0.698210 (0.486171)	siammask_loss: 1.903730 (2.348429)
+[2019-06-30 17:12:35,968-rk0-log_helper.py# 97] Progress: 30 / 70740 [0%], Speed: 0.558 s/iter, ETA 0:10:57 (D:H:M)
+
+[2019-06-30 17:12:39,601-rk0-train_siampose_bibranch.py#417] Epoch: [1][40/3537] lr: 0.001000	batch_time: 0.089732 (0.508843)	data_time: 0.000080 (0.312809)	rpn_cls_loss: 0.475134 (0.567458)	rpn_loc_loss: 0.302730 (0.535347)	rpn_kp_loss: 0.086899 (0.468356)	rpn_heatmap_loss: 0.403761 (0.454627)	siammask_loss: 1.329070 (2.132857)
+[2019-06-30 17:12:39,604-rk0-log_helper.py# 97] Progress: 40 / 70740 [0%], Speed: 0.509 s/iter, ETA 0:09:59 (D:H:M)
+
+[2019-06-30 17:12:44,897-rk0-train_siampose_bibranch.py#417] Epoch: [1][50/3537] lr: 0.001000	batch_time: 1.661513 (0.512815)	data_time: 1.570320 (0.336916)	rpn_cls_loss: 0.441000 (0.544382)	rpn_loc_loss: 0.382228 (0.512095)	rpn_kp_loss: 0.138657 (0.399948)	rpn_heatmap_loss: 0.652059 (0.455001)	siammask_loss: 1.690390 (2.013845)
+[2019-06-30 17:12:44,944-rk0-log_helper.py# 97] Progress: 50 / 70740 [0%], Speed: 0.513 s/iter, ETA 0:10:04 (D:H:M)
+
+[2019-06-30 17:12:49,244-rk0-train_siampose_bibranch.py#417] Epoch: [1][60/3537] lr: 0.001000	batch_time: 0.353160 (0.499671)	data_time: 0.264553 (0.336600)	rpn_cls_loss: 0.440296 (0.528870)	rpn_loc_loss: 0.362771 (0.480099)	rpn_kp_loss: 0.099413 (0.352066)	rpn_heatmap_loss: 0.321508 (0.436618)	siammask_loss: 1.296542 (1.893672)
+[2019-06-30 17:12:49,285-rk0-log_helper.py# 97] Progress: 60 / 70740 [0%], Speed: 0.500 s/iter, ETA 0:09:48 (D:H:M)
+
+[2019-06-30 17:12:54,091-rk0-train_siampose_bibranch.py#417] Epoch: [1][70/3537] lr: 0.001000	batch_time: 0.190536 (0.497441)	data_time: 0.100211 (0.342339)	rpn_cls_loss: 0.406540 (0.510690)	rpn_loc_loss: 0.250968 (0.453418)	rpn_kp_loss: 0.072374 (0.315506)	rpn_heatmap_loss: 0.078103 (0.416286)	siammask_loss: 0.858180 (1.786585)
+[2019-06-30 17:12:54,118-rk0-log_helper.py# 97] Progress: 70 / 70740 [0%], Speed: 0.497 s/iter, ETA 0:09:45 (D:H:M)
+
+[2019-06-30 17:12:57,877-rk0-train_siampose_bibranch.py#417] Epoch: [1][80/3537] lr: 0.001000	batch_time: 0.292482 (0.482487)	data_time: 0.195638 (0.335143)	rpn_cls_loss: 0.420303 (0.494814)	rpn_loc_loss: 0.326098 (0.437132)	rpn_kp_loss: 0.073394 (0.287499)	rpn_heatmap_loss: 0.547156 (0.418483)	siammask_loss: 1.432171 (1.725354)
+[2019-06-30 17:12:57,889-rk0-log_helper.py# 97] Progress: 80 / 70740 [0%], Speed: 0.482 s/iter, ETA 0:09:28 (D:H:M)
+
+[2019-06-30 17:13:02,504-rk0-train_siampose_bibranch.py#417] Epoch: [1][90/3537] lr: 0.001000	batch_time: 1.206164 (0.480211)	data_time: 1.099089 (0.338768)	rpn_cls_loss: 0.421912 (0.483059)	rpn_loc_loss: 0.374681 (0.421543)	rpn_kp_loss: 0.102975 (0.264405)	rpn_heatmap_loss: 0.492909 (0.407892)	siammask_loss: 1.467414 (1.661207)
+[2019-06-30 17:13:02,522-rk0-log_helper.py# 97] Progress: 90 / 70740 [0%], Speed: 0.480 s/iter, ETA 0:09:25 (D:H:M)
+
+[2019-06-30 17:13:06,110-rk0-train_siampose_bibranch.py#417] Epoch: [1][100/3537] lr: 0.001000	batch_time: 0.105236 (0.468177)	data_time: 0.000226 (0.331301)	rpn_cls_loss: 0.344117 (0.470318)	rpn_loc_loss: 0.292857 (0.406630)	rpn_kp_loss: 0.056873 (0.244744)	rpn_heatmap_loss: 0.592974 (0.397353)	siammask_loss: 1.345391 (1.600371)
+[2019-06-30 17:13:06,134-rk0-log_helper.py# 97] Progress: 100 / 70740 [0%], Speed: 0.468 s/iter, ETA 0:09:11 (D:H:M)
+
+[2019-06-30 17:13:10,533-rk0-train_siampose_bibranch.py#417] Epoch: [1][110/3537] lr: 0.001000	batch_time: 0.095065 (0.465750)	data_time: 0.000022 (0.332595)	rpn_cls_loss: 0.344694 (0.457841)	rpn_loc_loss: 0.265910 (0.395506)	rpn_kp_loss: 0.057254 (0.228169)	rpn_heatmap_loss: 0.340332 (0.391806)	siammask_loss: 1.061373 (1.552422)
+[2019-06-30 17:13:10,561-rk0-log_helper.py# 97] Progress: 110 / 70740 [0%], Speed: 0.466 s/iter, ETA 0:09:08 (D:H:M)
+
+[2019-06-30 17:13:15,051-rk0-train_siampose_bibranch.py#417] Epoch: [1][120/3537] lr: 0.001000	batch_time: 0.924427 (0.464521)	data_time: 0.837393 (0.334814)	rpn_cls_loss: 0.296309 (0.448433)	rpn_loc_loss: 0.229949 (0.385052)	rpn_kp_loss: 0.060598 (0.214343)	rpn_heatmap_loss: 0.533336 (0.390945)	siammask_loss: 1.166182 (1.515783)
+[2019-06-30 17:13:15,080-rk0-log_helper.py# 97] Progress: 120 / 70740 [0%], Speed: 0.465 s/iter, ETA 0:09:06 (D:H:M)
+
+[2019-06-30 17:13:20,002-rk0-train_siampose_bibranch.py#417] Epoch: [1][130/3537] lr: 0.001000	batch_time: 1.453946 (0.466812)	data_time: 1.349467 (0.339822)	rpn_cls_loss: 0.347912 (0.440876)	rpn_loc_loss: 0.251258 (0.377312)	rpn_kp_loss: 0.084560 (0.202760)	rpn_heatmap_loss: 0.273347 (0.384129)	siammask_loss: 1.007329 (1.480539)
+[2019-06-30 17:13:20,026-rk0-log_helper.py# 97] Progress: 130 / 70740 [0%], Speed: 0.467 s/iter, ETA 0:09:09 (D:H:M)
+
+[2019-06-30 17:13:23,895-rk0-train_siampose_bibranch.py#417] Epoch: [1][140/3537] lr: 0.001000	batch_time: 0.087920 (0.461212)	data_time: 0.000075 (0.336899)	rpn_cls_loss: 0.322361 (0.434128)	rpn_loc_loss: 0.305182 (0.368126)	rpn_kp_loss: 0.054586 (0.192662)	rpn_heatmap_loss: 0.268205 (0.373686)	siammask_loss: 1.011371 (1.442227)
+[2019-06-30 17:13:23,941-rk0-log_helper.py# 97] Progress: 140 / 70740 [0%], Speed: 0.461 s/iter, ETA 0:09:02 (D:H:M)
+
+[2019-06-30 17:13:27,742-rk0-train_siampose_bibranch.py#417] Epoch: [1][150/3537] lr: 0.001000	batch_time: 0.090907 (0.456053)	data_time: 0.000058 (0.333957)	rpn_cls_loss: 0.337401 (0.427541)	rpn_loc_loss: 0.218096 (0.360488)	rpn_kp_loss: 0.035121 (0.182895)	rpn_heatmap_loss: 0.248495 (0.363743)	siammask_loss: 0.882732 (1.406765)
+[2019-06-30 17:13:27,805-rk0-log_helper.py# 97] Progress: 150 / 70740 [0%], Speed: 0.456 s/iter, ETA 0:08:56 (D:H:M)
+
+[2019-06-30 17:13:32,575-rk0-train_siampose_bibranch.py#417] Epoch: [1][160/3537] lr: 0.001000	batch_time: 1.052488 (0.457709)	data_time: 0.964441 (0.337718)	rpn_cls_loss: 0.290285 (0.420283)	rpn_loc_loss: 0.186839 (0.353333)	rpn_kp_loss: 0.037752 (0.174410)	rpn_heatmap_loss: 0.000000 (0.361162)	siammask_loss: 0.552243 (1.379854)
+[2019-06-30 17:13:32,599-rk0-log_helper.py# 97] Progress: 160 / 70740 [0%], Speed: 0.458 s/iter, ETA 0:08:58 (D:H:M)
+
+[2019-06-30 17:13:37,702-rk0-train_siampose_bibranch.py#417] Epoch: [1][170/3537] lr: 0.001000	batch_time: 1.820139 (0.460898)	data_time: 1.715120 (0.342429)	rpn_cls_loss: 0.294545 (0.413746)	rpn_loc_loss: 0.276786 (0.345916)	rpn_kp_loss: 0.061567 (0.166791)	rpn_heatmap_loss: 0.454551 (0.359382)	siammask_loss: 1.142807 (1.355017)
+[2019-06-30 17:13:37,719-rk0-log_helper.py# 97] Progress: 170 / 70740 [0%], Speed: 0.461 s/iter, ETA 0:09:02 (D:H:M)
+
+[2019-06-30 17:13:41,072-rk0-train_siampose_bibranch.py#417] Epoch: [1][180/3537] lr: 0.001000	batch_time: 0.100036 (0.453970)	data_time: 0.000066 (0.336811)	rpn_cls_loss: 0.321320 (0.405968)	rpn_loc_loss: 0.234773 (0.341392)	rpn_kp_loss: 0.032694 (0.159690)	rpn_heatmap_loss: 0.000000 (0.358696)	siammask_loss: 0.635742 (1.334025)
+[2019-06-30 17:13:41,084-rk0-log_helper.py# 97] Progress: 180 / 70740 [0%], Speed: 0.454 s/iter, ETA 0:08:53 (D:H:M)
+
+[2019-06-30 17:13:44,529-rk0-train_siampose_bibranch.py#417] Epoch: [1][190/3537] lr: 0.001000	batch_time: 0.089002 (0.448224)	data_time: 0.000074 (0.332292)	rpn_cls_loss: 0.293118 (0.399569)	rpn_loc_loss: 0.234583 (0.336642)	rpn_kp_loss: 0.026057 (0.153184)	rpn_heatmap_loss: 0.372636 (0.354801)	siammask_loss: 0.973310 (1.311524)
+[2019-06-30 17:13:44,556-rk0-log_helper.py# 97] Progress: 190 / 70740 [0%], Speed: 0.448 s/iter, ETA 0:08:47 (D:H:M)
+
+[2019-06-30 17:13:48,732-rk0-train_siampose_bibranch.py#417] Epoch: [1][200/3537] lr: 0.001000	batch_time: 0.885124 (0.446784)	data_time: 0.795819 (0.332191)	rpn_cls_loss: 0.266658 (0.393285)	rpn_loc_loss: 0.254112 (0.331590)	rpn_kp_loss: 0.028536 (0.147500)	rpn_heatmap_loss: 0.505161 (0.350812)	siammask_loss: 1.105289 (1.289505)
+[2019-06-30 17:13:48,767-rk0-log_helper.py# 97] Progress: 200 / 70740 [0%], Speed: 0.447 s/iter, ETA 0:08:45 (D:H:M)
+
+[2019-06-30 17:13:53,634-rk0-train_siampose_bibranch.py#417] Epoch: [1][210/3537] lr: 0.001000	batch_time: 1.650964 (0.448813)	data_time: 1.562639 (0.335340)	rpn_cls_loss: 0.273563 (0.386945)	rpn_loc_loss: 0.312104 (0.328351)	rpn_kp_loss: 0.033076 (0.142041)	rpn_heatmap_loss: 0.541823 (0.353839)	siammask_loss: 1.222987 (1.276847)
+[2019-06-30 17:13:53,641-rk0-log_helper.py# 97] Progress: 210 / 70740 [0%], Speed: 0.449 s/iter, ETA 0:08:47 (D:H:M)
+
+[2019-06-30 17:13:57,325-rk0-train_siampose_bibranch.py#417] Epoch: [1][220/3537] lr: 0.001000	batch_time: 0.090977 (0.445156)	data_time: 0.000067 (0.332811)	rpn_cls_loss: 0.278348 (0.382021)	rpn_loc_loss: 0.220094 (0.325016)	rpn_kp_loss: 0.032395 (0.137020)	rpn_heatmap_loss: 0.539704 (0.349347)	siammask_loss: 1.114560 (1.258408)
+[2019-06-30 17:13:57,340-rk0-log_helper.py# 97] Progress: 220 / 70740 [0%], Speed: 0.445 s/iter, ETA 0:08:43 (D:H:M)
+
+[2019-06-30 17:14:00,484-rk0-train_siampose_bibranch.py#417] Epoch: [1][230/3537] lr: 0.001000	batch_time: 0.168850 (0.439502)	data_time: 0.080357 (0.328004)	rpn_cls_loss: 0.233080 (0.376080)	rpn_loc_loss: 0.257619 (0.321790)	rpn_kp_loss: 0.027835 (0.132453)	rpn_heatmap_loss: 0.315309 (0.350688)	siammask_loss: 0.885366 (1.245368)
+[2019-06-30 17:14:00,494-rk0-log_helper.py# 97] Progress: 230 / 70740 [0%], Speed: 0.440 s/iter, ETA 0:08:36 (D:H:M)
+
+[2019-06-30 17:14:04,972-rk0-train_siampose_bibranch.py#417] Epoch: [1][240/3537] lr: 0.001000	batch_time: 0.904308 (0.439852)	data_time: 0.815246 (0.329336)	rpn_cls_loss: 0.239477 (0.370808)	rpn_loc_loss: 0.264730 (0.318761)	rpn_kp_loss: 0.024365 (0.128114)	rpn_heatmap_loss: 0.152858 (0.350004)	siammask_loss: 0.734377 (1.231439)
+[2019-06-30 17:14:05,010-rk0-log_helper.py# 97] Progress: 240 / 70740 [0%], Speed: 0.440 s/iter, ETA 0:08:36 (D:H:M)
+
+[2019-06-30 17:14:09,733-rk0-train_siampose_bibranch.py#417] Epoch: [1][250/3537] lr: 0.001000	batch_time: 1.328062 (0.441270)	data_time: 1.240486 (0.331539)	rpn_cls_loss: 0.217993 (0.366299)	rpn_loc_loss: 0.236861 (0.315559)	rpn_kp_loss: 0.022870 (0.124169)	rpn_heatmap_loss: 0.289244 (0.346992)	siammask_loss: 0.814340 (1.216130)
+[2019-06-30 17:14:09,754-rk0-log_helper.py# 97] Progress: 250 / 70740 [0%], Speed: 0.441 s/iter, ETA 0:08:38 (D:H:M)
+
+[2019-06-30 17:14:12,921-rk0-train_siampose_bibranch.py#417] Epoch: [1][260/3537] lr: 0.001000	batch_time: 0.097261 (0.436526)	data_time: 0.000066 (0.327442)	rpn_cls_loss: 0.227372 (0.360485)	rpn_loc_loss: 0.247304 (0.312590)	rpn_kp_loss: 0.023328 (0.120516)	rpn_heatmap_loss: 0.266913 (0.345221)	siammask_loss: 0.814378 (1.201331)
+[2019-06-30 17:14:12,946-rk0-log_helper.py# 97] Progress: 260 / 70740 [0%], Speed: 0.437 s/iter, ETA 0:08:32 (D:H:M)
+
+[2019-06-30 17:14:16,342-rk0-train_siampose_bibranch.py#417] Epoch: [1][270/3537] lr: 0.001000	batch_time: 0.087460 (0.432997)	data_time: 0.000116 (0.324664)	rpn_cls_loss: 0.267299 (0.355650)	rpn_loc_loss: 0.231622 (0.309945)	rpn_kp_loss: 0.026600 (0.116970)	rpn_heatmap_loss: 0.213726 (0.340397)	siammask_loss: 0.785573 (1.184951)
+[2019-06-30 17:14:16,364-rk0-log_helper.py# 97] Progress: 270 / 70740 [0%], Speed: 0.433 s/iter, ETA 0:08:28 (D:H:M)
+
+[2019-06-30 17:14:21,402-rk0-train_siampose_bibranch.py#417] Epoch: [1][280/3537] lr: 0.001000	batch_time: 0.693729 (0.435575)	data_time: 0.590682 (0.327905)	rpn_cls_loss: 0.219203 (0.351338)	rpn_loc_loss: 0.201357 (0.306469)	rpn_kp_loss: 0.022845 (0.113699)	rpn_heatmap_loss: 0.237545 (0.336944)	siammask_loss: 0.721222 (1.169744)
+[2019-06-30 17:14:21,421-rk0-log_helper.py# 97] Progress: 280 / 70740 [0%], Speed: 0.436 s/iter, ETA 0:08:31 (D:H:M)
+
+[2019-06-30 17:14:26,370-rk0-train_siampose_bibranch.py#417] Epoch: [1][290/3537] lr: 0.001000	batch_time: 1.243497 (0.437659)	data_time: 1.155653 (0.330490)	rpn_cls_loss: 0.213245 (0.347081)	rpn_loc_loss: 0.218753 (0.303799)	rpn_kp_loss: 0.025104 (0.110678)	rpn_heatmap_loss: 0.582962 (0.335893)	siammask_loss: 1.083815 (1.158209)
+[2019-06-30 17:14:26,381-rk0-log_helper.py# 97] Progress: 290 / 70740 [0%], Speed: 0.438 s/iter, ETA 0:08:33 (D:H:M)
+
+[2019-06-30 17:14:29,877-rk0-train_siampose_bibranch.py#417] Epoch: [1][300/3537] lr: 0.001000	batch_time: 0.091821 (0.434730)	data_time: 0.000069 (0.328189)	rpn_cls_loss: 0.248204 (0.343360)	rpn_loc_loss: 0.245168 (0.300425)	rpn_kp_loss: 0.022002 (0.107785)	rpn_heatmap_loss: 0.108068 (0.332719)	siammask_loss: 0.672476 (1.144374)
+[2019-06-30 17:14:29,904-rk0-log_helper.py# 97] Progress: 300 / 70740 [0%], Speed: 0.435 s/iter, ETA 0:08:30 (D:H:M)
+
+[2019-06-30 17:14:33,590-rk0-train_siampose_bibranch.py#417] Epoch: [1][310/3537] lr: 0.001000	batch_time: 0.087187 (0.432657)	data_time: 0.000067 (0.326698)	rpn_cls_loss: 0.185075 (0.339171)	rpn_loc_loss: 0.182770 (0.297916)	rpn_kp_loss: 0.019943 (0.105079)	rpn_heatmap_loss: 0.276249 (0.330991)	siammask_loss: 0.700592 (1.132740)
+[2019-06-30 17:14:33,636-rk0-log_helper.py# 97] Progress: 310 / 70740 [0%], Speed: 0.433 s/iter, ETA 0:08:27 (D:H:M)
+
+[2019-06-30 17:14:38,132-rk0-train_siampose_bibranch.py#417] Epoch: [1][320/3537] lr: 0.001000	batch_time: 0.333083 (0.433306)	data_time: 0.245747 (0.327804)	rpn_cls_loss: 0.242773 (0.335268)	rpn_loc_loss: 0.126840 (0.295250)	rpn_kp_loss: 0.018594 (0.102555)	rpn_heatmap_loss: 0.222774 (0.328623)	siammask_loss: 0.636349 (1.120746)
+[2019-06-30 17:14:38,168-rk0-log_helper.py# 97] Progress: 320 / 70740 [0%], Speed: 0.433 s/iter, ETA 0:08:28 (D:H:M)
+
+[2019-06-30 17:14:43,273-rk0-train_siampose_bibranch.py#417] Epoch: [1][330/3537] lr: 0.001000	batch_time: 1.522870 (0.435732)	data_time: 1.414056 (0.330685)	rpn_cls_loss: 0.184156 (0.331568)	rpn_loc_loss: 0.209190 (0.292535)	rpn_kp_loss: 0.017426 (0.100069)	rpn_heatmap_loss: 0.521917 (0.328829)	siammask_loss: 0.974528 (1.111508)
+[2019-06-30 17:14:43,280-rk0-log_helper.py# 97] Progress: 330 / 70740 [0%], Speed: 0.436 s/iter, ETA 0:08:31 (D:H:M)
+
+[2019-06-30 17:14:46,221-rk0-train_siampose_bibranch.py#417] Epoch: [1][340/3537] lr: 0.001000	batch_time: 0.088508 (0.431563)	data_time: 0.000071 (0.326944)	rpn_cls_loss: 0.180876 (0.327410)	rpn_loc_loss: 0.176692 (0.290306)	rpn_kp_loss: 0.015527 (0.097674)	rpn_heatmap_loss: 0.271833 (0.327190)	siammask_loss: 0.680265 (1.100641)
+[2019-06-30 17:14:46,241-rk0-log_helper.py# 97] Progress: 340 / 70740 [0%], Speed: 0.432 s/iter, ETA 0:08:26 (D:H:M)
+
+[2019-06-30 17:14:49,694-rk0-train_siampose_bibranch.py#417] Epoch: [1][350/3537] lr: 0.001000	batch_time: 0.086729 (0.429133)	data_time: 0.000068 (0.325006)	rpn_cls_loss: 0.180220 (0.323443)	rpn_loc_loss: 0.225138 (0.288439)	rpn_kp_loss: 0.020006 (0.095514)	rpn_heatmap_loss: 0.000000 (0.325466)	siammask_loss: 0.470391 (1.090550)
+[2019-06-30 17:14:49,723-rk0-log_helper.py# 97] Progress: 350 / 70740 [0%], Speed: 0.429 s/iter, ETA 0:08:23 (D:H:M)
+
+[2019-06-30 17:14:53,842-rk0-train_siampose_bibranch.py#417] Epoch: [1][360/3537] lr: 0.001000	batch_time: 0.685658 (0.428713)	data_time: 0.596745 (0.325051)	rpn_cls_loss: 0.180455 (0.319854)	rpn_loc_loss: 0.170755 (0.286320)	rpn_kp_loss: 0.018646 (0.093381)	rpn_heatmap_loss: 0.197821 (0.323659)	siammask_loss: 0.601827 (1.080479)
+[2019-06-30 17:14:53,857-rk0-log_helper.py# 97] Progress: 360 / 70740 [0%], Speed: 0.429 s/iter, ETA 0:08:22 (D:H:M)
+
+[2019-06-30 17:14:58,629-rk0-train_siampose_bibranch.py#417] Epoch: [1][370/3537] lr: 0.001000	batch_time: 1.561954 (0.430045)	data_time: 1.455993 (0.326714)	rpn_cls_loss: 0.147862 (0.316023)	rpn_loc_loss: 0.255761 (0.284996)	rpn_kp_loss: 0.024047 (0.091395)	rpn_heatmap_loss: 0.464479 (0.323187)	siammask_loss: 0.943302 (1.072600)
+[2019-06-30 17:14:58,648-rk0-log_helper.py# 97] Progress: 370 / 70740 [0%], Speed: 0.430 s/iter, ETA 0:08:24 (D:H:M)
+
+[2019-06-30 17:15:02,010-rk0-train_siampose_bibranch.py#417] Epoch: [1][380/3537] lr: 0.001000	batch_time: 0.089555 (0.427606)	data_time: 0.000075 (0.324621)	rpn_cls_loss: 0.144978 (0.312411)	rpn_loc_loss: 0.187939 (0.282532)	rpn_kp_loss: 0.017248 (0.089539)	rpn_heatmap_loss: 0.248432 (0.321884)	siammask_loss: 0.636185 (1.062873)
+[2019-06-30 17:15:02,018-rk0-log_helper.py# 97] Progress: 380 / 70740 [0%], Speed: 0.428 s/iter, ETA 0:08:21 (D:H:M)
+
+[2019-06-30 17:15:05,198-rk0-train_siampose_bibranch.py#417] Epoch: [1][390/3537] lr: 0.001000	batch_time: 0.087426 (0.424795)	data_time: 0.000072 (0.322201)	rpn_cls_loss: 0.157313 (0.309159)	rpn_loc_loss: 0.170698 (0.281238)	rpn_kp_loss: 0.017027 (0.087693)	rpn_heatmap_loss: 0.000000 (0.319538)	siammask_loss: 0.379177 (1.053874)
+[2019-06-30 17:15:05,233-rk0-log_helper.py# 97] Progress: 390 / 70740 [0%], Speed: 0.425 s/iter, ETA 0:08:18 (D:H:M)
+
+[2019-06-30 17:15:09,452-rk0-train_siampose_bibranch.py#417] Epoch: [1][400/3537] lr: 0.001000	batch_time: 0.141813 (0.424790)	data_time: 0.054847 (0.322564)	rpn_cls_loss: 0.232233 (0.305959)	rpn_loc_loss: 0.264340 (0.279197)	rpn_kp_loss: 0.020162 (0.086009)	rpn_heatmap_loss: 0.126203 (0.321287)	siammask_loss: 0.695806 (1.048292)
+[2019-06-30 17:15:09,484-rk0-log_helper.py# 97] Progress: 400 / 70740 [0%], Speed: 0.425 s/iter, ETA 0:08:17 (D:H:M)
+
+[2019-06-30 17:15:14,239-rk0-train_siampose_bibranch.py#417] Epoch: [1][410/3537] lr: 0.001000	batch_time: 1.141732 (0.426085)	data_time: 1.034047 (0.324129)	rpn_cls_loss: 0.164593 (0.302836)	rpn_loc_loss: 0.190370 (0.277383)	rpn_kp_loss: 0.019636 (0.084362)	rpn_heatmap_loss: 0.530542 (0.320628)	siammask_loss: 0.943216 (1.040686)
+[2019-06-30 17:15:14,257-rk0-log_helper.py# 97] Progress: 410 / 70740 [0%], Speed: 0.426 s/iter, ETA 0:08:19 (D:H:M)
+
+[2019-06-30 17:15:17,591-rk0-train_siampose_bibranch.py#417] Epoch: [1][420/3537] lr: 0.001000	batch_time: 0.088164 (0.423901)	data_time: 0.000066 (0.322129)	rpn_cls_loss: 0.164215 (0.299698)	rpn_loc_loss: 0.185695 (0.276170)	rpn_kp_loss: 0.019036 (0.082765)	rpn_heatmap_loss: 0.195981 (0.319667)	siammask_loss: 0.602066 (1.033534)
+[2019-06-30 17:15:17,598-rk0-log_helper.py# 97] Progress: 420 / 70740 [0%], Speed: 0.424 s/iter, ETA 0:08:16 (D:H:M)
+
+[2019-06-30 17:15:21,326-rk0-train_siampose_bibranch.py#417] Epoch: [1][430/3537] lr: 0.001000	batch_time: 0.087603 (0.422712)	data_time: 0.000050 (0.321175)	rpn_cls_loss: 0.157161 (0.296418)	rpn_loc_loss: 0.232462 (0.275103)	rpn_kp_loss: 0.015268 (0.081203)	rpn_heatmap_loss: 0.573689 (0.320677)	siammask_loss: 1.025072 (1.028421)
+[2019-06-30 17:15:21,411-rk0-log_helper.py# 97] Progress: 430 / 70740 [0%], Speed: 0.423 s/iter, ETA 0:08:15 (D:H:M)
+
+[2019-06-30 17:15:26,394-rk0-train_siampose_bibranch.py#417] Epoch: [1][440/3537] lr: 0.001000	batch_time: 0.587124 (0.424604)	data_time: 0.500683 (0.323384)	rpn_cls_loss: 0.170886 (0.293242)	rpn_loc_loss: 0.242049 (0.273508)	rpn_kp_loss: 0.014387 (0.079735)	rpn_heatmap_loss: 0.153083 (0.318636)	siammask_loss: 0.628815 (1.019823)
+[2019-06-30 17:15:26,418-rk0-log_helper.py# 97] Progress: 440 / 70740 [0%], Speed: 0.425 s/iter, ETA 0:08:17 (D:H:M)
+
+[2019-06-30 17:15:30,552-rk0-train_siampose_bibranch.py#417] Epoch: [1][450/3537] lr: 0.001000	batch_time: 0.649116 (0.424390)	data_time: 0.556340 (0.323357)	rpn_cls_loss: 0.133140 (0.290196)	rpn_loc_loss: 0.232937 (0.272057)	rpn_kp_loss: 0.022223 (0.078397)	rpn_heatmap_loss: 0.301496 (0.318608)	siammask_loss: 0.736382 (1.013669)
+[2019-06-30 17:15:30,570-rk0-log_helper.py# 97] Progress: 450 / 70740 [0%], Speed: 0.424 s/iter, ETA 0:08:17 (D:H:M)
+
+[2019-06-30 17:15:33,879-rk0-train_siampose_bibranch.py#417] Epoch: [1][460/3537] lr: 0.001000	batch_time: 0.087413 (0.422379)	data_time: 0.000074 (0.321443)	rpn_cls_loss: 0.126973 (0.286995)	rpn_loc_loss: 0.150583 (0.270436)	rpn_kp_loss: 0.016156 (0.077060)	rpn_heatmap_loss: 0.540585 (0.321059)	siammask_loss: 0.864414 (1.009637)
+[2019-06-30 17:15:33,879-rk0-log_helper.py# 97] Progress: 460 / 70740 [0%], Speed: 0.422 s/iter, ETA 0:08:14 (D:H:M)
+
+[2019-06-30 17:15:37,568-rk0-train_siampose_bibranch.py#417] Epoch: [1][470/3537] lr: 0.001000	batch_time: 0.087575 (0.421223)	data_time: 0.000075 (0.320468)	rpn_cls_loss: 0.161509 (0.284054)	rpn_loc_loss: 0.264451 (0.269517)	rpn_kp_loss: 0.013442 (0.075755)	rpn_heatmap_loss: 0.251208 (0.320616)	siammask_loss: 0.743501 (1.003846)
+[2019-06-30 17:15:37,571-rk0-log_helper.py# 97] Progress: 470 / 70740 [0%], Speed: 0.421 s/iter, ETA 0:08:13 (D:H:M)
+
+[2019-06-30 17:15:43,432-rk0-train_siampose_bibranch.py#417] Epoch: [1][480/3537] lr: 0.001000	batch_time: 0.465137 (0.424648)	data_time: 0.368251 (0.324020)	rpn_cls_loss: 0.192892 (0.281336)	rpn_loc_loss: 0.221401 (0.267870)	rpn_kp_loss: 0.021698 (0.074512)	rpn_heatmap_loss: 0.157890 (0.318032)	siammask_loss: 0.638161 (0.995323)
+[2019-06-30 17:15:43,451-rk0-log_helper.py# 97] Progress: 480 / 70740 [0%], Speed: 0.425 s/iter, ETA 0:08:17 (D:H:M)
+
+[2019-06-30 17:15:47,160-rk0-train_siampose_bibranch.py#417] Epoch: [1][490/3537] lr: 0.001000	batch_time: 0.271919 (0.423573)	data_time: 0.185225 (0.323013)	rpn_cls_loss: 0.146136 (0.278908)	rpn_loc_loss: 0.214281 (0.266623)	rpn_kp_loss: 0.012852 (0.073335)	rpn_heatmap_loss: 0.498314 (0.318105)	siammask_loss: 0.914439 (0.990294)
+[2019-06-30 17:15:47,176-rk0-log_helper.py# 97] Progress: 490 / 70740 [0%], Speed: 0.424 s/iter, ETA 0:08:15 (D:H:M)
+
+[2019-06-30 17:15:50,898-rk0-train_siampose_bibranch.py#417] Epoch: [1][500/3537] lr: 0.001000	batch_time: 0.091179 (0.422558)	data_time: 0.000091 (0.322143)	rpn_cls_loss: 0.124876 (0.276031)	rpn_loc_loss: 0.172110 (0.265092)	rpn_kp_loss: 0.015968 (0.072165)	rpn_heatmap_loss: 0.376926 (0.318292)	siammask_loss: 0.724302 (0.984599)
+[2019-06-30 17:15:50,936-rk0-log_helper.py# 97] Progress: 500 / 70740 [0%], Speed: 0.423 s/iter, ETA 0:08:14 (D:H:M)
+
+[2019-06-30 17:15:54,734-rk0-train_siampose_bibranch.py#417] Epoch: [1][510/3537] lr: 0.001000	batch_time: 0.087643 (0.421778)	data_time: 0.000059 (0.321512)	rpn_cls_loss: 0.106783 (0.273376)	rpn_loc_loss: 0.218980 (0.263528)	rpn_kp_loss: 0.018130 (0.071064)	rpn_heatmap_loss: 0.450607 (0.318479)	siammask_loss: 0.838296 (0.979152)
+[2019-06-30 17:15:54,777-rk0-log_helper.py# 97] Progress: 510 / 70740 [0%], Speed: 0.422 s/iter, ETA 0:08:13 (D:H:M)
+
+[2019-06-30 17:15:59,720-rk0-train_siampose_bibranch.py#417] Epoch: [1][520/3537] lr: 0.001000	batch_time: 0.168640 (0.423239)	data_time: 0.081497 (0.323189)	rpn_cls_loss: 0.135408 (0.270915)	rpn_loc_loss: 0.247173 (0.262106)	rpn_kp_loss: 0.010719 (0.069995)	rpn_heatmap_loss: 0.433275 (0.316663)	siammask_loss: 0.876009 (0.972101)
+[2019-06-30 17:15:59,731-rk0-log_helper.py# 97] Progress: 520 / 70740 [0%], Speed: 0.423 s/iter, ETA 0:08:15 (D:H:M)
+
+[2019-06-30 17:16:04,260-rk0-train_siampose_bibranch.py#417] Epoch: [1][530/3537] lr: 0.001000	batch_time: 1.420851 (0.423804)	data_time: 1.332487 (0.323915)	rpn_cls_loss: 0.134315 (0.268378)	rpn_loc_loss: 0.218633 (0.261014)	rpn_kp_loss: 0.013814 (0.068955)	rpn_heatmap_loss: 0.264779 (0.316452)	siammask_loss: 0.675268 (0.967002)
+[2019-06-30 17:16:04,299-rk0-log_helper.py# 97] Progress: 530 / 70740 [0%], Speed: 0.424 s/iter, ETA 0:08:15 (D:H:M)
+
+[2019-06-30 17:16:07,736-rk0-train_siampose_bibranch.py#417] Epoch: [1][540/3537] lr: 0.001000	batch_time: 0.087049 (0.422380)	data_time: 0.000069 (0.322725)	rpn_cls_loss: 0.124452 (0.266057)	rpn_loc_loss: 0.187016 (0.259542)	rpn_kp_loss: 0.023145 (0.067992)	rpn_heatmap_loss: 0.519932 (0.315984)	siammask_loss: 0.891948 (0.961484)
+[2019-06-30 17:16:07,752-rk0-log_helper.py# 97] Progress: 540 / 70740 [0%], Speed: 0.422 s/iter, ETA 0:08:14 (D:H:M)
+
+[2019-06-30 17:16:10,720-rk0-train_siampose_bibranch.py#417] Epoch: [1][550/3537] lr: 0.001000	batch_time: 0.087667 (0.420110)	data_time: 0.000066 (0.320662)	rpn_cls_loss: 0.168685 (0.263677)	rpn_loc_loss: 0.206686 (0.258671)	rpn_kp_loss: 0.015950 (0.067021)	rpn_heatmap_loss: 0.372469 (0.316508)	siammask_loss: 0.805127 (0.957611)
+[2019-06-30 17:16:10,724-rk0-log_helper.py# 97] Progress: 550 / 70740 [0%], Speed: 0.420 s/iter, ETA 0:08:11 (D:H:M)
+
+[2019-06-30 17:16:15,624-rk0-train_siampose_bibranch.py#417] Epoch: [1][560/3537] lr: 0.001000	batch_time: 0.109284 (0.421350)	data_time: 0.000024 (0.322049)	rpn_cls_loss: 0.148674 (0.261294)	rpn_loc_loss: 0.206605 (0.257538)	rpn_kp_loss: 0.022460 (0.066110)	rpn_heatmap_loss: 0.301849 (0.315352)	siammask_loss: 0.720909 (0.951801)
+[2019-06-30 17:16:15,639-rk0-log_helper.py# 97] Progress: 560 / 70740 [0%], Speed: 0.421 s/iter, ETA 0:08:12 (D:H:M)
+
+[2019-06-30 17:16:19,842-rk0-train_siampose_bibranch.py#417] Epoch: [1][570/3537] lr: 0.001000	batch_time: 1.061239 (0.421344)	data_time: 0.974437 (0.322256)	rpn_cls_loss: 0.122906 (0.258963)	rpn_loc_loss: 0.172122 (0.256539)	rpn_kp_loss: 0.012702 (0.065208)	rpn_heatmap_loss: 0.309753 (0.315895)	siammask_loss: 0.651908 (0.947913)
+[2019-06-30 17:16:19,860-rk0-log_helper.py# 97] Progress: 570 / 70740 [0%], Speed: 0.421 s/iter, ETA 0:08:12 (D:H:M)
+
+[2019-06-30 17:16:23,219-rk0-train_siampose_bibranch.py#417] Epoch: [1][580/3537] lr: 0.001000	batch_time: 0.088157 (0.419888)	data_time: 0.000057 (0.320994)	rpn_cls_loss: 0.099286 (0.256724)	rpn_loc_loss: 0.166671 (0.255144)	rpn_kp_loss: 0.010274 (0.064355)	rpn_heatmap_loss: 0.448026 (0.316590)	siammask_loss: 0.757592 (0.943841)
+[2019-06-30 17:16:23,247-rk0-log_helper.py# 97] Progress: 580 / 70740 [0%], Speed: 0.420 s/iter, ETA 0:08:10 (D:H:M)
+
+[2019-06-30 17:16:26,428-rk0-train_siampose_bibranch.py#417] Epoch: [1][590/3537] lr: 0.001000	batch_time: 0.088655 (0.418197)	data_time: 0.000070 (0.319491)	rpn_cls_loss: 0.103602 (0.254592)	rpn_loc_loss: 0.160647 (0.254157)	rpn_kp_loss: 0.015165 (0.063510)	rpn_heatmap_loss: 0.275468 (0.316253)	siammask_loss: 0.587011 (0.939344)
+[2019-06-30 17:16:26,458-rk0-log_helper.py# 97] Progress: 590 / 70740 [0%], Speed: 0.418 s/iter, ETA 0:08:08 (D:H:M)
+
+[2019-06-30 17:16:31,150-rk0-train_siampose_bibranch.py#417] Epoch: [1][600/3537] lr: 0.001000	batch_time: 0.086718 (0.419084)	data_time: 0.000025 (0.320566)	rpn_cls_loss: 0.143897 (0.252373)	rpn_loc_loss: 0.198392 (0.253214)	rpn_kp_loss: 0.018268 (0.062668)	rpn_heatmap_loss: 0.172554 (0.314940)	siammask_loss: 0.572789 (0.933838)
+[2019-06-30 17:16:31,181-rk0-log_helper.py# 97] Progress: 600 / 70740 [0%], Speed: 0.419 s/iter, ETA 0:08:09 (D:H:M)
+
+[2019-06-30 17:16:35,702-rk0-train_siampose_bibranch.py#417] Epoch: [1][610/3537] lr: 0.001000	batch_time: 1.332788 (0.419664)	data_time: 1.245173 (0.321318)	rpn_cls_loss: 0.127468 (0.250076)	rpn_loc_loss: 0.166198 (0.252402)	rpn_kp_loss: 0.015925 (0.061893)	rpn_heatmap_loss: 0.531067 (0.314865)	siammask_loss: 0.873898 (0.929717)
+[2019-06-30 17:16:35,717-rk0-log_helper.py# 97] Progress: 610 / 70740 [0%], Speed: 0.420 s/iter, ETA 0:08:10 (D:H:M)
+
+[2019-06-30 17:16:39,065-rk0-train_siampose_bibranch.py#417] Epoch: [1][620/3537] lr: 0.001000	batch_time: 0.333771 (0.418306)	data_time: 0.245992 (0.320136)	rpn_cls_loss: 0.109841 (0.248009)	rpn_loc_loss: 0.158188 (0.251615)	rpn_kp_loss: 0.017992 (0.061127)	rpn_heatmap_loss: 0.037536 (0.313112)	siammask_loss: 0.355193 (0.924186)
+[2019-06-30 17:16:39,067-rk0-log_helper.py# 97] Progress: 620 / 70740 [0%], Speed: 0.418 s/iter, ETA 0:08:08 (D:H:M)
+
+[2019-06-30 17:16:42,541-rk0-train_siampose_bibranch.py#417] Epoch: [1][630/3537] lr: 0.001000	batch_time: 0.087869 (0.417171)	data_time: 0.000066 (0.319156)	rpn_cls_loss: 0.124178 (0.246037)	rpn_loc_loss: 0.199678 (0.250745)	rpn_kp_loss: 0.009507 (0.060382)	rpn_heatmap_loss: 0.416179 (0.312699)	siammask_loss: 0.789478 (0.920012)
+[2019-06-30 17:16:42,554-rk0-log_helper.py# 97] Progress: 630 / 70740 [0%], Speed: 0.417 s/iter, ETA 0:08:07 (D:H:M)
+
+[2019-06-30 17:16:46,783-rk0-train_siampose_bibranch.py#417] Epoch: [1][640/3537] lr: 0.001000	batch_time: 0.086803 (0.417268)	data_time: 0.000024 (0.319407)	rpn_cls_loss: 0.097373 (0.243899)	rpn_loc_loss: 0.238189 (0.249973)	rpn_kp_loss: 0.015344 (0.059660)	rpn_heatmap_loss: 0.063072 (0.311763)	siammask_loss: 0.461614 (0.915290)
+[2019-06-30 17:16:46,800-rk0-log_helper.py# 97] Progress: 640 / 70740 [0%], Speed: 0.417 s/iter, ETA 0:08:07 (D:H:M)
+
+[2019-06-30 17:16:51,419-rk0-train_siampose_bibranch.py#417] Epoch: [1][650/3537] lr: 0.001000	batch_time: 1.463188 (0.417968)	data_time: 1.375792 (0.320262)	rpn_cls_loss: 0.080897 (0.241809)	rpn_loc_loss: 0.194969 (0.248959)	rpn_kp_loss: 0.016365 (0.058960)	rpn_heatmap_loss: 0.318131 (0.311090)	siammask_loss: 0.649356 (0.910609)
+[2019-06-30 17:16:51,440-rk0-log_helper.py# 97] Progress: 650 / 70740 [0%], Speed: 0.418 s/iter, ETA 0:08:08 (D:H:M)
+
+[2019-06-30 17:16:55,259-rk0-train_siampose_bibranch.py#417] Epoch: [1][660/3537] lr: 0.001000	batch_time: 0.640635 (0.417443)	data_time: 0.539743 (0.319850)	rpn_cls_loss: 0.083882 (0.239752)	rpn_loc_loss: 0.174287 (0.247963)	rpn_kp_loss: 0.014674 (0.058261)	rpn_heatmap_loss: 0.387000 (0.311648)	siammask_loss: 0.694701 (0.907218)
+[2019-06-30 17:16:55,284-rk0-log_helper.py# 97] Progress: 660 / 70740 [0%], Speed: 0.417 s/iter, ETA 0:08:07 (D:H:M)
+
+[2019-06-30 17:16:58,175-rk0-train_siampose_bibranch.py#417] Epoch: [1][670/3537] lr: 0.001000	batch_time: 0.088402 (0.415553)	data_time: 0.000124 (0.318068)	rpn_cls_loss: 0.089859 (0.237688)	rpn_loc_loss: 0.219318 (0.247193)	rpn_kp_loss: 0.015422 (0.057600)	rpn_heatmap_loss: 0.272485 (0.312169)	siammask_loss: 0.640948 (0.904089)
+[2019-06-30 17:16:58,195-rk0-log_helper.py# 97] Progress: 670 / 70740 [0%], Speed: 0.416 s/iter, ETA 0:08:05 (D:H:M)
+
+[2019-06-30 17:17:01,794-rk0-train_siampose_bibranch.py#417] Epoch: [1][680/3537] lr: 0.001000	batch_time: 0.087879 (0.414751)	data_time: 0.000022 (0.317399)	rpn_cls_loss: 0.082194 (0.235711)	rpn_loc_loss: 0.154446 (0.246253)	rpn_kp_loss: 0.010766 (0.056944)	rpn_heatmap_loss: 0.340541 (0.312073)	siammask_loss: 0.618836 (0.900231)
+[2019-06-30 17:17:01,852-rk0-log_helper.py# 97] Progress: 680 / 70740 [0%], Speed: 0.415 s/iter, ETA 0:08:04 (D:H:M)
+
+[2019-06-30 17:17:06,460-rk0-train_siampose_bibranch.py#417] Epoch: [1][690/3537] lr: 0.001000	batch_time: 1.501906 (0.415490)	data_time: 1.414629 (0.318283)	rpn_cls_loss: 0.088190 (0.233808)	rpn_loc_loss: 0.211665 (0.245712)	rpn_kp_loss: 0.014719 (0.056316)	rpn_heatmap_loss: 0.454276 (0.311628)	siammask_loss: 0.811183 (0.896607)
+[2019-06-30 17:17:06,482-rk0-log_helper.py# 97] Progress: 690 / 70740 [0%], Speed: 0.415 s/iter, ETA 0:08:05 (D:H:M)
+
+[2019-06-30 17:17:10,738-rk0-train_siampose_bibranch.py#417] Epoch: [1][700/3537] lr: 0.001000	batch_time: 1.110611 (0.415656)	data_time: 1.022200 (0.318537)	rpn_cls_loss: 0.089673 (0.231834)	rpn_loc_loss: 0.241159 (0.245335)	rpn_kp_loss: 0.011526 (0.055687)	rpn_heatmap_loss: 0.187415 (0.311839)	siammask_loss: 0.578005 (0.893763)
+[2019-06-30 17:17:10,749-rk0-log_helper.py# 97] Progress: 700 / 70740 [0%], Speed: 0.416 s/iter, ETA 0:08:05 (D:H:M)
+
+[2019-06-30 17:17:14,239-rk0-train_siampose_bibranch.py#417] Epoch: [1][710/3537] lr: 0.001000	batch_time: 0.096582 (0.414720)	data_time: 0.000071 (0.317683)	rpn_cls_loss: 0.083524 (0.229987)	rpn_loc_loss: 0.136798 (0.244492)	rpn_kp_loss: 0.012241 (0.055078)	rpn_heatmap_loss: 0.000000 (0.311748)	siammask_loss: 0.259922 (0.890203)
+[2019-06-30 17:17:14,252-rk0-log_helper.py# 97] Progress: 710 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:04 (D:H:M)
+
+[2019-06-30 17:17:18,487-rk0-train_siampose_bibranch.py#417] Epoch: [1][720/3537] lr: 0.001000	batch_time: 0.087371 (0.414848)	data_time: 0.000023 (0.317933)	rpn_cls_loss: 0.067444 (0.228216)	rpn_loc_loss: 0.206554 (0.243709)	rpn_kp_loss: 0.012689 (0.054494)	rpn_heatmap_loss: 0.451576 (0.311504)	siammask_loss: 0.779574 (0.886666)
+[2019-06-30 17:17:18,496-rk0-log_helper.py# 97] Progress: 720 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:04 (D:H:M)
+
+[2019-06-30 17:17:22,245-rk0-train_siampose_bibranch.py#417] Epoch: [1][730/3537] lr: 0.001000	batch_time: 0.149311 (0.414302)	data_time: 0.061741 (0.317441)	rpn_cls_loss: 0.124577 (0.226486)	rpn_loc_loss: 0.196406 (0.242885)	rpn_kp_loss: 0.011978 (0.053944)	rpn_heatmap_loss: 0.236700 (0.310047)	siammask_loss: 0.608944 (0.881938)
+[2019-06-30 17:17:22,252-rk0-log_helper.py# 97] Progress: 730 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:17:27,733-rk0-train_siampose_bibranch.py#417] Epoch: [1][740/3537] lr: 0.001000	batch_time: 2.020456 (0.416108)	data_time: 1.914023 (0.319296)	rpn_cls_loss: 0.153682 (0.224753)	rpn_loc_loss: 0.179473 (0.242178)	rpn_kp_loss: 0.014381 (0.053393)	rpn_heatmap_loss: 0.247193 (0.310769)	siammask_loss: 0.630624 (0.879528)
+[2019-06-30 17:17:27,754-rk0-log_helper.py# 97] Progress: 740 / 70740 [1%], Speed: 0.416 s/iter, ETA 0:08:05 (D:H:M)
+
+[2019-06-30 17:17:30,919-rk0-train_siampose_bibranch.py#417] Epoch: [1][750/3537] lr: 0.001000	batch_time: 0.087838 (0.414798)	data_time: 0.000067 (0.318036)	rpn_cls_loss: 0.110821 (0.223077)	rpn_loc_loss: 0.177447 (0.241429)	rpn_kp_loss: 0.016095 (0.052838)	rpn_heatmap_loss: 0.248810 (0.309820)	siammask_loss: 0.588662 (0.875450)
+[2019-06-30 17:17:30,930-rk0-log_helper.py# 97] Progress: 750 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:17:34,854-rk0-train_siampose_bibranch.py#417] Epoch: [1][760/3537] lr: 0.001000	batch_time: 0.087417 (0.414507)	data_time: 0.000067 (0.317796)	rpn_cls_loss: 0.081083 (0.221453)	rpn_loc_loss: 0.161755 (0.240508)	rpn_kp_loss: 0.014731 (0.052298)	rpn_heatmap_loss: 0.271131 (0.309562)	siammask_loss: 0.561051 (0.871923)
+[2019-06-30 17:17:34,872-rk0-log_helper.py# 97] Progress: 760 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:17:38,277-rk0-train_siampose_bibranch.py#417] Epoch: [1][770/3537] lr: 0.001000	batch_time: 0.087460 (0.413558)	data_time: 0.000057 (0.316886)	rpn_cls_loss: 0.121298 (0.219807)	rpn_loc_loss: 0.195428 (0.239761)	rpn_kp_loss: 0.012491 (0.051782)	rpn_heatmap_loss: 0.235640 (0.309425)	siammask_loss: 0.603942 (0.868727)
+[2019-06-30 17:17:38,288-rk0-log_helper.py# 97] Progress: 770 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:17:44,671-rk0-train_siampose_bibranch.py#417] Epoch: [1][780/3537] lr: 0.001000	batch_time: 2.880384 (0.416443)	data_time: 2.774574 (0.319818)	rpn_cls_loss: 0.083243 (0.218262)	rpn_loc_loss: 0.199431 (0.239081)	rpn_kp_loss: 0.012688 (0.051283)	rpn_heatmap_loss: 0.057897 (0.308969)	siammask_loss: 0.393146 (0.865411)
+[2019-06-30 17:17:44,688-rk0-log_helper.py# 97] Progress: 780 / 70740 [1%], Speed: 0.416 s/iter, ETA 0:08:05 (D:H:M)
+
+[2019-06-30 17:17:47,717-rk0-train_siampose_bibranch.py#417] Epoch: [1][790/3537] lr: 0.001000	batch_time: 0.099751 (0.415017)	data_time: 0.000070 (0.318401)	rpn_cls_loss: 0.081860 (0.216651)	rpn_loc_loss: 0.182787 (0.238268)	rpn_kp_loss: 0.012022 (0.050796)	rpn_heatmap_loss: 0.292948 (0.309499)	siammask_loss: 0.606174 (0.862867)
+[2019-06-30 17:17:47,760-rk0-log_helper.py# 97] Progress: 790 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:17:51,539-rk0-train_siampose_bibranch.py#417] Epoch: [1][800/3537] lr: 0.001000	batch_time: 0.087686 (0.414597)	data_time: 0.000062 (0.318016)	rpn_cls_loss: 0.101911 (0.215195)	rpn_loc_loss: 0.163407 (0.237687)	rpn_kp_loss: 0.013445 (0.050322)	rpn_heatmap_loss: 0.378197 (0.309605)	siammask_loss: 0.689641 (0.860346)
+[2019-06-30 17:17:51,570-rk0-log_helper.py# 97] Progress: 800 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:17:54,236-rk0-train_siampose_bibranch.py#417] Epoch: [1][810/3537] lr: 0.001000	batch_time: 0.090780 (0.412798)	data_time: 0.000082 (0.316312)	rpn_cls_loss: 0.078729 (0.213683)	rpn_loc_loss: 0.221848 (0.237059)	rpn_kp_loss: 0.010534 (0.049852)	rpn_heatmap_loss: 0.344857 (0.309212)	siammask_loss: 0.700338 (0.857218)
+[2019-06-30 17:17:54,251-rk0-log_helper.py# 97] Progress: 810 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:01 (D:H:M)
+
+[2019-06-30 17:17:59,913-rk0-train_siampose_bibranch.py#417] Epoch: [1][820/3537] lr: 0.001000	batch_time: 2.459015 (0.414677)	data_time: 2.352636 (0.318204)	rpn_cls_loss: 0.086101 (0.212207)	rpn_loc_loss: 0.130054 (0.236506)	rpn_kp_loss: 0.010819 (0.049415)	rpn_heatmap_loss: 0.280459 (0.308880)	siammask_loss: 0.533445 (0.854310)
+[2019-06-30 17:17:59,931-rk0-log_helper.py# 97] Progress: 820 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:18:03,262-rk0-train_siampose_bibranch.py#417] Epoch: [1][830/3537] lr: 0.001000	batch_time: 0.089371 (0.413706)	data_time: 0.000048 (0.317271)	rpn_cls_loss: 0.077146 (0.210631)	rpn_loc_loss: 0.149589 (0.235932)	rpn_kp_loss: 0.013031 (0.048958)	rpn_heatmap_loss: 0.167586 (0.308435)	siammask_loss: 0.437269 (0.851142)
+[2019-06-30 17:18:03,301-rk0-log_helper.py# 97] Progress: 830 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:18:06,887-rk0-train_siampose_bibranch.py#417] Epoch: [1][840/3537] lr: 0.001000	batch_time: 0.088504 (0.413087)	data_time: 0.000056 (0.316674)	rpn_cls_loss: 0.102377 (0.209197)	rpn_loc_loss: 0.180951 (0.235180)	rpn_kp_loss: 0.016180 (0.048517)	rpn_heatmap_loss: 0.372942 (0.307799)	siammask_loss: 0.708642 (0.847729)
+[2019-06-30 17:18:06,893-rk0-log_helper.py# 97] Progress: 840 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:01 (D:H:M)
+
+[2019-06-30 17:18:10,744-rk0-train_siampose_bibranch.py#417] Epoch: [1][850/3537] lr: 0.001000	batch_time: 0.087891 (0.412756)	data_time: 0.000068 (0.316403)	rpn_cls_loss: 0.090994 (0.207844)	rpn_loc_loss: 0.183570 (0.234375)	rpn_kp_loss: 0.009317 (0.048077)	rpn_heatmap_loss: 0.110885 (0.306928)	siammask_loss: 0.431480 (0.844100)
+[2019-06-30 17:18:10,817-rk0-log_helper.py# 97] Progress: 850 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:18:16,667-rk0-train_siampose_bibranch.py#417] Epoch: [1][860/3537] lr: 0.001000	batch_time: 2.588552 (0.414834)	data_time: 2.481811 (0.318495)	rpn_cls_loss: 0.075507 (0.206367)	rpn_loc_loss: 0.165332 (0.233823)	rpn_kp_loss: 0.013248 (0.047663)	rpn_heatmap_loss: 0.148179 (0.307408)	siammask_loss: 0.435332 (0.842026)
+[2019-06-30 17:18:16,681-rk0-log_helper.py# 97] Progress: 860 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:03 (D:H:M)
+
+[2019-06-30 17:18:20,127-rk0-train_siampose_bibranch.py#417] Epoch: [1][870/3537] lr: 0.001000	batch_time: 0.098755 (0.414034)	data_time: 0.000057 (0.317710)	rpn_cls_loss: 0.089216 (0.204937)	rpn_loc_loss: 0.155178 (0.233174)	rpn_kp_loss: 0.019228 (0.047251)	rpn_heatmap_loss: 0.507036 (0.307811)	siammask_loss: 0.801695 (0.839808)
+[2019-06-30 17:18:20,151-rk0-log_helper.py# 97] Progress: 870 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:18:23,352-rk0-train_siampose_bibranch.py#417] Epoch: [1][880/3537] lr: 0.001000	batch_time: 0.088135 (0.412985)	data_time: 0.000065 (0.316677)	rpn_cls_loss: 0.071880 (0.203510)	rpn_loc_loss: 0.207050 (0.232480)	rpn_kp_loss: 0.014262 (0.046850)	rpn_heatmap_loss: 0.495933 (0.307163)	siammask_loss: 0.830535 (0.836499)
+[2019-06-30 17:18:23,360-rk0-log_helper.py# 97] Progress: 880 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:18:27,063-rk0-train_siampose_bibranch.py#417] Epoch: [1][890/3537] lr: 0.001000	batch_time: 0.087628 (0.412505)	data_time: 0.000070 (0.316245)	rpn_cls_loss: 0.082847 (0.202212)	rpn_loc_loss: 0.192305 (0.231906)	rpn_kp_loss: 0.012172 (0.046453)	rpn_heatmap_loss: 0.503155 (0.306759)	siammask_loss: 0.828940 (0.833712)
+[2019-06-30 17:18:27,106-rk0-log_helper.py# 97] Progress: 890 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:18:33,038-rk0-train_siampose_bibranch.py#417] Epoch: [1][900/3537] lr: 0.001000	batch_time: 2.654273 (0.414551)	data_time: 2.548741 (0.318313)	rpn_cls_loss: 0.116232 (0.200984)	rpn_loc_loss: 0.182220 (0.231462)	rpn_kp_loss: 0.019418 (0.046068)	rpn_heatmap_loss: 0.475744 (0.306891)	siammask_loss: 0.830058 (0.831697)
+[2019-06-30 17:18:33,053-rk0-log_helper.py# 97] Progress: 900 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:18:36,275-rk0-train_siampose_bibranch.py#417] Epoch: [1][910/3537] lr: 0.001000	batch_time: 0.098237 (0.413544)	data_time: 0.000060 (0.317319)	rpn_cls_loss: 0.064778 (0.199624)	rpn_loc_loss: 0.188210 (0.230846)	rpn_kp_loss: 0.012336 (0.045689)	rpn_heatmap_loss: 0.081332 (0.306938)	siammask_loss: 0.384299 (0.829266)
+[2019-06-30 17:18:36,296-rk0-log_helper.py# 97] Progress: 910 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:01 (D:H:M)
+
+[2019-06-30 17:18:39,396-rk0-train_siampose_bibranch.py#417] Epoch: [1][920/3537] lr: 0.001000	batch_time: 0.088105 (0.412432)	data_time: 0.000087 (0.316247)	rpn_cls_loss: 0.065690 (0.198192)	rpn_loc_loss: 0.173355 (0.230169)	rpn_kp_loss: 0.008958 (0.045316)	rpn_heatmap_loss: 0.347437 (0.307449)	siammask_loss: 0.630111 (0.827162)
+[2019-06-30 17:18:39,421-rk0-log_helper.py# 97] Progress: 920 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:59 (D:H:M)
+
+[2019-06-30 17:18:42,939-rk0-train_siampose_bibranch.py#417] Epoch: [1][930/3537] lr: 0.001000	batch_time: 0.087874 (0.411798)	data_time: 0.000070 (0.315512)	rpn_cls_loss: 0.066368 (0.196882)	rpn_loc_loss: 0.184822 (0.229718)	rpn_kp_loss: 0.011027 (0.044944)	rpn_heatmap_loss: 0.440824 (0.307587)	siammask_loss: 0.740006 (0.825075)
+[2019-06-30 17:18:42,970-rk0-log_helper.py# 97] Progress: 930 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:59 (D:H:M)
+
+[2019-06-30 17:18:48,177-rk0-train_siampose_bibranch.py#417] Epoch: [1][940/3537] lr: 0.001000	batch_time: 2.188348 (0.412982)	data_time: 2.083112 (0.316722)	rpn_cls_loss: 0.052520 (0.195558)	rpn_loc_loss: 0.197412 (0.229258)	rpn_kp_loss: 0.013124 (0.044596)	rpn_heatmap_loss: 0.259656 (0.307617)	siammask_loss: 0.562194 (0.822880)
+[2019-06-30 17:18:48,201-rk0-log_helper.py# 97] Progress: 940 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:18:52,103-rk0-train_siampose_bibranch.py#417] Epoch: [1][950/3537] lr: 0.001000	batch_time: 0.098554 (0.412759)	data_time: 0.000159 (0.316520)	rpn_cls_loss: 0.057275 (0.194261)	rpn_loc_loss: 0.188583 (0.228625)	rpn_kp_loss: 0.011941 (0.044250)	rpn_heatmap_loss: 0.267775 (0.306225)	siammask_loss: 0.563290 (0.819086)
+[2019-06-30 17:18:52,129-rk0-log_helper.py# 97] Progress: 950 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:18:55,223-rk0-train_siampose_bibranch.py#417] Epoch: [1][960/3537] lr: 0.001000	batch_time: 0.088961 (0.411702)	data_time: 0.000063 (0.315511)	rpn_cls_loss: 0.068471 (0.192983)	rpn_loc_loss: 0.189492 (0.228137)	rpn_kp_loss: 0.014556 (0.043907)	rpn_heatmap_loss: 0.457505 (0.305714)	siammask_loss: 0.767921 (0.816368)
+[2019-06-30 17:18:55,304-rk0-log_helper.py# 97] Progress: 960 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:58 (D:H:M)
+
+[2019-06-30 17:18:58,705-rk0-train_siampose_bibranch.py#417] Epoch: [1][970/3537] lr: 0.001000	batch_time: 0.089377 (0.411039)	data_time: 0.000071 (0.314885)	rpn_cls_loss: 0.075645 (0.191802)	rpn_loc_loss: 0.203995 (0.227618)	rpn_kp_loss: 0.009531 (0.043581)	rpn_heatmap_loss: 0.403271 (0.304639)	siammask_loss: 0.733242 (0.813164)
+[2019-06-30 17:18:58,721-rk0-log_helper.py# 97] Progress: 970 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:19:04,057-rk0-train_siampose_bibranch.py#417] Epoch: [1][980/3537] lr: 0.001000	batch_time: 2.329281 (0.412298)	data_time: 2.223756 (0.316161)	rpn_cls_loss: 0.108106 (0.190618)	rpn_loc_loss: 0.246576 (0.227189)	rpn_kp_loss: 0.010529 (0.043243)	rpn_heatmap_loss: 0.152456 (0.304689)	siammask_loss: 0.566982 (0.811178)
+[2019-06-30 17:19:04,059-rk0-log_helper.py# 97] Progress: 980 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:59 (D:H:M)
+
+[2019-06-30 17:19:07,389-rk0-train_siampose_bibranch.py#417] Epoch: [1][990/3537] lr: 0.001000	batch_time: 0.096661 (0.411491)	data_time: 0.000102 (0.315348)	rpn_cls_loss: 0.085037 (0.189474)	rpn_loc_loss: 0.162710 (0.226987)	rpn_kp_loss: 0.008026 (0.042916)	rpn_heatmap_loss: 0.254726 (0.304739)	siammask_loss: 0.543040 (0.809513)
+[2019-06-30 17:19:07,414-rk0-log_helper.py# 97] Progress: 990 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:58 (D:H:M)
+
+[2019-06-30 17:19:10,474-rk0-train_siampose_bibranch.py#417] Epoch: [1][1000/3537] lr: 0.001000	batch_time: 0.086954 (0.410452)	data_time: 0.000067 (0.314338)	rpn_cls_loss: 0.061466 (0.188286)	rpn_loc_loss: 0.166091 (0.226558)	rpn_kp_loss: 0.011053 (0.042594)	rpn_heatmap_loss: 0.215129 (0.304516)	siammask_loss: 0.486959 (0.807266)
+[2019-06-30 17:19:10,483-rk0-log_helper.py# 97] Progress: 1000 / 70740 [1%], Speed: 0.410 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:19:13,499-rk0-train_siampose_bibranch.py#417] Epoch: [1][1010/3537] lr: 0.001000	batch_time: 0.088286 (0.409375)	data_time: 0.000126 (0.313290)	rpn_cls_loss: 0.045905 (0.187090)	rpn_loc_loss: 0.106775 (0.226025)	rpn_kp_loss: 0.008451 (0.042289)	rpn_heatmap_loss: 0.262163 (0.304187)	siammask_loss: 0.444649 (0.804795)
+[2019-06-30 17:19:13,508-rk0-log_helper.py# 97] Progress: 1010 / 70740 [1%], Speed: 0.409 s/iter, ETA 0:07:55 (D:H:M)
+
+[2019-06-30 17:19:19,248-rk0-train_siampose_bibranch.py#417] Epoch: [1][1020/3537] lr: 0.001000	batch_time: 2.357160 (0.410990)	data_time: 2.250016 (0.314913)	rpn_cls_loss: 0.057533 (0.185950)	rpn_loc_loss: 0.185459 (0.225546)	rpn_kp_loss: 0.013635 (0.041977)	rpn_heatmap_loss: 0.239229 (0.303565)	siammask_loss: 0.532948 (0.802146)
+[2019-06-30 17:19:19,290-rk0-log_helper.py# 97] Progress: 1020 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:19:22,464-rk0-train_siampose_bibranch.py#417] Epoch: [1][1030/3537] lr: 0.001000	batch_time: 0.100229 (0.410112)	data_time: 0.000064 (0.314037)	rpn_cls_loss: 0.064240 (0.184882)	rpn_loc_loss: 0.156287 (0.225009)	rpn_kp_loss: 0.008429 (0.041666)	rpn_heatmap_loss: 0.097035 (0.302918)	siammask_loss: 0.357249 (0.799477)
+[2019-06-30 17:19:22,464-rk0-log_helper.py# 97] Progress: 1030 / 70740 [1%], Speed: 0.410 s/iter, ETA 0:07:56 (D:H:M)
+
+[2019-06-30 17:19:25,902-rk0-train_siampose_bibranch.py#417] Epoch: [1][1040/3537] lr: 0.001000	batch_time: 0.094741 (0.409467)	data_time: 0.000023 (0.313428)	rpn_cls_loss: 0.076644 (0.183690)	rpn_loc_loss: 0.200792 (0.224572)	rpn_kp_loss: 0.009537 (0.041363)	rpn_heatmap_loss: 0.288063 (0.302065)	siammask_loss: 0.615195 (0.796606)
+[2019-06-30 17:19:25,907-rk0-log_helper.py# 97] Progress: 1040 / 70740 [1%], Speed: 0.409 s/iter, ETA 0:07:55 (D:H:M)
+
+[2019-06-30 17:19:29,409-rk0-train_siampose_bibranch.py#417] Epoch: [1][1050/3537] lr: 0.001000	batch_time: 0.087175 (0.408899)	data_time: 0.000068 (0.312897)	rpn_cls_loss: 0.066760 (0.182576)	rpn_loc_loss: 0.173768 (0.223928)	rpn_kp_loss: 0.014058 (0.041065)	rpn_heatmap_loss: 0.394406 (0.301914)	siammask_loss: 0.683745 (0.794270)
+[2019-06-30 17:19:29,410-rk0-log_helper.py# 97] Progress: 1050 / 70740 [1%], Speed: 0.409 s/iter, ETA 0:07:54 (D:H:M)
+
+[2019-06-30 17:19:36,015-rk0-train_siampose_bibranch.py#417] Epoch: [1][1060/3537] lr: 0.001000	batch_time: 3.012484 (0.411265)	data_time: 2.907516 (0.315289)	rpn_cls_loss: 0.060624 (0.181576)	rpn_loc_loss: 0.200750 (0.223445)	rpn_kp_loss: 0.012715 (0.040768)	rpn_heatmap_loss: 0.361237 (0.301051)	siammask_loss: 0.675476 (0.791530)
+[2019-06-30 17:19:36,096-rk0-log_helper.py# 97] Progress: 1060 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:19:39,590-rk0-train_siampose_bibranch.py#417] Epoch: [1][1070/3537] lr: 0.001000	batch_time: 0.088652 (0.410755)	data_time: 0.000071 (0.314792)	rpn_cls_loss: 0.087621 (0.180537)	rpn_loc_loss: 0.150867 (0.223107)	rpn_kp_loss: 0.009213 (0.040486)	rpn_heatmap_loss: 0.272300 (0.300486)	siammask_loss: 0.550175 (0.789238)
+[2019-06-30 17:19:39,590-rk0-log_helper.py# 97] Progress: 1070 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:56 (D:H:M)
+
+[2019-06-30 17:19:43,006-rk0-train_siampose_bibranch.py#417] Epoch: [1][1080/3537] lr: 0.001000	batch_time: 0.087278 (0.410108)	data_time: 0.000108 (0.314175)	rpn_cls_loss: 0.064542 (0.179471)	rpn_loc_loss: 0.135382 (0.222625)	rpn_kp_loss: 0.013155 (0.040217)	rpn_heatmap_loss: 0.231252 (0.299995)	siammask_loss: 0.471406 (0.786833)
+[2019-06-30 17:19:43,013-rk0-log_helper.py# 97] Progress: 1080 / 70740 [1%], Speed: 0.410 s/iter, ETA 0:07:56 (D:H:M)
+
+[2019-06-30 17:19:46,868-rk0-train_siampose_bibranch.py#417] Epoch: [1][1090/3537] lr: 0.001000	batch_time: 0.089081 (0.409880)	data_time: 0.000064 (0.313978)	rpn_cls_loss: 0.058695 (0.178384)	rpn_loc_loss: 0.170972 (0.222266)	rpn_kp_loss: 0.012130 (0.039953)	rpn_heatmap_loss: 0.186808 (0.299066)	siammask_loss: 0.462800 (0.784123)
+[2019-06-30 17:19:46,903-rk0-log_helper.py# 97] Progress: 1090 / 70740 [1%], Speed: 0.410 s/iter, ETA 0:07:55 (D:H:M)
+
+[2019-06-30 17:19:53,459-rk0-train_siampose_bibranch.py#417] Epoch: [1][1100/3537] lr: 0.001000	batch_time: 3.116166 (0.412139)	data_time: 3.010316 (0.316260)	rpn_cls_loss: 0.067292 (0.177316)	rpn_loc_loss: 0.191994 (0.221888)	rpn_kp_loss: 0.007591 (0.039681)	rpn_heatmap_loss: 0.119020 (0.298278)	siammask_loss: 0.424296 (0.781542)
+[2019-06-30 17:19:53,478-rk0-log_helper.py# 97] Progress: 1100 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:58 (D:H:M)
+
+[2019-06-30 17:19:57,054-rk0-train_siampose_bibranch.py#417] Epoch: [1][1110/3537] lr: 0.001000	batch_time: 0.102885 (0.411658)	data_time: 0.000062 (0.315773)	rpn_cls_loss: 0.046915 (0.176309)	rpn_loc_loss: 0.148408 (0.221403)	rpn_kp_loss: 0.007854 (0.039423)	rpn_heatmap_loss: 0.469766 (0.297513)	siammask_loss: 0.702624 (0.778929)
+[2019-06-30 17:19:57,058-rk0-log_helper.py# 97] Progress: 1110 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:20:00,784-rk0-train_siampose_bibranch.py#417] Epoch: [1][1120/3537] lr: 0.001000	batch_time: 0.086993 (0.411306)	data_time: 0.000057 (0.315456)	rpn_cls_loss: 0.054469 (0.175281)	rpn_loc_loss: 0.162416 (0.221014)	rpn_kp_loss: 0.009071 (0.039160)	rpn_heatmap_loss: 0.000000 (0.296731)	siammask_loss: 0.258439 (0.776389)
+[2019-06-30 17:20:00,825-rk0-log_helper.py# 97] Progress: 1120 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:20:04,345-rk0-train_siampose_bibranch.py#417] Epoch: [1][1130/3537] lr: 0.001000	batch_time: 0.087372 (0.410811)	data_time: 0.000054 (0.315001)	rpn_cls_loss: 0.068246 (0.174339)	rpn_loc_loss: 0.147923 (0.220573)	rpn_kp_loss: 0.008729 (0.038901)	rpn_heatmap_loss: 0.276962 (0.296300)	siammask_loss: 0.531444 (0.774227)
+[2019-06-30 17:20:04,363-rk0-log_helper.py# 97] Progress: 1130 / 70740 [1%], Speed: 0.411 s/iter, ETA 0:07:56 (D:H:M)
+
+[2019-06-30 17:20:10,791-rk0-train_siampose_bibranch.py#417] Epoch: [1][1140/3537] lr: 0.001000	batch_time: 2.850065 (0.412855)	data_time: 2.744250 (0.317032)	rpn_cls_loss: 0.058891 (0.173313)	rpn_loc_loss: 0.191800 (0.220281)	rpn_kp_loss: 0.009231 (0.038644)	rpn_heatmap_loss: 0.176389 (0.295808)	siammask_loss: 0.474671 (0.772102)
+[2019-06-30 17:20:10,823-rk0-log_helper.py# 97] Progress: 1140 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:07:58 (D:H:M)
+
+[2019-06-30 17:20:14,585-rk0-train_siampose_bibranch.py#417] Epoch: [1][1150/3537] lr: 0.001000	batch_time: 0.087271 (0.412558)	data_time: 0.000051 (0.316729)	rpn_cls_loss: 0.086690 (0.172308)	rpn_loc_loss: 0.136276 (0.219868)	rpn_kp_loss: 0.010730 (0.038405)	rpn_heatmap_loss: 0.174817 (0.295485)	siammask_loss: 0.435768 (0.770040)
+[2019-06-30 17:20:14,596-rk0-log_helper.py# 97] Progress: 1150 / 70740 [1%], Speed: 0.413 s/iter, ETA 0:07:58 (D:H:M)
+
+[2019-06-30 17:20:18,157-rk0-train_siampose_bibranch.py#417] Epoch: [1][1160/3537] lr: 0.001000	batch_time: 0.086902 (0.412074)	data_time: 0.000058 (0.316263)	rpn_cls_loss: 0.041396 (0.171346)	rpn_loc_loss: 0.135356 (0.219273)	rpn_kp_loss: 0.008656 (0.038154)	rpn_heatmap_loss: 0.240150 (0.295446)	siammask_loss: 0.452630 (0.768074)
+[2019-06-30 17:20:18,175-rk0-log_helper.py# 97] Progress: 1160 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:20:22,268-rk0-train_siampose_bibranch.py#417] Epoch: [1][1170/3537] lr: 0.001000	batch_time: 0.089059 (0.412060)	data_time: 0.000096 (0.316282)	rpn_cls_loss: 0.059323 (0.170358)	rpn_loc_loss: 0.174018 (0.218907)	rpn_kp_loss: 0.009723 (0.037914)	rpn_heatmap_loss: 0.462417 (0.295387)	siammask_loss: 0.740286 (0.766347)
+[2019-06-30 17:20:22,299-rk0-log_helper.py# 97] Progress: 1170 / 70740 [1%], Speed: 0.412 s/iter, ETA 0:07:57 (D:H:M)
+
+[2019-06-30 17:20:29,186-rk0-train_siampose_bibranch.py#417] Epoch: [1][1180/3537] lr: 0.001000	batch_time: 3.033633 (0.414425)	data_time: 2.928817 (0.318646)	rpn_cls_loss: 0.045614 (0.169512)	rpn_loc_loss: 0.170139 (0.218486)	rpn_kp_loss: 0.012256 (0.037690)	rpn_heatmap_loss: 0.134090 (0.295495)	siammask_loss: 0.396127 (0.764880)
+[2019-06-30 17:20:29,222-rk0-log_helper.py# 97] Progress: 1180 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:20:33,425-rk0-train_siampose_bibranch.py#417] Epoch: [1][1190/3537] lr: 0.001000	batch_time: 0.103922 (0.414497)	data_time: 0.000060 (0.318724)	rpn_cls_loss: 0.062165 (0.168658)	rpn_loc_loss: 0.119781 (0.218125)	rpn_kp_loss: 0.009286 (0.037458)	rpn_heatmap_loss: 0.308295 (0.295206)	siammask_loss: 0.523484 (0.763072)
+[2019-06-30 17:20:33,446-rk0-log_helper.py# 97] Progress: 1190 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:20:37,692-rk0-train_siampose_bibranch.py#417] Epoch: [1][1200/3537] lr: 0.001000	batch_time: 0.087743 (0.414592)	data_time: 0.000063 (0.318826)	rpn_cls_loss: 0.063640 (0.167759)	rpn_loc_loss: 0.190652 (0.217746)	rpn_kp_loss: 0.010602 (0.037233)	rpn_heatmap_loss: 0.233042 (0.295083)	siammask_loss: 0.536065 (0.761371)
+[2019-06-30 17:20:37,694-rk0-log_helper.py# 97] Progress: 1200 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:20:41,258-rk0-train_siampose_bibranch.py#417] Epoch: [1][1210/3537] lr: 0.001000	batch_time: 0.087783 (0.414106)	data_time: 0.000066 (0.318353)	rpn_cls_loss: 0.067443 (0.166848)	rpn_loc_loss: 0.162222 (0.217434)	rpn_kp_loss: 0.010771 (0.037006)	rpn_heatmap_loss: 0.098269 (0.295146)	siammask_loss: 0.371149 (0.759920)
+[2019-06-30 17:20:41,277-rk0-log_helper.py# 97] Progress: 1210 / 70740 [1%], Speed: 0.414 s/iter, ETA 0:07:59 (D:H:M)
+
+[2019-06-30 17:20:47,041-rk0-train_siampose_bibranch.py#417] Epoch: [1][1220/3537] lr: 0.001000	batch_time: 2.510389 (0.415445)	data_time: 2.403713 (0.319686)	rpn_cls_loss: 0.075622 (0.165950)	rpn_loc_loss: 0.235229 (0.217139)	rpn_kp_loss: 0.013656 (0.036790)	rpn_heatmap_loss: 0.132521 (0.295402)	siammask_loss: 0.504074 (0.758708)
+[2019-06-30 17:20:47,073-rk0-log_helper.py# 97] Progress: 1220 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:01 (D:H:M)
+
+[2019-06-30 17:20:50,779-rk0-train_siampose_bibranch.py#417] Epoch: [1][1230/3537] lr: 0.001000	batch_time: 0.092825 (0.415099)	data_time: 0.000067 (0.319344)	rpn_cls_loss: 0.040252 (0.165084)	rpn_loc_loss: 0.156979 (0.216639)	rpn_kp_loss: 0.012546 (0.036567)	rpn_heatmap_loss: 0.237028 (0.294844)	siammask_loss: 0.478202 (0.756462)
+[2019-06-30 17:20:50,798-rk0-log_helper.py# 97] Progress: 1230 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:20:55,027-rk0-train_siampose_bibranch.py#417] Epoch: [1][1240/3537] lr: 0.001000	batch_time: 0.091645 (0.415170)	data_time: 0.000085 (0.319436)	rpn_cls_loss: 0.065483 (0.164282)	rpn_loc_loss: 0.142729 (0.216254)	rpn_kp_loss: 0.008728 (0.036353)	rpn_heatmap_loss: 0.314123 (0.294743)	siammask_loss: 0.559610 (0.754884)
+[2019-06-30 17:20:55,111-rk0-log_helper.py# 97] Progress: 1240 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:20:58,483-rk0-train_siampose_bibranch.py#417] Epoch: [1][1250/3537] lr: 0.001000	batch_time: 0.095977 (0.414606)	data_time: 0.000067 (0.318879)	rpn_cls_loss: 0.048542 (0.163410)	rpn_loc_loss: 0.182716 (0.215909)	rpn_kp_loss: 0.010188 (0.036145)	rpn_heatmap_loss: 0.428118 (0.294097)	siammask_loss: 0.706107 (0.752743)
+[2019-06-30 17:20:58,512-rk0-log_helper.py# 97] Progress: 1250 / 70740 [1%], Speed: 0.415 s/iter, ETA 0:08:00 (D:H:M)
+
+[2019-06-30 17:21:05,405-rk0-train_siampose_bibranch.py#417] Epoch: [1][1260/3537] lr: 0.001000	batch_time: 3.068786 (0.416803)	data_time: 2.962703 (0.321053)	rpn_cls_loss: 0.046597 (0.162559)	rpn_loc_loss: 0.211808 (0.215596)	rpn_kp_loss: 0.008131 (0.035937)	rpn_heatmap_loss: 0.450759 (0.293528)	siammask_loss: 0.759657 (0.750740)
+[2019-06-30 17:21:05,449-rk0-log_helper.py# 97] Progress: 1260 / 70740 [1%], Speed: 0.417 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:21:09,661-rk0-train_siampose_bibranch.py#417] Epoch: [1][1270/3537] lr: 0.001000	batch_time: 0.104888 (0.416866)	data_time: 0.000068 (0.321100)	rpn_cls_loss: 0.070912 (0.161723)	rpn_loc_loss: 0.192246 (0.215221)	rpn_kp_loss: 0.008377 (0.035735)	rpn_heatmap_loss: 0.111707 (0.293455)	siammask_loss: 0.421692 (0.749179)
+[2019-06-30 17:21:09,722-rk0-log_helper.py# 97] Progress: 1270 / 70740 [1%], Speed: 0.417 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:21:13,468-rk0-train_siampose_bibranch.py#417] Epoch: [1][1280/3537] lr: 0.001000	batch_time: 0.087722 (0.416576)	data_time: 0.000064 (0.320801)	rpn_cls_loss: 0.060417 (0.160959)	rpn_loc_loss: 0.146771 (0.214824)	rpn_kp_loss: 0.009860 (0.035533)	rpn_heatmap_loss: 0.090030 (0.292943)	siammask_loss: 0.336433 (0.747224)
+[2019-06-30 17:21:13,468-rk0-log_helper.py# 97] Progress: 1280 / 70740 [1%], Speed: 0.417 s/iter, ETA 0:08:02 (D:H:M)
+
+[2019-06-30 17:21:17,093-rk0-train_siampose_bibranch.py#417] Epoch: [1][1290/3537] lr: 0.001000	batch_time: 0.088173 (0.416151)	data_time: 0.000068 (0.320402)	rpn_cls_loss: 0.059615 (0.160132)	rpn_loc_loss: 0.171486 (0.214470)	rpn_kp_loss: 0.008148 (0.035333)	rpn_heatmap_loss: 0.049625 (0.292421)	siammask_loss: 0.323172 (0.745249)
+[2019-06-30 17:21:17,120-rk0-log_helper.py# 97] Progress: 1290 / 70740 [1%], Speed: 0.416 s/iter, ETA 0:08:01 (D:H:M)
+
+[2019-06-30 17:21:24,063-rk0-train_siampose_bibranch.py#417] Epoch: [1][1300/3537] lr: 0.001000	batch_time: 3.156714 (0.418305)	data_time: 3.048524 (0.322564)	rpn_cls_loss: 0.049673 (0.159249)	rpn_loc_loss: 0.164686 (0.214136)	rpn_kp_loss: 0.011185 (0.035138)	rpn_heatmap_loss: 0.262958 (0.292351)	siammask_loss: 0.521439 (0.743701)
+[2019-06-30 17:21:24,113-rk0-log_helper.py# 97] Progress: 1300 / 70740 [1%], Speed: 0.418 s/iter, ETA 0:08:04 (D:H:M)
+
+[2019-06-30 17:21:27,942-rk0-train_siampose_bibranch.py#417] Epoch: [1][1310/3537] lr: 0.001000	batch_time: 0.102430 (0.418067)	data_time: 0.000063 (0.322289)	rpn_cls_loss: 0.059081 (0.158440)	rpn_loc_loss: 0.148699 (0.213708)	rpn_kp_loss: 0.012486 (0.034938)	rpn_heatmap_loss: 0.090538 (0.291911)	siammask_loss: 0.340544 (0.741739)
+[2019-06-30 17:21:28,019-rk0-log_helper.py# 97] Progress: 1310 / 70740 [1%], Speed: 0.418 s/iter, ETA 0:08:03 (D:H:M)
+

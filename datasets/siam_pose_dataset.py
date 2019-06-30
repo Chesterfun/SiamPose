@@ -400,7 +400,7 @@ class DataSets(Dataset):
         self.heatmap_size = (255, 255)
         self.image_size = 255
         self.size = 17
-        self.sigma = 6
+        self.sigma = 4
         self.base_size = 0
         self.crop_size = 0
         self.target_type = 'gaussian'
@@ -549,11 +549,13 @@ class DataSets(Dataset):
             'Only support gaussian map now!'
 
         if self.target_type == 'gaussian':
-            target = np.zeros((self.heatmap_size[1],
+            target = np.zeros((1,
+                              self.heatmap_size[1],
                               self.heatmap_size[0]),
                               dtype=np.float32)
 
-            masked_gaussian = np.zeros((self.heatmap_size[1],
+            masked_gaussian = np.zeros((1,
+                                       self.heatmap_size[1],
                                        self.heatmap_size[0]),
                                        dtype=np.float32)
 
@@ -589,7 +591,7 @@ class DataSets(Dataset):
 
                 v = target_weight[joint_id]
                 if v > 0.5:
-                    masked_gaussian[img_y[0]:img_y[1], img_x[0]:img_x[1]] = \
+                    masked_gaussian[:, img_y[0]:img_y[1], img_x[0]:img_x[1]] = \
                         g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
                     np.maximum(target, masked_gaussian, out=target)
 

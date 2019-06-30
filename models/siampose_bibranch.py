@@ -9,11 +9,44 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from utils.anchors import Anchors
 
+class JointsSL1Loss(nn.Module):
+
+    def __init__(self, use_target_weight):
+        super(JointsSL1Loss, self).__init__()
+        self.criterion = nn.SmoothL1Loss()
+        self.use_target_weight = use_target_weight
+
+    def forward(self, output, target, target_weight):
+        target = target.float()
+        # output = output.float()
+        # target_weight = target_weight.float()
+        target_weight = torch.unsqueeze(target_weight, -1)
+        batch_size = output.size(0)
+        num_joints = 17
+        heatmaps_pred = output.reshape((batch_size, num_joints, -1)).split(1, 1)
+        heatmaps_gt = target.reshape((batch_size, num_joints, -1)).split(1, 1)
+        loss = 0
+
+        for idx in range(num_joints):
+            heatmap_pred = heatmaps_pred[idx].squeeze()
+            heatmap_gt = heatmaps_gt[idx].squeeze()
+
+            if self.use_target_weight:
+                loss += self.criterion(
+                    heatmap_pred.mul(target_weight[:, idx]),
+                    heatmap_gt.mul(target_weight[:, idx])
+                )
+            else:
+                loss += self.criterion(heatmap_pred, heatmap_gt)
+
+        return loss / num_joints
+
+
 class JointsMSELoss(nn.Module):
 
     def __init__(self, use_target_weight):
         super(JointsMSELoss, self).__init__()
-        self.criterion = nn.SmoothL1Loss()
+        self.criterion = nn.MSELoss()
         self.use_target_weight = use_target_weight
 
     def forward(self, output, target, target_weight):
@@ -29,14 +62,15 @@ class JointsMSELoss(nn.Module):
             heatmap_gt = heatmaps_gt[idx].squeeze()
 
             if self.use_target_weight:
-                loss += * self.criterion(
+                loss += self.criterion(
                     heatmap_pred.mul(target_weight[:, idx]),
                     heatmap_gt.mul(target_weight[:, idx])
                 )
             else:
-                loss += 0.5 * self.criterion(heatmap_pred, heatmap_gt)
+                loss += self.criterion(heatmap_pred, heatmap_gt)
 
         return loss / num_joints
+
 
 class SiamMask(nn.Module):
     def __init__(self, anchors=None, o_sz=63, g_sz=127):
@@ -50,7 +84,8 @@ class SiamMask(nn.Module):
         self.o_sz = o_sz
         self.g_sz = g_sz
         self.upSample = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])
-        self.kp_criterion = JointsMSELoss(True)
+        self.kp_criterion = JointsSL1Loss(True)
+        self.heatmap_criterion = JointsMSELoss(True)
 
         self.all_anchors = None
 
@@ -70,36 +105,41 @@ class SiamMask(nn.Module):
         return pred_cls, pred_loc
 
     def mask(self, template, search):
-        pred_mask = self.mask_model(template, search)
-        return pred_mask
+        kp_coord, kp_heatmap = self.mask_model(template, search)
+        return kp_coord, kp_heatmap
 
-    def _add_rpn_loss(self, label_cls, label_loc, lable_loc_weight, label_mask, label_mask_weight,
-                      rpn_pred_cls, rpn_pred_loc, rpn_pred_mask, kp_weight, kp_criterion):
+    def _add_rpn_loss(self, label_cls, label_loc, lable_loc_weight, label_kp, label_heatmap, label_mask_weight,
+                      rpn_pred_cls, rpn_pred_loc, kp_coord, kp_heatmap, kp_weight, kp_criterion, heatmap_criterion):
         rpn_loss_cls = select_cross_entropy_loss(rpn_pred_cls, label_cls)
 
         rpn_loss_loc = weight_l1_loss(rpn_pred_loc, label_loc, lable_loc_weight)
 
-        rpn_loss_mask = select_mask_logistic_loss(rpn_pred_mask,
-                                                 label_mask,
-                                                 label_mask_weight,
-                                                 kp_weight,
-                                                 kp_criterion)
+        rpn_loss_kp = select_kp_logistic_loss(kp_coord,
+                                                label_kp,
+                                                label_mask_weight,
+                                                kp_weight,
+                                                kp_criterion)
 
-        return rpn_loss_cls, rpn_loss_loc, rpn_loss_mask
+        rpn_loss_heatmap = select_heatmap_logistic_loss(kp_heatmap,
+                                                     label_heatmap,
+                                                     label_mask_weight,
+                                                     kp_weight,
+                                                     heatmap_criterion)
+
+        return rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap
 
     def run(self, template, search, softmax=False):
         """
         run network
         """
         template_feature = self.feature_extractor(template)
-        feature, search_feature = self.features.forward_all(search)
+        search_feature = self.feature_extractor(search)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
-        corr_feature = self.mask_model.mask.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
-        rpn_pred_mask = self.refine_model(feature, corr_feature)
+        kp_coord, kp_heatmap = self.mask(template_feature, search_feature)
 
         if softmax:
             rpn_pred_cls = self.softmax(rpn_pred_cls)
-        return rpn_pred_cls, rpn_pred_loc, rpn_pred_mask, template_feature, search_feature
+        return rpn_pred_cls, rpn_pred_loc, kp_coord, kp_heatmap, template_feature, search_feature
 
     def softmax(self, cls):
         b, a2, h, w = cls.size()
@@ -128,19 +168,19 @@ class SiamMask(nn.Module):
             label_kp_weight = input['label_kp_weight']
             label_kp = input['label_kp']
 
-        rpn_pred_cls, rpn_pred_loc, rpn_pred_mask, template_feature, search_feature = \
+        rpn_pred_cls, rpn_pred_loc, kp_coord, kp_heatmap, template_feature, search_feature = \
             self.run(template, search, softmax=self.training)
 
         outputs = dict()
 
-        outputs['predict'] = [rpn_pred_loc, rpn_pred_cls, rpn_pred_mask, template_feature, search_feature]
+        outputs['predict'] = [rpn_pred_loc, rpn_pred_cls, kp_coord, kp_heatmap, template_feature, search_feature]
 
         if self.training:
-            rpn_loss_cls, rpn_loss_loc, rpn_loss_mask = \
-                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask_weight,
-                                   rpn_pred_cls, rpn_pred_loc, rpn_pred_mask,
-                                   label_kp_weight, self.kp_criterion)
-            outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, rpn_loss_mask]
+            rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap = \
+                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask, label_mask_weight,
+                                   rpn_pred_cls, rpn_pred_loc, kp_coord, kp_heatmap,
+                                   label_kp_weight, self.kp_criterion, self.heatmap_criterion)
+            outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap]
             # outputs['accuracy'] = [iou_acc_mean, iou_acc_5, iou_acc_7]
 
         return outputs
@@ -192,7 +232,13 @@ def weight_l1_loss(pred_loc, label_loc, loss_weight):
     return loss.sum().div(b)
 
 
-def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, g_sz=127):
+def select_kp_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, g_sz=127):
+    # mask = mask[:, 0, :, :]
+    # mask = mask.unsqueeze(1)
+    # print('mask shape: ', mask.shape)
+    # print('pred mask shape: ', p_m.shape)
+    # print('mask weight shape: ', weight.shape)
+    # print('kp weight shape: ', kp_weight.shape)
 
     kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
     kp_weight_pos = kp_weight_pos.expand(-1,
@@ -202,13 +248,51 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
                                          -1).contiguous()
     # (bs, 1, 25, 25, 17)
     kp_weight_pos = kp_weight_pos.view(-1, 17)
+
+    mask_weight_pos = mask.view(mask.size(0), 1, 1, 1, -1, 2)
+    mask_weight_pos = mask_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1, -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    mask_weight_pos = mask_weight_pos.view(-1, 17, 2)
+
+    weight = weight.view(-1)
+    pos = Variable(weight.data.eq(1).nonzero().squeeze())
+    kp_weight = torch.index_select(kp_weight_pos, 0, pos)
+    mask = torch.index_select(mask_weight_pos, 0, pos)
+    # print('pose shape: ', pos.shape)
+    if pos.nelement() == 0: return p_m.sum() * 0
+
+    if len(p_m.shape) == 4:
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, 2)
+        # print('atf pred mask shape: ', p_m.shape)
+        p_m = torch.index_select(p_m, 0, pos)
+        # print('atf selected pred mask shape: ', p_m.shape)
+    else:
+        p_m = torch.index_select(p_m, 0, pos)
+
+    loss = criterion(p_m, mask, kp_weight)
+
+    return loss
+
+def select_heatmap_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, g_sz=127):
+    kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
+    kp_weight_pos = kp_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    kp_weight_pos = kp_weight_pos.view(-1, 1)
     weight = weight.view(-1)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())
     # print('pose shape: ', pos.shape)
     if pos.nelement() == 0: return p_m.sum() * 0
 
     if len(p_m.shape) == 4:
-        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, o_sz, o_sz)
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 1, o_sz, o_sz)
         # print('atf pred mask shape: ', p_m.shape)
         p_m = torch.index_select(p_m, 0, pos)
         # print('atf selected pred mask shape: ', p_m.shape)
@@ -216,17 +300,17 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
         # p_m = p_m.view(-1, g_sz * g_sz * 17)
     else:
         p_m = torch.index_select(p_m, 0, pos)
-        p_m = p_m.view(-1, 17, g_sz, g_sz)
+        p_m = p_m.view(-1, 1, g_sz, g_sz)
 
     kp_weight = torch.index_select(kp_weight_pos, 0, pos)
 
     mask_uf = F.unfold(mask, (g_sz, g_sz), padding=32, stride=8)
     # print('mask uf shape: ', mask_uf.shape)
-    mask_uf = torch.transpose(mask_uf, 1, 2).contiguous().view(-1, g_sz * g_sz * 17)
+    mask_uf = torch.transpose(mask_uf, 1, 2).contiguous().view(-1, g_sz * g_sz * 1)
     # print('transpose mask uf shape: ', mask_uf.shape)
 
     mask_uf = torch.index_select(mask_uf, 0, pos)
-    mask_uf = mask_uf.view(-1, 17, g_sz, g_sz)
+    mask_uf = mask_uf.view(-1, 1, g_sz, g_sz)
     # loss = F.soft_margin_loss(p_m, mask_uf)
     loss = criterion(p_m, mask_uf, kp_weight)
 

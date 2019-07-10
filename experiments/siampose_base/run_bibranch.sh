@@ -5,7 +5,7 @@ mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_bibranch.py \
     --config=config_bibranch.json -b 16 \
-    -j 8 \
+    -j 8 --resume ./siampose_bibrach_0630/checkpoint_e92.pth \
     --epochs 20 \
     --log logs/log.txt \
     2>&1 | tee logs/train.log

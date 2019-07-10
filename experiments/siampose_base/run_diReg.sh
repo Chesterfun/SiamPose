@@ -5,7 +5,7 @@ mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_directReg.py \
     --config=config_refine.json -b 16 \
-    -j 8 --resume snapshot/checkpoint_e9.pth \
+    -j 8 \
     --epochs 20 \
     --log logs/log.txt \
     2>&1 | tee logs/train.log

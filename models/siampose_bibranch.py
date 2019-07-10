@@ -8,6 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from utils.anchors import Anchors
+import matplotlib.pyplot as plt
 
 class JointsSL1Loss(nn.Module):
 
@@ -85,7 +86,7 @@ class SiamMask(nn.Module):
         self.g_sz = g_sz
         self.upSample = nn.UpsamplingBilinear2d(size=[g_sz, g_sz])
         self.kp_criterion = JointsSL1Loss(True)
-        self.heatmap_criterion = JointsMSELoss(True)
+        self.heatmap_criterion = JointsMSELoss(False)
 
         self.all_anchors = None
 
@@ -120,13 +121,13 @@ class SiamMask(nn.Module):
                                                 kp_weight,
                                                 kp_criterion)
 
-        rpn_loss_heatmap = select_heatmap_logistic_loss(kp_heatmap,
+        rpn_loss_heatmap, kp_pred, htmap_pred = select_heatmap_logistic_loss(kp_heatmap,
                                                      label_heatmap,
                                                      label_mask_weight,
                                                      kp_weight,
                                                      heatmap_criterion)
 
-        return rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap
+        return rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap, kp_pred, htmap_pred
 
     def run(self, template, search, softmax=False):
         """
@@ -176,12 +177,13 @@ class SiamMask(nn.Module):
         outputs['predict'] = [rpn_pred_loc, rpn_pred_cls, kp_coord, kp_heatmap, template_feature, search_feature]
 
         if self.training:
-            rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap = \
+            rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap, kp_pred, htmap_pred = \
                 self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask, label_mask_weight,
                                    rpn_pred_cls, rpn_pred_loc, kp_coord, kp_heatmap,
                                    label_kp_weight, self.kp_criterion, self.heatmap_criterion)
             outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, rpn_loss_kp, rpn_loss_heatmap]
-            # outputs['accuracy'] = [iou_acc_mean, iou_acc_5, iou_acc_7]
+
+        outputs['predict'].extend([kp_pred, htmap_pred])
 
         return outputs
 
@@ -314,7 +316,7 @@ def select_heatmap_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=6
     # loss = F.soft_margin_loss(p_m, mask_uf)
     loss = criterion(p_m, mask_uf, kp_weight)
 
-    return loss
+    return loss, p_m, mask_uf
 
 def iou_measure(pred, label):
     pred = pred.ge(0)

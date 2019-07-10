@@ -352,6 +352,88 @@ class AnchorTargetLayer:
                 return cls, delta, delta_weight, overlap
 
         tcx, tcy, tw, th = corner2center(target)
+        print('tcx shape: ', tcx)
+
+
+        anchor_box = anchor.all_anchors[0]
+        anchor_center = anchor.all_anchors[1]
+        print('anchor_center: ', anchor_center.shape)
+        x1, y1, x2, y2 = anchor_box[0], anchor_box[1], anchor_box[2], anchor_box[3]
+        cx, cy, w, h = anchor_center[0], anchor_center[1], anchor_center[2], anchor_center[3]
+
+        # delta
+        delta[0] = (tcx - cx) / w
+        delta[1] = (tcy - cy) / h
+        delta[2] = np.log(tw / w)
+        delta[3] = np.log(th / h)
+
+        # IoU
+        overlap = IoU([x1, y1, x2, y2], target)
+
+        pos = np.where(overlap > self.thr_high)
+        neg = np.where(overlap < self.thr_low)
+
+        pos, pos_num = select(pos, self.positive)
+        neg, neg_num = select(neg, self.rpn_batch - pos_num)
+        print('pos: ', pos)
+
+        cls[pos] = 1
+        delta_weight[pos] = 1. / (pos_num + 1e-6)
+
+        cls[neg] = 0
+
+        if not need_iou:
+            return cls, delta, delta_weight
+        else:
+            return cls, delta, delta_weight, overlap
+
+
+class AnchorTargetWithKPLayer:
+    def __init__(self, cfg):
+        self.thr_high = 0.6
+        self.thr_low = 0.3
+        self.negative = 16
+        self.rpn_batch = 64
+        self.positive = 16
+
+        self.__dict__.update(cfg)
+
+    def __call__(self, anchor, target, kp, size, neg=False, need_iou=False):
+        anchor_num = anchor.anchors.shape[0]
+        # kp shape [17, 3]
+        cls = np.zeros((anchor_num, size, size), dtype=np.int64)
+        cls[...] = -1  # -1 ignore 0 negative 1 positive
+        delta = np.zeros((4, anchor_num, size, size), dtype=np.float32)
+        delta_weight = np.zeros((anchor_num, size, size), dtype=np.float32)
+        kp_delta = np.zeros((anchor_num, 17*2, size, size), dtype=np.float32)
+
+        def select(position, keep_num=16):
+            num = position[0].shape[0]
+            if num <= keep_num:
+                return position, num
+            slt = np.arange(num)
+            np.random.shuffle(slt)
+            slt = slt[:keep_num]
+            return tuple(p[slt] for p in position), keep_num
+
+        if neg:
+            l = size // 2 - 3
+            r = size // 2 + 3 + 1
+
+            cls[:, l:r, l:r] = 0
+
+            neg, neg_num = select(np.where(cls == 0), self.negative)
+            cls[:] = -1
+            cls[neg] = 0
+
+            if not need_iou:
+                return cls, delta, delta_weight
+            else:
+                overlap = np.zeros((anchor_num, size, size), dtype=np.float32)
+                return cls, delta, delta_weight, overlap
+
+        tcx, tcy, tw, th = corner2center(target)
+
 
         anchor_box = anchor.all_anchors[0]
         anchor_center = anchor.all_anchors[1]
@@ -821,6 +903,8 @@ class DataSets(Dataset):
         else:
             gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
         joints_3d = joints_3d / 255
+
+        print(self.anchors.all_anchors[0].shape)
 
         return template, search, cls, delta, \
           delta_weight, np.array(bbox, np.float32), \

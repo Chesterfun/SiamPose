@@ -303,7 +303,10 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
     cur_lr = lr_scheduler.get_cur_lr()
     logger = logging.getLogger('global')
     avg = AverageMeter()
-    model.train()
+    model.module.features.eval()
+    model.module.rpn_model.eval()
+    model.module.mask_model.eval()
+    # model.train()
     model = model.cuda()
     end = time.time()
 
@@ -373,6 +376,20 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
                                                                     torch.mean(outputs['losses'][3])
 
         # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
+        htmap_pred = outputs['predict'][-1]
+        kp_pred = outputs['predict'][-2]
+        htmap_pred = htmap_pred.squeeze(1)
+        kp_pred = kp_pred.squeeze(1)
+        # htmap_pred = htmap_pred.permute(0, 2, 3, 1)
+        # kp_pred = kp_pred.permute(0, 2, 3, 1)
+        htmap_pred = htmap_pred.cpu().numpy()
+        kp_pred = kp_pred.cpu().detach().numpy()
+        f, (ax1, ax2) = plt.subplots(1, 2)
+        print(htmap_pred[0].shape)
+        print(kp_pred[0].shape)
+        ax1.imshow(htmap_pred[0])
+        ax2.imshow(kp_pred[0])
+        plt.show()
 
         cls_weight, reg_weight, kp_weight, heatmap_weight = cfg['loss']['weight']
 

@@ -12,7 +12,7 @@
         "end_lr": 0.0025
     },
     "loss": {
-        "weight": [1.0, 1.2, 100]
+        "weight": [1.0, 1.2, 1]
     },
     "train_datasets": {
         "datasets": {

@@ -264,7 +264,7 @@ def select_mask_logistic_loss_rel1(p_m, mask, weight, kp_weight, criterion, o_sz
     kp_weight_pos = kp_weight_pos.view(-1, 17)
 
     mask = mask[:, :2]  # [bs, 2, 17, size, size]
-    mask = mask.permute(0, 3, 4, 2, 1)
+    mask = mask.permute(0, 3, 4, 2, 1).contiguous()
     # (bs, 1, 25, 25, 17)
     mask_weight_pos = mask.view(-1, 17, 2)
 

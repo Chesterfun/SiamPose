@@ -82,11 +82,20 @@ class SiamMask(nn.Module):
 
         rpn_loss_loc = weight_l1_loss(rpn_pred_loc, label_loc, lable_loc_weight)
 
-        rpn_loss_mask, pred_kp, gt_kp = select_mask_logistic_loss(rpn_pred_mask,
-                                                 label_mask,
-                                                 label_mask_weight,
-                                                 kp_weight,
-                                                 kp_criterion)
+        if self.method == 'direct':
+            rpn_loss_mask, pred_kp, gt_kp = select_mask_logistic_loss(rpn_pred_mask,
+                                                    label_mask,
+                                                    label_mask_weight,
+                                                    kp_weight,
+                                                    kp_criterion)
+        elif self.method == 'rel1':
+            rpn_loss_mask, pred_kp, gt_kp = select_mask_logistic_loss_rel1(rpn_pred_mask,
+                                                    label_mask,
+                                                    label_mask_weight,
+                                                    kp_weight,
+                                                    kp_criterion)
+        else:
+            raise NotImplementedError
 
         return rpn_loss_cls, rpn_loss_loc, rpn_loss_mask, pred_kp, gt_kp
 
@@ -221,6 +230,43 @@ def select_mask_logistic_loss(p_m, mask, weight, kp_weight, criterion, o_sz=63, 
                                          -1, -1).contiguous()
     # (bs, 1, 25, 25, 17)
     mask_weight_pos = mask_weight_pos.view(-1, 17, 2)
+
+    weight = weight.view(-1)
+    pos = Variable(weight.data.eq(1).nonzero().squeeze())
+    kp_weight = torch.index_select(kp_weight_pos, 0, pos)
+    mask = torch.index_select(mask_weight_pos, 0, pos)
+    # print('pose shape: ', pos.shape)
+    if pos.nelement() == 0: return p_m.sum() * 0
+
+    if len(p_m.shape) == 4:
+        p_m = p_m.permute(0, 2, 3, 1).contiguous().view(-1, 17, 2)
+        # print('atf pred mask shape: ', p_m.shape)
+        p_m = torch.index_select(p_m, 0, pos)
+        # print('atf selected pred mask shape: ', p_m.shape)
+    else:
+        p_m = torch.index_select(p_m, 0, pos)
+
+    loss = criterion(p_m, mask, kp_weight)
+
+    # iou_m, iou_5, iou_7 = iou_measure(p_m, mask_uf)
+    return loss, p_m, mask  # , iou_m, iou_5, iou_7
+
+def select_mask_logistic_loss_rel1(p_m, mask, weight, kp_weight, criterion, o_sz=63, g_sz=127):
+    # mask shape: [bs, 3, 17, size, size]
+
+    kp_weight_pos = kp_weight.view(kp_weight.size(0), 1, 1, 1, -1)
+    kp_weight_pos = kp_weight_pos.expand(-1,
+                                         weight.size(1),
+                                         weight.size(2),
+                                         weight.size(3),
+                                         -1).contiguous()
+    # (bs, 1, 25, 25, 17)
+    kp_weight_pos = kp_weight_pos.view(-1, 17)
+
+    mask = mask[:, :2]  # [bs, 2, 17, size, size]
+    mask = mask.permute(0, 3, 4, 2, 1)
+    # (bs, 1, 25, 25, 17)
+    mask_weight_pos = mask.view(-1, 17, 2)
 
     weight = weight.view(-1)
     pos = Variable(weight.data.eq(1).nonzero().squeeze())

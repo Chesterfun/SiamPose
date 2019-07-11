@@ -90,11 +90,12 @@ class MaskCorr(Mask):
         return self.mask(z, x)
 
 class Custom(SiamMask):
-    def __init__(self, pretrain=False, **kwargs):
+    def __init__(self, method, pretrain=False, **kwargs):
         super(Custom, self).__init__(**kwargs)
         self.features = ResDown(pretrain=pretrain)
         self.rpn_model = UP(anchor_num=self.anchor_num, feature_in=256, feature_out=256)
         self.mask_model = MaskCorr()
+        self.method = method
 
     def template(self, template):
         self.zf = self.features(template)

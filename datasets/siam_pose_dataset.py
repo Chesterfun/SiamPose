@@ -453,11 +453,10 @@ class AnchorTargetWithKPLayer:
 
         kp_vis = np.repeat(kp_vis, size, axis=1)
         kp_vis = np.repeat(kp_vis, size, axis=2)
-        kp_delta_x = kp_x - cx_kp  # (17, size, size)
-        kp_delta_y = kp_y - cy_kp
+        kp_delta_x = (kp_x - cx_kp) / w[0, ...].expand_dims(0)  # (17, size, size)
+        kp_delta_y = (kp_y - cy_kp) / h[0, ...].expand_dims(0)
         kp_delta = np.stack([kp_delta_x, kp_delta_y, kp_vis], axis=0)  # (3, 17, size, size)
         kp_delta = kp_delta.astype(np.float32)
-
 
         # delta
         delta[0] = (tcx - cx) / w
@@ -927,7 +926,7 @@ class DataSets(Dataset):
             kp_weight = cls.max(axis=0, keepdims=True)
         else:
             kp_weight = np.zeros([1, cls.shape[1], cls.shape[2]], dtype=np.float32)
-        
+
 
         # print(self.anchors.all_anchors[0].shape)
 

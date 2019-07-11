@@ -69,6 +69,7 @@ parser.add_argument('-l', '--log', default="log.txt", type=str,
 parser.add_argument('-s', '--save_dir', default='snapshot', type=str,
                     help='save dir')
 parser.add_argument('--log-dir', default='board', help='TensorBoard log dir')
+parser.add_argument('--method', default='direct', help='direct|rel1|rel2')
 
 
 best_acc = 0.
@@ -270,7 +271,7 @@ def main():
 
     if args.arch == 'Custom':
         from custom_direct_reg import Custom
-        model = Custom(pretrain=True, anchors=cfg['anchors'])
+        model = Custom(args.method, pretrain=True, anchors=cfg['anchors'])
     else:
         exit()
     logger.info(model)
@@ -365,6 +366,8 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
             'label_kp': torch.autograd.Variable(input[9]).cuda()
         }
 
+        if 'rel' in args.method:
+            x['label_kp'] = 'label_kp': torch.autograd.Variable(input[10]).cuda()
         outputs = model(x)
 
         rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\

@@ -352,12 +352,12 @@ class AnchorTargetLayer:
                 return cls, delta, delta_weight, overlap
 
         tcx, tcy, tw, th = corner2center(target)
-        print('tcx shape: ', tcx)
+        # print('tcx shape: ', tcx)
 
 
         anchor_box = anchor.all_anchors[0]
         anchor_center = anchor.all_anchors[1]
-        print('anchor_center: ', anchor_center.shape)
+        # print('anchor_center: ', anchor_center.shape)
         x1, y1, x2, y2 = anchor_box[0], anchor_box[1], anchor_box[2], anchor_box[3]
         cx, cy, w, h = anchor_center[0], anchor_center[1], anchor_center[2], anchor_center[3]
 
@@ -375,7 +375,7 @@ class AnchorTargetLayer:
 
         pos, pos_num = select(pos, self.positive)
         neg, neg_num = select(neg, self.rpn_batch - pos_num)
-        print('pos: ', pos)
+        # print('pos: ', pos)
 
         cls[pos] = 1
         delta_weight[pos] = 1. / (pos_num + 1e-6)
@@ -405,7 +405,7 @@ class AnchorTargetWithKPLayer:
         cls[...] = -1  # -1 ignore 0 negative 1 positive
         delta = np.zeros((4, anchor_num, size, size), dtype=np.float32)
         delta_weight = np.zeros((anchor_num, size, size), dtype=np.float32)
-        kp_delta = np.zeros((anchor_num, 17*2, size, size), dtype=np.float32)
+        kp_delta = np.zeros((3, 17, size, size), dtype=np.float32)
 
         def select(position, keep_num=16):
             num = position[0].shape[0]
@@ -427,10 +427,10 @@ class AnchorTargetWithKPLayer:
             cls[neg] = 0
 
             if not need_iou:
-                return cls, delta, delta_weight
+                return cls, delta, kp_delta, delta_weight
             else:
                 overlap = np.zeros((anchor_num, size, size), dtype=np.float32)
-                return cls, delta, delta_weight, overlap
+                return cls, delta, kp_delta, delta_weight, overlap
 
         tcx, tcy, tw, th = corner2center(target)
 
@@ -439,6 +439,23 @@ class AnchorTargetWithKPLayer:
         anchor_center = anchor.all_anchors[1]
         x1, y1, x2, y2 = anchor_box[0], anchor_box[1], anchor_box[2], anchor_box[3]
         cx, cy, w, h = anchor_center[0], anchor_center[1], anchor_center[2], anchor_center[3]
+        # cx shape: [anchor_num, size, size] -> [size, size]
+        # kp shape: [17, 3]
+        # kp delta shape: [17*2, size, size]
+        # kp_delta_x target shape: [17, size, size]
+        # kp_x [17, 1, 1] and cx_kp [1, size, size]
+
+        cx_kp = np.expand_dims(cx[0, :, :], 0)
+        cy_kp = np.expand_dims(cx[0, :, :], 0)
+        kp_x = np.expand_dims(np.expand_dims(kp[:, 0], -1), -1)
+        kp_y = np.expand_dims(np.expand_dims(kp[:, 1], -1), -1)
+        kp_vis = np.expand_dims(np.expand_dims(kp[:, 2], -1), -1)
+
+        kp_vis = np.repeat(kp_vis, size, axis=1)
+        kp_vis = np.repeat(kp_vis, size, axis=2)
+        kp_delta_x = kp_x - cx_kp  # (17, size, size)
+        kp_delta_y = kp_y - cy_kp
+        kp_delta = np.stack([kp_delta_x, kp_delta_y, kp_vis], axis=0)  # (3, 17, size, size)
 
         # delta
         delta[0] = (tcx - cx) / w
@@ -461,9 +478,9 @@ class AnchorTargetWithKPLayer:
         cls[neg] = 0
 
         if not need_iou:
-            return cls, delta, delta_weight
+            return cls, delta, kp_delta, delta_weight
         else:
-            return cls, delta, delta_weight, overlap
+            return cls, delta, kp_delta, delta_weight, overlap
 
 
 class DataSets(Dataset):
@@ -516,7 +533,12 @@ class DataSets(Dataset):
 
         if 'anchor_target' not in cfg:
             cfg['anchor_target'] = {}
-        self.anchor_target = AnchorTargetLayer(cfg['anchor_target'])
+        if 'kp_anchor' not in anchor_cfg:
+            self.anchor_target = AnchorTargetLayer(cfg['anchor_target'])
+            self.kp_anchor = False
+        else:
+            self.anchor_target = AnchorTargetWithKPLayer(cfg['anchor_target'])
+            self.kp_anchor = True
 
         # data sets
         if 'datasets' not in cfg:
@@ -863,7 +885,10 @@ class DataSets(Dataset):
             draw(template, _, "debug/{:06d}_t.jpg".format(index))
             draw(search, bbox, "debug/{:06d}_s.jpg".format(index))
 
-        cls, delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
+        if self.kp_anchor is False:
+            cls, delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
+        else:
+            cls, delta, kp_delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
         # template = template_image  # .astype(np.int16)  # np.array(template_image, dtype=np.int16)
         # search = search_image  # .astype(np.int16)  # np.array(search_image, dtype=np.int16)
 
@@ -904,8 +929,9 @@ class DataSets(Dataset):
             gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
         joints_3d = joints_3d / 255
 
-        print(self.anchors.all_anchors[0].shape)
+        # print(self.anchors.all_anchors[0].shape)
+        print('kp_delta: ', kp_delta, kp_delta.shape)
 
         return template, search, cls, delta, \
           delta_weight, np.array(bbox, np.float32), \
-          gs_tgt, tgt_wt, np.array(kp_weight, np.float32), joints_3d[:, :2]
+          gs_tgt, tgt_wt, np.array(kp_weight, np.float32), joints_3d[:, :2], kp_delta

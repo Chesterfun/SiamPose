@@ -456,6 +456,8 @@ class AnchorTargetWithKPLayer:
         kp_delta_x = kp_x - cx_kp  # (17, size, size)
         kp_delta_y = kp_y - cy_kp
         kp_delta = np.stack([kp_delta_x, kp_delta_y, kp_vis], axis=0)  # (3, 17, size, size)
+        kp_delta = kp_delta.astype(np.float32)
+
 
         # delta
         delta[0] = (tcx - cx) / w
@@ -884,20 +886,7 @@ class DataSets(Dataset):
             draw(search_image, search_box, "debug/{:06d}_os.jpg".format(index))
             draw(template, _, "debug/{:06d}_t.jpg".format(index))
             draw(search, bbox, "debug/{:06d}_s.jpg".format(index))
-
-        if self.kp_anchor is False:
-            cls, delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
-        else:
-            cls, delta, kp_delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
-        # template = template_image  # .astype(np.int16)  # np.array(template_image, dtype=np.int16)
-        # search = search_image  # .astype(np.int16)  # np.array(search_image, dtype=np.int16)
-
         pos, s = crop_like_SiamFCx(search_box, exemplar_size=127, context_amount=0.5, search_size=255)
-
-        # search = crop_like_SiamFCx1(search, bbox, exemplar_size=127, context_amount=0.5, search_size=255,
-        #                              padding=avg_chans)
-
-
         mapping_bbox = pos_s_2_bbox(pos, s)
 
         mapping = crop_hwc(mapping_bbox, out_sz=255)
@@ -917,20 +906,30 @@ class DataSets(Dataset):
             joints_3d_vis[ipt, 1] = t_vis
             joints_3d_vis[ipt, 2] = 0
 
-        if not neg:
-            kp_weight = cls.max(axis=0, keepdims=True)
-        else:
-            kp_weight = np.zeros([1, cls.shape[1], cls.shape[2]], dtype=np.float32)
-
         template, search = map(lambda x: np.transpose(x, (2, 0, 1)).astype(np.float32), [template, search])
         if self.single_heatmap:
             gs_tgt, tgt_wt = self.generate_target_in_single_map(joints_3d, joints_3d_vis)
         else:
             gs_tgt, tgt_wt = self.generate_target(joints_3d, joints_3d_vis)
-        joints_3d = joints_3d / 255
+        # joints_3d = joints_3d / 255
+
+        if self.kp_anchor is False:
+            cls, delta, delta_weight = self.anchor_target(self.anchors, bbox, self.size, neg)
+        else:
+            cls, delta, kp_delta, delta_weight = self.anchor_target(self.anchors, bbox, joints_3d, self.size, neg)
+        # template = template_image  # .astype(np.int16)  # np.array(template_image, dtype=np.int16)
+        # search = search_image  # .astype(np.int16)  # np.array(search_image, dtype=np.int16)
+
+        # search = crop_like_SiamFCx1(search, bbox, exemplar_size=127, context_amount=0.5, search_size=255,
+        #                              padding=avg_chans)
+
+        if not neg:
+            kp_weight = cls.max(axis=0, keepdims=True)
+        else:
+            kp_weight = np.zeros([1, cls.shape[1], cls.shape[2]], dtype=np.float32)
+        
 
         # print(self.anchors.all_anchors[0].shape)
-        print('kp_delta: ', kp_delta, kp_delta.shape)
 
         return template, search, cls, delta, \
           delta_weight, np.array(bbox, np.float32), \

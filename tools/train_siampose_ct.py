@@ -81,6 +81,18 @@ parser.add_argument('--not_reg_hp_offset', action='store_true',
                               'human joint heatmaps.')
 parser.add_argument('--not_reg_bbox', action='store_true',
                          help='not regression bounding box size.')
+# losses
+parser.add_argument('--mse_loss', action='store_true',
+                             help='use mse loss or focal loss to train '
+                                  'keypoint heatmaps.')
+parser.add_argument('--reg_loss', default='l1',
+                             help='regression loss: sl1 | l1 | l2')
+parser.add_argument('--hm_weight', type=float, default=1,
+                             help='loss weight for keypoint heatmaps.')
+parser.add_argument('--off_weight', type=float, default=1,
+                         help='loss weight for keypoint local offsets.')
+parser.add_argument('--wh_weight', type=float, default=0.1,
+                         help='loss weight for bounding box size.')
 
 best_acc = 0.
 
@@ -262,6 +274,7 @@ def build_opt_lr(model, cfg, args, epoch):
 def main():
     global args, best_acc, tb_writer, logger
     args = parser.parse_args()
+    args = args_process(args)
 
     init_log('global', logging.INFO)
 
@@ -466,11 +479,13 @@ def save_checkpoint(state, is_best, filename='checkpoint.pth', best_file='model_
     if is_best:
         shutil.copyfile(filename, best_file)
 
-
 def args_process(opt):
     opt.reg_offset = not opt.not_reg_offset
     opt.reg_bbox = not opt.not_reg_bbox
     opt.hm_hp = not opt.not_hm_hp
     opt.reg_hp_offset = (not opt.not_reg_hp_offset) and opt.hm_hp
+    return opt
+
+
 if __name__ == '__main__':
     main()

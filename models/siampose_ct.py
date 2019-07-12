@@ -8,6 +8,48 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from utils.anchors import Anchors
+from models.losses import FocalLoss, RegL1Loss, RegLoss, RegWeightedL1Loss
+
+class MultiPoseLoss(torch.nn.Module):
+    def __init__(self, opt):
+        super(MultiPoseLoss, self).__init__()
+        self.crit_hm_hp = torch.nn.MSELoss() if opt.mse_loss else FocalLoss()
+        self.crit_kp = RegWeightedL1Loss() if not opt.dense_hp else \
+            torch.nn.L1Loss(reduction='sum')
+        self.crit_reg = RegL1Loss() if opt.reg_loss == 'l1' else \
+            RegLoss() if opt.reg_loss == 'sl1' else None
+        self.opt = opt
+
+    def forward(self, output, batch):
+        opt = self.opt
+        hp_loss, hm_hp_loss, hp_offset_loss = 0, 0, 0
+        if opt.hm_hp and not opt.mse_loss:
+            output['hm_hp'] = _sigmoid(output['hm_hp'])
+
+        if opt.dense_hp:
+            mask_weight = batch['dense_hps_mask'].sum() + 1e-4
+            hp_loss += (self.crit_kp(output['hps'] * batch['dense_hps_mask'],
+                        batch['dense_hps'] * batch['dense_hps_mask']) /
+                        mask_weight)
+        else:
+            hp_loss += self.crit_kp(output['hps'], batch['hps_mask'],
+                                    batch['ind'], batch['hps'])
+
+        if opt.reg_hp_offset and opt.off_weight > 0:
+            hp_offset_loss += self.crit_reg(
+              output['hp_offset'], batch['hp_mask'],
+              batch['hp_ind'], batch['hp_offset'])
+        if opt.hm_hp and opt.hm_hp_weight > 0:
+            hm_hp_loss += self.crit_hm_hp(
+              output['hm_hp'], batch['hm_hp'])
+
+        loss = opt.hp_weight * hp_loss + \
+            opt.hm_hp_weight * hm_hp_loss + opt.off_weight * hp_offset_loss
+
+        loss_stats = {'loss': loss, 'hp_loss': hp_loss,
+                      'hm_hp_loss': hm_hp_loss, 'hp_offset_loss': hp_offset_loss}
+
+        return loss, loss_stats
 
 class JointsMSELoss(nn.Module):
 

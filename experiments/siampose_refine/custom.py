@@ -150,7 +150,7 @@ class Refine(nn.Module):
         out = self.deconv2(out)
         out = self.conv(out)
         out = self.up_sample(out)
-        out = out.view(-1, 127*127*17)
+        # out = out.view(-1, 127*127*17)
 
         return out
 

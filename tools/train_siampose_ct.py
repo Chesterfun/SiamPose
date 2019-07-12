@@ -298,7 +298,7 @@ def main():
 
     if args.arch == 'Custom':
         from custom_refine import Custom
-        model = Custom(pretrain=True, anchors=cfg['anchors'])
+        model = Custom(args, pretrain=True, anchors=cfg['anchors'])
     else:
         exit()
     logger.info(model)
@@ -393,43 +393,29 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
 
         data_time = time.time() - end
         avg.update(data_time=data_time)
-        x = {
+        x_rpn = {
             'cfg': cfg,
             'template': torch.autograd.Variable(input[0]).cuda(),
             'search': torch.autograd.Variable(input[1]).cuda(),
             'label_cls': torch.autograd.Variable(input[2]).cuda(),
             'label_loc': torch.autograd.Variable(input[3]).cuda(),
             'label_loc_weight': torch.autograd.Variable(input[4]).cuda(),
-            'label_mask': torch.autograd.Variable(input[6]).cuda(),
-            'label_kp_weight': torch.autograd.Variable(input[7]).cuda(),
-            'label_mask_weight': torch.autograd.Variable(input[8]).cuda(),
+            'label_mask': torch.autograd.Variable(input[6]).cuda()
         }
+        x_kp = input[7]
+        x_kp = {x: torch.autograd.Variable(y).cuda() for x, y in x_kp.items()}
 
-        outputs = model(x)
-        if tb_index % 200 == 0:
+        outputs = model(x_rpn, x_kp)
 
-            gt_mask = x['label_mask']
-            gt_mask = select_gt_img(gt_mask, x['label_mask_weight'], channel=17)
-            pred_mask = outputs['predict'][2]
-            pred_mask = select_pred_heatmap(pred_mask, x['label_mask_weight'])  # is rpn_pred_mask (bs, 17, 127, 127)
-
-            true_search = select_gt_img(x['search'], x['label_mask_weight'])
-            toTensor = ToTensor()
-            if true_search.shape:
-                pred_img = save_batch_heatmaps(true_search, pred_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
-                gt_img = save_batch_heatmaps(true_search, gt_mask, '{}.jpg'.format(iter), normalize=True, toTensor=toTensor)
-
-
-
-        rpn_cls_loss, rpn_loc_loss, rpn_mask_loss = torch.mean(outputs['losses'][0]),\
+        rpn_cls_loss, rpn_loc_loss, kp_loss = torch.mean(outputs['losses'][0]),\
                                                     torch.mean(outputs['losses'][1]),\
                                                     torch.mean(outputs['losses'][2])
 
         # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
 
-        cls_weight, reg_weight, mask_weight = cfg['loss']['weight']
+        cls_weight, reg_weight, kp_weight = cfg['loss']['weight']
 
-        loss = rpn_cls_loss * cls_weight + rpn_loc_loss * reg_weight + rpn_mask_loss * mask_weight
+        loss = rpn_cls_loss * cls_weight + rpn_loc_loss * reg_weight + kp_loss * kp_weight
 
         optimizer.zero_grad()
         loss.backward()
@@ -449,26 +435,20 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
         batch_time = time.time() - end
 
         avg.update(batch_time=batch_time, rpn_cls_loss=rpn_cls_loss, rpn_loc_loss=rpn_loc_loss,
-                   rpn_mask_loss=rpn_mask_loss * mask_weight, siammask_loss=siammask_loss)
+                   kp_loss=kp_loss * kp_weight, siammask_loss=siammask_loss)
                    # mask_iou_mean=mask_iou_mean, mask_iou_at_5=mask_iou_at_5, mask_iou_at_7=mask_iou_at_7)
 
         tb_writer.add_scalar('loss/cls', rpn_cls_loss, tb_index)
         tb_writer.add_scalar('loss/loc', rpn_loc_loss, tb_index)
-        tb_writer.add_scalar('loss/mask', rpn_mask_loss * mask_weight, tb_index)
-        if tb_index % 200 == 0:
-            tb_writer.add_image('gt_img', gt_img, tb_index)
-            tb_writer.add_image('pred_img', pred_img, tb_index)
-        # tb_writer.add_scalar('mask/mIoU', mask_iou_mean, tb_index)
-        # tb_writer.add_scalar('mask/AP@.5', mask_iou_at_5, tb_index)
-        # tb_writer.add_scalar('mask/AP@.7', mask_iou_at_7, tb_index)
+        tb_writer.add_scalar('loss/kp', kp_loss, tb_index)
         end = time.time()
 
         if (iter + 1) % args.print_freq == 0:
             logger.info('Epoch: [{0}][{1}/{2}] lr: {lr:.6f}\t{batch_time:s}\t{data_time:s}'
-                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{rpn_mask_loss:s}\t{siammask_loss:s}'.format(
+                        '\t{rpn_cls_loss:s}\t{rpn_loc_loss:s}\t{kp_loss:s}\t{siammask_loss:s}'.format(
                         epoch+1, (iter + 1) % num_per_epoch, num_per_epoch, lr=cur_lr, batch_time=avg.batch_time,
                         data_time=avg.data_time, rpn_cls_loss=avg.rpn_cls_loss, rpn_loc_loss=avg.rpn_loc_loss,
-                        rpn_mask_loss=avg.rpn_mask_loss, siammask_loss=avg.siammask_loss,))
+                        kp_loss=avg.kp_loss, siammask_loss=avg.siammask_loss,))
                         # mask_iou_mean=avg.mask_iou_mean,
                         # mask_iou_at_5=avg.mask_iou_at_5,mask_iou_at_7=avg.mask_iou_at_7))
             print_speed(iter + 1, avg.batch_time.avg, args.epochs * num_per_epoch)

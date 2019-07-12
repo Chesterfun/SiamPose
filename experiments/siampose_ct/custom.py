@@ -85,7 +85,7 @@ class UP(RPN):
         loc = self.loc(z_f, x_f)
         return cls, loc
 
-class center_pose_head(nn.Module):
+class Center_pose_head(nn.Module):
     def __init__(self, head_conv=256):
         self.inplanes = 512
         self.deconv_layers = self._make_deconv_layer(
@@ -188,11 +188,12 @@ class center_pose_head(nn.Module):
 
 
 class Custom(SiamMask):
-    def __init__(self, pretrain=False, **kwargs):
+    def __init__(self, opt, pretrain=False, **kwargs):
         super(Custom, self).__init__(**kwargs)
+        self.opt = opt
         self.features = ResDown(pretrain=pretrain)
         self.rpn_model = UP(anchor_num=self.anchor_num, feature_in=256, feature_out=256)
-        self.mask_model = MaskCorr()
+        self.kp_model = Center_pose_head()
 
     def template(self, template):
         self.zf = self.features(template)

@@ -93,6 +93,10 @@ parser.add_argument('--off_weight', type=float, default=1,
                          help='loss weight for keypoint local offsets.')
 parser.add_argument('--wh_weight', type=float, default=0.1,
                          help='loss weight for bounding box size.')
+parser.add_argument('--hp_weight', type=float, default=1,
+                             help='loss weight for human pose offset.')
+parser.add_argument('--hm_hp_weight', type=float, default=1,
+                             help='loss weight for human keypoint heatmap.')
 
 best_acc = 0.
 
@@ -258,7 +262,7 @@ def build_opt_lr(model, cfg, args, epoch):
     else:
         trainable_params = backbone_feature + \
                            model.rpn_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['rpn_lr_mult']) + \
-                           model.mask_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
+                           model.kp_model.param_groups(cfg['lr']['start_lr'], cfg['lr']['mask_lr_mult'])
 
     optimizer = torch.optim.SGD(trainable_params, args.lr,
                                 momentum=args.momentum,
@@ -297,8 +301,8 @@ def main():
     train_loader, val_loader = build_data_loader(cfg)
 
     if args.arch == 'Custom':
-        from custom_refine import Custom
-        model = Custom(args, pretrain=True, anchors=cfg['anchors'])
+        from custom import Custom
+        model = Custom(pretrain=True, opts=args, anchors=cfg['anchors'])
     else:
         exit()
     logger.info(model)
@@ -460,7 +464,6 @@ def save_checkpoint(state, is_best, filename='checkpoint.pth', best_file='model_
         shutil.copyfile(filename, best_file)
 
 def args_process(opt):
-    opt.reg_offset = not opt.not_reg_offset
     opt.reg_bbox = not opt.not_reg_bbox
     opt.hm_hp = not opt.not_hm_hp
     opt.reg_hp_offset = (not opt.not_reg_hp_offset) and opt.hm_hp

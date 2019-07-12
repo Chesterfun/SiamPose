@@ -4,15 +4,18 @@
 # Written by Qiang Wang (wangqiang2015 at ia.ac.cn)
 # --------------------------------------------------------
 import torch
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from utils.anchors import Anchors
 from models.losses import FocalLoss, RegL1Loss, RegLoss, RegWeightedL1Loss
+from models.utils import _sigmoid
+
 
 class PoseLoss(torch.nn.Module):
     def __init__(self, opt):
-        super(MultiPoseLoss, self).__init__()
+        super(PoseLoss, self).__init__()
         self.crit_hm_hp = torch.nn.MSELoss() if opt.mse_loss else FocalLoss()
         self.crit_kp = RegWeightedL1Loss() if not opt.dense_hp else \
             torch.nn.L1Loss(reduction='sum')
@@ -20,9 +23,10 @@ class PoseLoss(torch.nn.Module):
             RegLoss() if opt.reg_loss == 'sl1' else None
         self.opt = opt
 
-    def forward(self, output, batch):
+    def forward(self, outputs, batch):
         opt = self.opt
         hp_loss, hm_hp_loss, hp_offset_loss = 0, 0, 0
+        output = outputs[0]
         if opt.hm_hp and not opt.mse_loss:
             output['hm_hp'] = _sigmoid(output['hm_hp'])
 
@@ -81,9 +85,10 @@ class JointsMSELoss(nn.Module):
         return loss / num_joints
 
 class SiamMask(nn.Module):
-    def __init__(self, anchors=None, o_sz=63, g_sz=127):
+    def __init__(self, opts=None, anchors=None, o_sz=63, g_sz=127):
         super(SiamMask, self).__init__()
         self.anchors = anchors  # anchor_cfg
+        self.opt = opts
         self.anchor_num = len(self.anchors["ratios"]) * len(self.anchors["scales"])
         self.anchor = Anchors(anchors)
         self.features = None
@@ -115,7 +120,7 @@ class SiamMask(nn.Module):
         pred_mask = self.mask_model(template, search)
         return pred_mask
 
-    def _add_rpn_loss(self, label_cls, label_loc, lable_loc_weight, label_mask, label_mask_weight,
+    def _add_rpn_loss(self, label_cls, label_loc, lable_loc_weight, label_mask,
                       rpn_pred_cls, rpn_pred_loc):
         rpn_loss_cls = select_cross_entropy_loss(rpn_pred_cls, label_cls)
 
@@ -128,9 +133,9 @@ class SiamMask(nn.Module):
         run network
         """
         template_feature = self.feature_extractor(template)
-        search_feature, kp_feature = self.forward_all(search)
+        search_feature, kp_feature = self.features.forward_all(search)
+        print('kp_feature shape: ', kp_feature.shape)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
-        corr_feature = self.mask_model.mask.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
         pred_kp = self.kp_model(kp_feature)
 
         if softmax:
@@ -158,11 +163,8 @@ class SiamMask(nn.Module):
         if self.training:
             label_cls = rpn_input['label_cls']
             label_loc = rpn_input['label_loc']
-            lable_loc_weight = rpn_input['label_loc_weight']
             label_mask = rpn_input['label_mask']
-            label_mask_weight = rpn_input['label_mask_weight']
-            label_kp_weight = rpn_input['label_kp_weight']
-            label_kp = rpn_input['label_kp']
+            lable_loc_weight = rpn_input['label_loc_weight']
 
         rpn_pred_cls, rpn_pred_loc, pred_kp, template_feature, search_feature = \
             self.run(template, search, softmax=self.training)
@@ -172,8 +174,8 @@ class SiamMask(nn.Module):
         outputs['predict'] = [rpn_pred_loc, rpn_pred_cls, pred_kp, template_feature, search_feature]
 
         if self.training:
-            rpn_loss_cls, rpn_loss_loc, rpn_loss_mask = \
-                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_kp, label_mask_weight,
+            rpn_loss_cls, rpn_loss_loc = \
+                self._add_rpn_loss(label_cls, label_loc, lable_loc_weight, label_mask,
                                    rpn_pred_cls, rpn_pred_loc)
             kp_loss, kp_loss_status = self.kp_criterion(pred_kp, kp_input)
             outputs['losses'] = [rpn_loss_cls, rpn_loss_loc, kp_loss, kp_loss_status]

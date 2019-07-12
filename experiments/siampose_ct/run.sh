@@ -4,7 +4,7 @@ export PYTHONPATH=$ROOT:$PYTHONPATH
 mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_ct.py \
-    --config=config_old.json -b 4 \
+    --config=config.json -b 4 \
     -j 1 \
     --epochs 20 \
     --log logs/log.txt \

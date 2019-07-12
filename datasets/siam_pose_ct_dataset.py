@@ -508,7 +508,7 @@ class DataSets(Dataset):
         self.crop_size = 0
         self.target_type = 'gaussian'
         self.single_heatmap = False
-        self.output_res = 255 // 4
+        self.output_res = 56
         self.num_joints = 17                                                # added
         self.mse_loss = False
         self.hm_gauss = 5
@@ -943,6 +943,7 @@ class DataSets(Dataset):
         ind = np.zeros(1, dtype=np.int64)
         hm_hp = np.zeros((num_joints, output_res, output_res), dtype=np.float32)
         kps = np.zeros(num_joints * 2, dtype=np.float32)
+        kps_mask = np.zeros((self.num_joints * 2), dtype=np.uint8)
         hp_offset = np.zeros((num_joints, 2), dtype=np.float32)
         hp_ind = np.zeros(num_joints, dtype=np.int64)
         hp_mask = np.zeros(num_joints, dtype=np.int64)
@@ -965,13 +966,14 @@ class DataSets(Dataset):
         hp_radius = gaussian_radius((math.ceil(h), math.ceil(w)))
         hp_radius = self.hm_gauss \
                     if self.mse_loss else max(0, int(hp_radius))
-        ind = ct_int[1] * output_res + ct_int[0]
+        ind[0] = ct_int[1] * output_res + ct_int[0]
         for j in range(num_joints):
             if pts[j, 2] > 0:
                 pts[j, :2] = affine_transform(pts[j, :2], trans_output_rot)
             if pts[j, 0] >= 0 and pts[j, 0] < output_res and \
                pts[j, 1] >= 0 and pts[j, 1] < output_res:
                 kps[j * 2: j * 2 + 2] = pts[j, :2] - ct_int
+                kps_mask[j * 2: j * 2 + 2] = 1
                 pt_int = pts[j, :2].astype(np.int32)
                 hp_offset[j] = pts[j, :2] - pt_int
                 hp_ind[j] = pt_int[1] * output_res + pt_int[0]
@@ -979,8 +981,8 @@ class DataSets(Dataset):
 
                 draw_gaussian(hm_hp[j], pt_int, hp_radius)
 
-        ret = {'hps': kps, 'hm_hp': hm_hp}
-        ret.update({'hp_offset': hp_offset, 'hp_ind': hp_ind, 'hp_mask': hp_mask, 'ind': ind})
+        ret = {'hps': kps, 'hm_hp': hm_hp, 'hp_mask': hp_mask}
+        ret.update({'hp_offset': hp_offset, 'hp_ind': hp_ind, 'hps_mask': kps_mask, 'ind': ind})
 
         return template, search, cls, delta, \
           delta_weight, bbox_reg, \

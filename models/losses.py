@@ -102,7 +102,9 @@ class RegWeightedL1Loss(nn.Module):
     def forward(self, output, mask, ind, target):
         pred = _tranpose_and_gather_feat(output, ind)
         mask = mask.float()
+        pred = pred.squeeze()
         # loss = F.l1_loss(pred * mask, target * mask, reduction='elementwise_mean')
+        print('pred: ', pred.shape, 'target: ', target.shape, 'mask: ', mask.shape)
         loss = F.l1_loss(pred * mask, target * mask, size_average=False)
         loss = loss / (mask.sum() + 1e-4)
         return loss

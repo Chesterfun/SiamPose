@@ -34,8 +34,6 @@
         "base_size": 8,
         "size": 25,
 
-        "num" : 600000,
-
         "augmentation": {
             "template": {
                 "shift": 4, "scale": 0.05

@@ -2,6 +2,7 @@ from models.siammask import SiamMask
 from models.features import MultiStageFeature
 from models.rpn import RPN, DepthCorr
 from models.mask import Mask
+from models.DCNv2.dcn_v2 import DCN
 import torch
 import torch.nn as nn
 from utils.load_helper import load_pretrain
@@ -173,6 +174,7 @@ class Center_pose_head(nn.Module):
 
     def forward(self, x):
         x = self.deconv_layers(x)
+        print('deconv final shape:', x.shape)
         ret = {}
         for head in self.heads:
             ret[head] = self.__getattr__(head)(x)

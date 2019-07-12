@@ -151,13 +151,13 @@ class Center_pose_head(nn.Module):
                 self._get_deconv_cfg(num_kernels[i], i)
 
             planes = num_filters[i]
-            fc = DCN(self.inplanes, planes,
-                    kernel_size=(3,3), stride=1,
-                    padding=1, dilation=1, deformable_groups=1)
-            # fc = nn.Conv2d(self.inplanes, planes,
-            #         kernel_size=3, stride=1,
-            #         padding=1, dilation=1, bias=False)
-            # fill_fc_weights(fc)
+            # fc = DCN(self.inplanes, planes,
+            #         kernel_size=(3,3), stride=1,
+            #         padding=1, dilation=1, deformable_groups=1)
+            fc = nn.Conv2d(self.inplanes, planes,
+                    kernel_size=3, stride=1,
+                    padding=1, dilation=1, bias=False)
+            fill_fc_weights(fc)
             up = nn.ConvTranspose2d(
                     in_channels=planes,
                     out_channels=planes,
@@ -186,7 +186,7 @@ class Center_pose_head(nn.Module):
         for head in self.heads:
             ret[head] = self.__getattr__(head)(x)
         return [ret]
-    
+
     def param_groups(self, start_lr, feature_mult=1, key=None):
         if key is None:
             params = filter(lambda x:x.requires_grad, self.parameters())

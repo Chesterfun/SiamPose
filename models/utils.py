@@ -10,8 +10,6 @@ def _sigmoid(x):
   return y
 
 def _gather_feat(feat, ind, mask=None):
-    print('feat shape: ', feat.shape)
-    print('ind shape: ', ind.shape)
     dim  = feat.size(2)
     ind  = ind.unsqueeze(2).expand(ind.size(0), ind.size(1), dim).contiguous()
     feat = feat.gather(1, ind)

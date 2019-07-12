@@ -134,7 +134,6 @@ class SiamMask(nn.Module):
         """
         template_feature = self.feature_extractor(template)
         search_feature, kp_feature = self.features.forward_all(search)
-        print('kp_feature shape: ', kp_feature.shape)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
         pred_kp = self.kp_model(kp_feature)
 

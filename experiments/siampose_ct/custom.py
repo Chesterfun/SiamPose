@@ -179,9 +179,7 @@ class Center_pose_head(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        print('before deconv shape: ', x.shape)
         x = self.deconv_layers(x)
-        print('deconv final shape:', x.shape)
         ret = {}
         for head in self.heads:
             ret[head] = self.__getattr__(head)(x)

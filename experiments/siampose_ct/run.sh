@@ -4,9 +4,9 @@ export PYTHONPATH=$ROOT:$PYTHONPATH
 mkdir -p logs
 
 python -u $ROOT/tools/train_siampose_ct.py \
-    --config=config.json -b 4 \
-    -j 1 \
-    --epochs 20 \
+    --config=config.json -b 12 \
+    -j 4 --resume snapshot/checkpoint_e4.pth \
+    --epochs 50 \
     --log logs/log.txt \
     2>&1 | tee logs/train.log
 

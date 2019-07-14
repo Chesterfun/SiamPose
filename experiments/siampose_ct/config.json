@@ -8,11 +8,11 @@
     },
     "lr": {
         "type": "log",
-        "start_lr": 0.005,
-        "end_lr": 0.0025,
+        "start_lr": 0.05,
+        "end_lr": 0.001,
         "warmup": {
-            "start_lr": 0.001,
-            "end_lr": 0.005,
+            "start_lr": 0.01,
+            "end_lr": 0.05,
             "type": "step",
             "step": 1,
             "epoch": 5

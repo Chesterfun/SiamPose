@@ -902,7 +902,7 @@ class DataSets(Dataset):
         for ipt in range(self.num_joints):
             joints_3d[ipt, 0] = keypoints[ipt * 3 + 0]
             joints_3d[ipt, 1] = keypoints[ipt * 3 + 1]
-            joints_3d[ipt, 2] = 0
+            joints_3d[ipt, 2] = keypoints[ipt * 3 + 2]
             t_vis = search_kp[ipt * 3 + 2]
             if t_vis > 1:
                 t_vis = 1
@@ -952,7 +952,7 @@ class DataSets(Dataset):
         draw_gaussian = draw_msra_gaussian if self.mse_loss else \
                     draw_umich_gaussian
 
-        pts = joints_3d_vis
+        pts = joints_3d
         bbox = np.array(bbox, np.float32)
         bbox_reg = np.array(bbox, np.float32)
         bbox[:2] = affine_transform(bbox[:2], trans_output)
@@ -967,6 +967,7 @@ class DataSets(Dataset):
         hp_radius = self.hm_gauss \
                     if self.mse_loss else max(0, int(hp_radius))
         ind[0] = ct_int[1] * output_res + ct_int[0]
+        print(pts)
         for j in range(num_joints):
             if pts[j, 2] > 0:
                 pts[j, :2] = affine_transform(pts[j, :2], trans_output_rot)
@@ -975,6 +976,8 @@ class DataSets(Dataset):
                 kps[j * 2: j * 2 + 2] = pts[j, :2] - ct_int
                 kps_mask[j * 2: j * 2 + 2] = 1
                 pt_int = pts[j, :2].astype(np.int32)
+                # print('ct_int: ', ct_int)
+                # print('pt_int: ', pt_int)
                 hp_offset[j] = pts[j, :2] - pt_int
                 hp_ind[j] = pt_int[1] * output_res + pt_int[0]
                 hp_mask[j] = 1
@@ -982,7 +985,10 @@ class DataSets(Dataset):
                 draw_gaussian(hm_hp[j], pt_int, hp_radius)
 
         ret = {'hps': kps, 'hm_hp': hm_hp, 'hp_mask': hp_mask}
+        # print('kps: ', ret['hps'])
         ret.update({'hp_offset': hp_offset, 'hp_ind': hp_ind, 'hps_mask': kps_mask, 'ind': ind})
+
+        # print('hp_offset: ', hp_offset)
 
         return template, search, cls, delta, \
           delta_weight, bbox_reg, \

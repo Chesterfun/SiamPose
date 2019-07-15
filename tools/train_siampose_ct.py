@@ -413,11 +413,11 @@ def train(train_loader, model, optimizer, lr_scheduler, epoch, cfg):
 
         rpn_cls_loss, rpn_loc_loss, kp_losses = torch.mean(outputs['losses'][0]),\
                                                     torch.mean(outputs['losses'][1]),\
-                                                    torch.mean(outputs['losses'][3])
-        kp_loss = kp_losses['loss']
-        kp_hp_loss = kp_losses['hp_loss']
-        kp_hm_hp_loss = kp_losses['hm_hp_loss']
-        kp_hp_offset_loss = kp_losses['hp_offset_loss']
+                                                    outputs['losses'][3]
+        kp_loss = torch.mean(kp_losses['loss'])
+        kp_hp_loss = torch.mean(kp_losses['hp_loss'])
+        kp_hm_hp_loss = torch.mean(kp_losses['hm_hp_loss'])
+        kp_hp_offset_loss = torch.mean(kp_losses['hp_offset_loss'])
 
         # mask_iou_mean, mask_iou_at_5, mask_iou_at_7 = torch.mean(outputs['accuracy'][0]), torch.mean(outputs['accuracy'][1]), torch.mean(outputs['accuracy'][2])
 

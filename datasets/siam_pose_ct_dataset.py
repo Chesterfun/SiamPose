@@ -967,22 +967,21 @@ class DataSets(Dataset):
         hp_radius = self.hm_gauss \
                     if self.mse_loss else max(0, int(hp_radius))
         ind[0] = ct_int[1] * output_res + ct_int[0]
-        print(pts)
         for j in range(num_joints):
             if pts[j, 2] > 0:
                 pts[j, :2] = affine_transform(pts[j, :2], trans_output_rot)
-            if pts[j, 0] >= 0 and pts[j, 0] < output_res and \
-               pts[j, 1] >= 0 and pts[j, 1] < output_res:
-                kps[j * 2: j * 2 + 2] = pts[j, :2] - ct_int
-                kps_mask[j * 2: j * 2 + 2] = 1
-                pt_int = pts[j, :2].astype(np.int32)
-                # print('ct_int: ', ct_int)
-                # print('pt_int: ', pt_int)
-                hp_offset[j] = pts[j, :2] - pt_int
-                hp_ind[j] = pt_int[1] * output_res + pt_int[0]
-                hp_mask[j] = 1
+                if pts[j, 0] >= 0 and pts[j, 0] < output_res and \
+                   pts[j, 1] >= 0 and pts[j, 1] < output_res:
+                    kps[j * 2: j * 2 + 2] = pts[j, :2] - ct_int
+                    kps_mask[j * 2: j * 2 + 2] = 1
+                    pt_int = pts[j, :2].astype(np.int32)
+                    # print('ct_int: ', ct_int)
+                    # print('pt_int: ', pt_int)
+                    hp_offset[j] = pts[j, :2] - pt_int
+                    hp_ind[j] = pt_int[1] * output_res + pt_int[0]
+                    hp_mask[j] = 1
 
-                draw_gaussian(hm_hp[j], pt_int, hp_radius)
+                    draw_gaussian(hm_hp[j], pt_int, hp_radius)
 
         ret = {'hps': kps, 'hm_hp': hm_hp, 'hp_mask': hp_mask}
         # print('kps: ', ret['hps'])

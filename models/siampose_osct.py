@@ -133,10 +133,15 @@ class SiamMask(nn.Module):
         run network
         """
         template_feature = self.feature_extractor(template)
-        search_feature = self.features.forward(search)
+        search_feature = self.feature_extractor(search)
         rpn_pred_cls, rpn_pred_loc = self.rpn(template_feature, search_feature)
         corr_feature = self.kp_corr.kp.forward_corr(template_feature, search_feature)  # (b, 256, w, h)
-        pred_kp = self.kp_head(corr_feature)
+        # print('template shape: ', template.shape)
+        # print('search shape: ', search.shape)
+        # print('template_feature shape: ', template_feature.shape)
+        # print('search_feature shape: ', search_feature.shape)
+        # print('corr_feature output: ', corr_feature.shape)
+        pred_kp = self.kp_model(corr_feature)
 
         if softmax:
             rpn_pred_cls = self.softmax(rpn_pred_cls)

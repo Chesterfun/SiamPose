@@ -21,10 +21,10 @@ class ResDownS(nn.Module):
 
     def forward(self, x):
         x = self.downsample(x)
-        if x.size(3) < 20:
-            l = 4
-            r = -4
-            x = x[:, :, l:r, l:r]
+        # if x.size(3) < 20:
+        #     l = 4
+        #     r = -4
+        #     x = x[:, :, l:r, l:r]
         return x
 
 
@@ -201,8 +201,7 @@ class Center_pose_head(nn.Module):
 class KpCorr(Mask):
     def __init__(self):
         super(KpCorr, self).__init__()
-        self.oSz = oSz
-        self.kp = DepthCorr(256, 256, 1024)
+        self.kp = DepthCorr(256, 512, 1024)
 
     def forward(self, z, x):
         return self.kp(z, x)

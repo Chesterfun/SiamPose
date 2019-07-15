@@ -39,10 +39,10 @@
                 "shift": 4, "scale": 0.05
             },
             "search": {
-                "shift": 64, "scale": 0.18, "blur": 0.18
+                "shift": 0.00, "scale": 0.00, "blur": 0.18
             },
-            "neg": 0.2,
-            "gray": 0.25
+            "neg": 0,
+            "gray": 0.15
         }
     },
 
@@ -65,7 +65,7 @@
                 "shift": 0, "scale": 0.00
             },
             "search": {
-                "shift": 12, "scale": 0.18
+                "shift": 0, "scale": 0.00, "blur": 0.18
             },
             "neg": 0,
             "gray": 0

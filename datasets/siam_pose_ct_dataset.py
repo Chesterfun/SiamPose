@@ -952,7 +952,7 @@ class DataSets(Dataset):
         draw_gaussian = draw_msra_gaussian if self.mse_loss else \
                     draw_umich_gaussian
 
-        pts = joints_3d
+        pts = joints_3d.copy()
         bbox = np.array(bbox, np.float32)
         bbox_reg = np.array(bbox, np.float32)
         bbox[:2] = affine_transform(bbox[:2], trans_output)

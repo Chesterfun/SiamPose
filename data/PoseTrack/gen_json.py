@@ -1,16 +1,10 @@
-import cv2
-import numpy as np
+import json
 import os
 from os.path import join, isdir
 from os import mkdir, makedirs
-from concurrent import futures
-import sys
-import time
-import json
-import glob
+import cv2
+import numpy as np
 import re
-import matplotlib.pyplot as plt
-
 
 def tryint(s):
     try:
@@ -60,7 +54,6 @@ def read_json_from_file(input_path):
         python_data = json.load(read_file)
     return python_data
 
-
 def clip_bbox(bbox, img_shape):
     bbox[2] += bbox[0]
     bbox[3] += bbox[1]
@@ -69,7 +62,6 @@ def clip_bbox(bbox, img_shape):
     if bbox[3] > img_shape[0]:
         bbox[3] = img_shape[0]
     return bbox
-
 
 def crop_hwc_coord(bbox, out_sz=511):
     a = (out_sz - 1) / (bbox[2] - bbox[0])
@@ -82,7 +74,6 @@ def crop_hwc_coord(bbox, out_sz=511):
     # borderMode=cv2.BORDER_CONSTANT, borderValue=padding)
     return mapping
 
-
 def crop_hwc(image, bbox, out_sz, padding=(0, 0, 0)):
     a = (out_sz-1) / (bbox[2]-bbox[0])
     b = (out_sz-1) / (bbox[3]-bbox[1])
@@ -93,16 +84,13 @@ def crop_hwc(image, bbox, out_sz, padding=(0, 0, 0)):
     crop = cv2.warpAffine(image, mapping, (out_sz, out_sz), borderMode=cv2.BORDER_CONSTANT, borderValue=padding)
     return crop
 
-
 def pos_s_2_bbox(pos, s):
     return [pos[0]-s/2, pos[1]-s/2, pos[0]+s/2, pos[1]+s/2]
-
 
 def affine_transform(pt, t):
     new_pt = np.array([pt[0], pt[1], 1.], dtype=np.float32).T
     new_pt = np.dot(t, new_pt)
     return new_pt[:2]
-
 
 def crop_like_SiamFC_coord(bbox, exemplar_size=127, context_amount=0.5, search_size=255):
     target_pos = [(bbox[2] + bbox[0]) / 2., (bbox[3] + bbox[1]) / 2.]
@@ -117,7 +105,6 @@ def crop_like_SiamFC_coord(bbox, exemplar_size=127, context_amount=0.5, search_s
 
     # x = crop_hwc1(image, pos_s_2_bbox(target_pos, s_x), search_size, padding)
     return target_pos, s_x
-
 
 def crop_like_SiamFCx(image, bbox, context_amount=0.5, exemplar_size=127, instanc_size=255, padding=(0, 0, 0)):
     target_pos = [(bbox[2]+bbox[0])/2., (bbox[3]+bbox[1])/2.]
@@ -134,53 +121,70 @@ def crop_like_SiamFCx(image, bbox, context_amount=0.5, exemplar_size=127, instan
     return x
 
 
-def printProgress(iteration, total, prefix='', suffix='', decimals=1, barLength=100):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        barLength   - Optional  : character length of bar (Int)
-    """
-    formatStr       = "{0:." + str(decimals) + "f}"
-    percents        = formatStr.format(100 * (iteration / float(total)))
-    filledLength    = int(round(barLength * iteration / float(total)))
-    bar             = '' * filledLength + '-' * (barLength - filledLength)
-    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
-    if iteration == total:
-        sys.stdout.write('\x1b[2K\r')
-    sys.stdout.flush()
+def gen_json(json_list, data_subset):
+    snippets = dict()
+    for js_file in json_list:
+        js_data = read_json_from_file(js_file)
+        ann = js_data['annotations']
+        eg_img_path = join('.', js_data['images'][0]['file_name'])
+        im = cv2.imread(eg_img_path)
+        im_shape = im.shape
+        video_name = js_file.split('.')[-2].split('/')[-2] + '/' + js_file.split('.')[-2].split('/')[-1]
+        snippet = dict()
 
 
-def crop_video(vid_id, gt_json_file_path, crop_path, gt_img_folder_base, instanc_size):
-    video_crop_base_path = join(crop_path, vid_id)
-    if not isdir(video_crop_base_path): makedirs(video_crop_base_path)
+        for i, frame in enumerate(ann):
+            #             print(frame)
+            if frame['category_id'] != 1:  # 如果标注的不是人
+                continue
+            if 'bbox' not in frame:  # 如果没有标注bbox(通常是人被完全遮挡，keypoints全为0)
+                continue
+            kp = frame['keypoints']
+            if kp.count(0) >= 30:  # 如果被遮挡的kp数量大于等于10
+                continue
 
-    gt_python_data = read_json_from_file(gt_json_file_path)
-    ann = gt_python_data['annotations']
-    for obj in ann:
-        if obj['category_id'] != 1:
-            continue
-        if 'bbox' not in obj:
-            continue
-        kp = obj['keypoints']
-        if kp.count(0) >= 30:
-            continue
-        img_name = '00' + str(obj['image_id'])[-4:] + '.jpg'
-        img_path = join(gt_img_folder_base, vid_id, img_name)
-        im = cv2.imread(img_path)
-        avg_chans = np.mean(im, axis=(0, 1))
-        bbox = obj['bbox']
-        bbox = clip_bbox(bbox, im.shape)
-        trackid = obj['track_id']
-        x = crop_like_SiamFCx(im, bbox, instanc_size=instanc_size, padding=avg_chans)
-        cv2.imwrite(join(video_crop_base_path, '{:06d}.{:02d}.x.jpg'.format(int(str(obj['image_id'])[-4:]), trackid)), x)
+            trackid = "{:02d}".format(frame['track_id'])
 
+            frame_name = "{:06d}".format(int(str(frame['image_id'])[-4:]))
 
-def main(instanc_size=511, num_threads=12):
+            kp_name = "kp_" + frame_name
+
+            bbox = clip_bbox(frame['bbox'], im_shape)
+
+            pos, s = crop_like_SiamFC_coord(bbox, exemplar_size=127, context_amount=0.5, search_size=511)
+            mapping_bbox = pos_s_2_bbox(pos, s)
+            mapping = crop_hwc_coord(mapping_bbox, out_sz=511)
+
+            affine_bbox = []
+            affine_bbox[:2] = affine_transform(bbox[:2], mapping)  # bbox作仿射变换
+            affine_bbox[2:] = affine_transform(bbox[2:], mapping)
+
+            joints_3d = np.zeros((int(len(kp) / 3), 3), dtype=np.float)
+            for ipt in range(int(len(kp) / 3)):
+                joints_3d[ipt, 0] = kp[ipt * 3 + 0]
+                joints_3d[ipt, 1] = kp[ipt * 3 + 1]
+                joints_3d[ipt, 2] = kp[ipt * 3 + 2]
+            pts = joints_3d.copy()
+            affine_kp = []
+            for j in range(int(len(kp) / 3)):
+                if pts[j, 2] > 0:
+                    pts[j, :2] = affine_transform(pts[j, :2], mapping)  # kp作仿射变换
+                for k in range(3):
+                    affine_kp.append(pts[j][k])
+            if trackid not in snippet.keys():
+                snippet[trackid] = dict()
+            #             print("frame_name: ", frame_name)
+            #             print("kp_name: ")
+            snippet[trackid][frame_name] = affine_bbox
+            snippet[trackid][kp_name] = affine_kp
+
+        snippets[video_name] = snippet
+
+    print('save json (dataset), please wait 20 seconds~')
+    json.dump(snippets, open('{}_pose_siamfc.json'.format(data_subset), 'w'), indent=4, sort_keys=True)
+    print('done!')
+
+def main(instanc_size=511):
     dataDir = '.'
     crop_path = './crop{:d}'.format(instanc_size)
     if not isdir(crop_path): mkdir(crop_path)
@@ -214,25 +218,13 @@ def main(instanc_size=511, num_threads=12):
             json_list.append(join(gt_json_folder_base, js + '.json'))
         #     print(json_list)
         #     print(json_list[0].split('.')[-2].split('/')[-2] + '/' + json_list[0].split('.')[-2].split('/')[-1])
-        print(len(gt_img_with_anno_names), len(json_list))
+        # print(len(gt_img_with_anno_names), len(json_list))
 
-        n_video = len(gt_img_with_anno_names)
+        # n_video = len(gt_img_with_anno_names)
 
-        #     gen_json(json_list, dataType)
-        with futures.ProcessPoolExecutor(max_workers=num_threads) as executor:
-            fs = [executor.submit(crop_video, json_path, join(gt_json_folder_base, json_path + '.json'),
-                                  set_crop_base_path, set_img_base_path, instanc_size)
-                  for json_path in gt_img_with_anno_names]
-            for i, f in enumerate(futures.as_completed(fs)):
-                # Write progress to error so that it can be seen
-                printProgress(i, n_video, prefix=dataType, suffix='Done ', barLength=40)
-
-    print('done!')
+        gen_json(json_list, dataType)
 
 
 if __name__ == '__main__':
-    since = time.time()
-    main(int(sys.argv[1]), int(sys.argv[2]))
-    time_elapsed = time.time() - since
-    print('Total complete in {:.0f}m {:.0f}s'.format(
-        time_elapsed // 60, time_elapsed % 60))
+    instanc_size = 511
+    main(instanc_size)

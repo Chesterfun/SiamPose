@@ -508,7 +508,7 @@ class DataSets(Dataset):
         self.crop_size = 0
         self.target_type = 'gaussian'
         self.single_heatmap = False
-        self.output_res = 56
+        self.output_res = 68
         self.num_joints = 17                                                # added
         self.mse_loss = False
         self.hm_gauss = 5
